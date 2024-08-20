@@ -1,6 +1,7 @@
 package com.carinaschoppe.skylife.commands.user
 
 import com.carinaschoppe.skylife.game.management.GameCluster
+import com.carinaschoppe.skylife.utility.messages.Messages
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -22,14 +23,14 @@ class JoinCommand : CommandExecutor {
             return false
         }
         if (args.size != 1) {
-            //todo: send message
+            sender.sendMessage(Messages.ERROR_ARGUMENT)
             return false
         }
         if (args[0] == "random") {
             if (sender.hasPermission("skylife.join.random"))
                 GameCluster.addPlayerToRandomGame(sender)
             else {
-                //TODO: send message
+                sender.sendMessage(Messages.ERROR_PERMISSION)
 
             }
         } else {
@@ -39,7 +40,7 @@ class JoinCommand : CommandExecutor {
                     GameCluster.addPlayerToGame(sender, mapName)
                 }
             } else {
-                //TODO: send message
+                sender.sendMessage(Messages.ERROR_PERMISSION)
             }
         }
 
