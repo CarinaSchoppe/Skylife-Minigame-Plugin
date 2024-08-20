@@ -12,6 +12,9 @@ object Messages {
     val GAME_SAVED = fun(gameName: String): Component {
         return Component.text("Game saved", messagecolor, TextDecoration.BOLD)
     }
+    val GAME_OVER = fun(): Component {
+        return Component.text("The game is over", messagecolor, TextDecoration.BOLD)
+    }
     val PLAYER_JOINS_GAME = fun(playerName: String): Component {
         return Component.text("Welcome ", messagecolor, TextDecoration.BOLD)
             .append(Component.text(playerName, namecolor, TextDecoration.BOLD, TextDecoration.UNDERLINED))
@@ -59,7 +62,6 @@ object Messages {
     val PROTECTION_TIME = fun(protectionTime: Int): Component {
         return Component.text("Protection time ends in $protectionTime seconds", messagecolor, TextDecoration.BOLD)
     }
-
 
     //TODO: roundTimer message
     //TODO: round ends message
