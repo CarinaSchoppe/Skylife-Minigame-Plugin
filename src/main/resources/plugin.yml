@@ -1,0 +1,5 @@
+name: Skylife
+version: '1.0-SNAPSHOT'
+main: com.carinaschoppe.skylife.Skylife
+api-version: '1.21'
+description: Skylife is a Skywars Main-System Plugin used for a remake of Smash and Skywars
