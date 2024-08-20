@@ -17,6 +17,10 @@ class IngameState(game: Game) : GameState(game) {
         game.currentState = this
         countdown.start()
         protectionCountdown.start()
+
+
+        //TODO: stats to new living players
+
         //teleport all players
         val locations = game.gamePattern.gameLocationManagement.spawnLocations.toTypedArray()
 

@@ -69,10 +69,10 @@ object GameCluster {
 
     fun removePlayerFromGame(player: Player) {
 
-        //TODO: enough?
         val game = lobbyGames.firstOrNull { it.livingPlayers.contains(player) } ?: activeGames.firstOrNull { it.livingPlayers.contains(player) } ?: return
         game.spectators.remove(player)
         game.livingPlayers.remove(player)
+
 
         player.teleport(mainLocation)
 
@@ -80,7 +80,10 @@ object GameCluster {
             it.showPlayer(Skylife.instance, player)
             player.showPlayer(Skylife.instance, it)
         }
+        Utility.checkGameDone(game)
 
+
+        //TODO: update scoreboard
         //TODO: send message
 
     }

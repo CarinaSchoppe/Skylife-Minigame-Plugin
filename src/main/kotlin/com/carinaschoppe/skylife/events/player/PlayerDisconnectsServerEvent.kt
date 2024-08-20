@@ -1,3 +1,17 @@
 package com.carinaschoppe.skylife.events.player
 
-class PlayerDisconnectsServerEvent
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.player.PlayerQuitEvent
+
+class PlayerDisconnectsServerEvent : Listener {
+
+    @EventHandler(ignoreCancelled = true)
+    fun onPlayerQuit(event: PlayerQuitEvent) {
+        event.player.performCommand("leave")
+
+        event.quitMessage(null)
+    }
+
+
+}

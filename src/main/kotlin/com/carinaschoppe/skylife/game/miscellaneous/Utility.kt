@@ -30,9 +30,19 @@ object Utility {
     }
 
 
+    fun checkGameDone(game: Game): Boolean {
+        if (game.livingPlayers.size > 2) {
+            return false
+        }
+        game.currentState.stop()
+        return true
+    }
+
+
     fun endingMatchMessage(game: Game) {
         if (game.livingPlayers.size == 1) {
             game.livingPlayers.forEach {
+                //TODO: do stats winning
                 it.sendMessage(Messages.PLAYER_WON(game.livingPlayers[0].name))
             }
             game.spectators.forEach {
