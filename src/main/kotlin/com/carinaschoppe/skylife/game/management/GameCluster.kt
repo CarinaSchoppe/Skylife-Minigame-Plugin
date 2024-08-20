@@ -68,9 +68,8 @@ object GameCluster {
     }
 
     fun removePlayerFromGame(player: Player) {
-        //TODO: here
-        //TODO: visibility and list checks as well as teleportation
 
+        //TODO: enough?
         val game = lobbyGames.firstOrNull { it.livingPlayers.contains(player) } ?: activeGames.firstOrNull { it.livingPlayers.contains(player) } ?: return
         game.spectators.remove(player)
         game.livingPlayers.remove(player)
