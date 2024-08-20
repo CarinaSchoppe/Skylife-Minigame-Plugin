@@ -3,6 +3,7 @@ package com.carinaschoppe.skylife.game.management.gamestates
 import com.carinaschoppe.skylife.game.management.Game
 import com.carinaschoppe.skylife.game.management.countdown.Countdown
 import com.carinaschoppe.skylife.game.management.countdown.IngameCountdown
+import com.carinaschoppe.skylife.utility.messages.Messages
 
 class IngameState(game: Game) : GameState(game) {
     override val gameStateID: Int = GameStates.INGAME_STATE.id
@@ -12,7 +13,16 @@ class IngameState(game: Game) : GameState(game) {
 
     override fun start() {
         game.currentState = this
-        TODO("Not yet implemented")
+        countdown.start()
+        //teleport all players
+        val locations = game.gamePattern.gameLocationManagement.spawnLocations.toTypedArray()
+
+        for (i in 0 until game.livingPlayers.size) {
+            game.livingPlayers.toTypedArray()[i].teleport(locations[i])
+
+            //TODO: message here
+            game.livingPlayers.toTypedArray()[i].sendMessage(Messages.INGAME_START)
+        }
     }
 
     override fun stop() {

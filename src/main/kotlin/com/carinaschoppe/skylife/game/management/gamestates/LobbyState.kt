@@ -15,8 +15,6 @@ class LobbyState(game: Game) : GameState(game) {
 
 
     override fun stop() {
-
-
         game.gameStats.get(game.gameStats.indexOf(this) + 1).start()
     }
 

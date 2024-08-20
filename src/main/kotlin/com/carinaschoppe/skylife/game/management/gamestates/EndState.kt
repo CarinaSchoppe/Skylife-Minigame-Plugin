@@ -3,6 +3,7 @@ package com.carinaschoppe.skylife.game.management.gamestates
 import com.carinaschoppe.skylife.game.management.Game
 import com.carinaschoppe.skylife.game.management.countdown.Countdown
 import com.carinaschoppe.skylife.game.management.countdown.EndCountdown
+import com.carinaschoppe.skylife.game.miscellaneous.Utility
 
 class EndState(game: Game) : GameState(game) {
 
@@ -10,6 +11,9 @@ class EndState(game: Game) : GameState(game) {
 
     override fun start() {
         game.currentState = this
+        //todo: broadcast message to all players
+        Utility.endingMatchMessage(game)
+
     }
 
 

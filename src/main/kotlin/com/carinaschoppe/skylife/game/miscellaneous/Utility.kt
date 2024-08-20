@@ -1,6 +1,7 @@
 package com.carinaschoppe.skylife.game.miscellaneous
 
 import com.carinaschoppe.skylife.game.management.Game
+import com.carinaschoppe.skylife.utility.messages.Messages
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import java.io.File
@@ -28,5 +29,25 @@ object Utility {
         return false
     }
 
+
+    fun endingMatchMessage(game: Game) {
+        if (game.livingPlayers.size == 1) {
+            game.livingPlayers.forEach {
+                it.sendMessage(Messages.PLAYER_WON(game.livingPlayers[0].name))
+            }
+            game.spectators.forEach {
+                it.sendMessage(Messages.PLAYER_WON(game.livingPlayers[0].name))
+            }
+        }
+
+        //TODO: game over message
+        game.livingPlayers.forEach {
+            it.sendMessage(Messages.PLAYER_WON(game.livingPlayers[0].name))
+        }
+        game.spectators.forEach {
+            it.sendMessage(Messages.PLAYER_WON(game.livingPlayers[0].name))
+        }
+
+    }
 
 }

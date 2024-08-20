@@ -12,7 +12,7 @@ class EndCountdown(game: Game) : Countdown(game) {
         countdown = Bukkit.getScheduler().runTaskTimer(Skylife.instance, Runnable {
             duration--
             when (duration) {
-                0L -> stop()
+                0 -> stop()
             }
         }, 0, 20)
     }
