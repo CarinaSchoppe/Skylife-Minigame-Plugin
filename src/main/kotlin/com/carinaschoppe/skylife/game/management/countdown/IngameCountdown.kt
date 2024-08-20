@@ -18,7 +18,7 @@ class IngameCountdown(game: Game) : Countdown(game) {
 
             duration--
             when (duration) {
-                0L -> stop()
+                0 -> stop()
 
             }
 
