@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "+"
+    kotlin("jvm") version "2.0.10"
     idea
     id("com.github.johnrengelman.shadow") version "+"
     id("xyz.jpenilla.run-paper") version "+"
@@ -32,13 +32,10 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:+")
     testImplementation(kotlin("test"))
     compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation(kotlin("stdlib"))
 }
 
-val targetJavaVersion = 21
-kotlin {
-    jvmToolchain(targetJavaVersion)
-}
+
 
 
 tasks {
@@ -47,7 +44,6 @@ tasks {
     }
     compileJava {
         options.encoding = Charsets.UTF_8.name() // We want UTF-8 for everything
-        options.release.set(21)
     }
     javadoc {
         options.encoding = Charsets.UTF_8.name() // We want UTF-8 for everything
@@ -71,6 +67,5 @@ tasks {
 }
 
 java {
-    // Configure the java toolchain. This allows gradle to auto-provision JDK 17 on systems that only have JDK 8 installed for example.
     toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 }
