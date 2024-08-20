@@ -40,7 +40,6 @@ object Utility {
             }
         }
 
-        //TODO: game over message
         game.livingPlayers.forEach {
             it.sendMessage(Messages.GAME_OVER())
         }

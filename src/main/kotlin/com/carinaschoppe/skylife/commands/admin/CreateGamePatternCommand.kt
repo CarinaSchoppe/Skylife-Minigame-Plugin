@@ -3,6 +3,7 @@ package com.carinaschoppe.skylife.commands.admin
 import com.carinaschoppe.skylife.game.management.GameCluster
 import com.carinaschoppe.skylife.game.management.GamePattern
 import com.carinaschoppe.skylife.game.miscellaneous.GameLoader
+import com.carinaschoppe.skylife.utility.messages.Messages
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -13,20 +14,20 @@ class CreateGamePatternCommand : CommandExecutor {
         if (command.label != "game") return false
 
         if (args == null) {
+            sender.sendMessage(Messages.ERROR_ARGUMENT)
             return false
-            //TODO: send message
         }
 
 
         if (args.size != 2) {
+            sender.sendMessage(Messages.ERROR_ARGUMENT)
             return false
-            //TODO: send message
         }
 
 
         if (sender !is Player) {
+            sender.sendMessage(Messages.ERROR_NOTPLAYER)
             return false
-            //TODO: send message
         }
 
         val type = args[0]
@@ -36,8 +37,8 @@ class CreateGamePatternCommand : CommandExecutor {
         when (type) {
             "create" -> {
                 if (!sender.hasPermission("skylife.create")) {
+                    sender.sendMessage(Messages.ERROR_PERMISSION)
                     return false
-                    //TODO: send message
                 }
                 if (GameCluster.gamePatterns.any { it.mapName == name }) {
                     //todo: send message
@@ -51,8 +52,8 @@ class CreateGamePatternCommand : CommandExecutor {
 
             "save" -> {
                 if (!sender.hasPermission("skylife.save")) {
+                    sender.sendMessage(Messages.ERROR_PERMISSION)
                     return false
-                    //TODO: send message
                 }
 
 
@@ -68,8 +69,8 @@ class CreateGamePatternCommand : CommandExecutor {
 
             "delete" -> {
                 if (!sender.hasPermission("skylife.delete")) {
+                    sender.sendMessage(Messages.ERROR_PERMISSION)
                     return false
-                    //TODO: send message
                 }
                 //check if any pattern with that name exists
                 if (GameCluster.gamePatterns.any { it.mapName == name }) {

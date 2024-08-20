@@ -1,6 +1,7 @@
 package com.carinaschoppe.skylife.commands.admin
 
 import com.carinaschoppe.skylife.game.management.GameCluster
+import com.carinaschoppe.skylife.utility.messages.Messages
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -12,20 +13,20 @@ class PlayerAmountCommand : CommandExecutor {
 
 
         if (args == null) {
+            sender.sendMessage(Messages.ERROR_ARGUMENT)
             return false
-            //TODO: send message
         }
 
 
         if (args.size != 3) {
+            sender.sendMessage(Messages.ERROR_ARGUMENT)
             return false
-            //TODO: send message
         }
 
 
         if (sender !is Player) {
+            sender.sendMessage(Messages.ERROR_NOTPLAYER)
             return false
-            //TODO: send message
         }
 
         val game = try {
@@ -41,16 +42,16 @@ class PlayerAmountCommand : CommandExecutor {
 
         if (type == "min") {
             if (!sender.hasPermission("skylife.playeramount.min")) {
+                sender.sendMessage(Messages.ERROR_PERMISSION)
                 return false
-                //TODO:send message
             }
             game.minPlayers = amount
             //TODO: message
         } else if (type == "max") {
 
             if (!sender.hasPermission("skylife.playeramount.min")) {
+                sender.sendMessage(Messages.ERROR_PERMISSION)
                 return false
-                //TODO: send message
             }
             game.maxPlayers = amount
             //TODO: message
