@@ -6,13 +6,13 @@ import org.bukkit.Bukkit
 
 class ProtectionCountdown(game: Game) : Countdown(game) {
 
-    override val defaultDuration: Long = 10
+    override val defaultDuration: Int = 10
 
     override fun start() {
         countdown = Bukkit.getScheduler().runTaskTimer(Skylife.instance, Runnable {
             duration--
             when (duration) {
-                0L -> stop()
+                0 -> stop()
             }
         }, 0, 20)
     }

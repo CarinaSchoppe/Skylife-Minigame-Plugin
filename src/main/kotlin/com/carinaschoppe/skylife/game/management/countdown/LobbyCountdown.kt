@@ -6,7 +6,7 @@ import com.carinaschoppe.skylife.utility.messages.Messages
 import org.bukkit.Bukkit
 
 class LobbyCountdown(game: Game) : Countdown(game) {
-    override val defaultDuration: Long = 60
+    override val defaultDuration: Int = 60
 
     var idle = false
 
@@ -25,7 +25,7 @@ class LobbyCountdown(game: Game) : Countdown(game) {
 
                     }
                 }
-                0L -> stop()
+                0 -> stop()
             }
             duration--
 

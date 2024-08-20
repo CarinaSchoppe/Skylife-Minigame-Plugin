@@ -5,7 +5,7 @@ import com.carinaschoppe.skylife.game.management.Game
 import org.bukkit.Bukkit
 
 class EndCountdown(game: Game) : Countdown(game) {
-    override val defaultDuration: Long = 10
+    override val defaultDuration: Int = 10
 
 
     override fun start() {

@@ -7,7 +7,7 @@ import org.bukkit.Bukkit
 
 class IngameCountdown(game: Game) : Countdown(game) {
 
-    override val defaultDuration: Long = 15 * 60
+    override val defaultDuration: Int = 15 * 60
 
 
     override fun start() {

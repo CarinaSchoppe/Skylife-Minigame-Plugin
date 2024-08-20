@@ -5,9 +5,9 @@ import org.bukkit.scheduler.BukkitTask
 
 abstract class Countdown(val game: Game) {
 
-    var duration: Long = defaultDuration
+    var duration: Int = defaultDuration
 
-    abstract val defaultDuration: Long
+    abstract val defaultDuration: Int
 
     lateinit var countdown: BukkitTask
     abstract fun start()
