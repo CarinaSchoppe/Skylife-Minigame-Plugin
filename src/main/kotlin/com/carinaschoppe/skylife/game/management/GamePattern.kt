@@ -1,12 +1,11 @@
 package com.carinaschoppe.skylife.game.management
 
 
-class GamePattern {
+class GamePattern(val mapName: String) {
 
-    lateinit var mapName: String
 
     var minPlayers: Int = 0
-    var maxPlayerCount: Int = 0
+    var maxPlayers: Int = 0
 
     val gameLocationManagement = GameLocationManagement()
 

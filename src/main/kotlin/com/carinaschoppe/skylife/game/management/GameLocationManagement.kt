@@ -9,7 +9,7 @@ class GameLocationManagement {
 
     lateinit var spectatorLocation: Location
 
-    var spawnLocations = mutableListOf<Location>()
+    var spawnLocations = mutableSetOf<Location>()
 
 
 }

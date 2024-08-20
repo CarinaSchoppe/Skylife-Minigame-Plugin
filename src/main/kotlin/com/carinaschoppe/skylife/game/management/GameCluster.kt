@@ -28,7 +28,7 @@ object GameCluster {
     }
 
     fun addPlayerToRandomGame(player: Player) {
-        val filteredGames = lobbyGames.filter { it.livingPlayers.size < it.gamePattern.maxPlayerCount }
+        val filteredGames = lobbyGames.filter { it.livingPlayers.size < it.gamePattern.maxPlayers }
         if (filteredGames.isNotEmpty()) {
             val game = filteredGames.minByOrNull { it.livingPlayers.size }!!
             addPlayerToGame(player, game)
@@ -56,7 +56,7 @@ object GameCluster {
     }
 
     fun addPlayerToGame(player: Player, mapName: String) {
-        val existingGame = lobbyGames.firstOrNull { it.gamePattern.mapName == mapName && it.livingPlayers.size < it.gamePattern.maxPlayerCount }
+        val existingGame = lobbyGames.firstOrNull { it.gamePattern.mapName == mapName && it.livingPlayers.size < it.gamePattern.maxPlayers }
         if (existingGame != null) {
             addPlayerToGame(player, existingGame)
         } else {

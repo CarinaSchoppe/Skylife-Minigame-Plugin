@@ -15,6 +15,19 @@ object GameLoader {
         GameCluster.gamePatterns.add(gamePattern)
     }
 
+
+    fun deleteGameFile(gamePattern: GamePattern) {
+
+        val folder = File("games")
+        if (!folder.exists()) {
+            folder.mkdir()
+        }
+        val file = File(folder, "${gamePattern.mapName}.json")
+        if (file.exists()) {
+            file.delete()
+        }
+    }
+
     fun saveGameToFile(gamePattern: GamePattern) {
 
         val folder = File("games")

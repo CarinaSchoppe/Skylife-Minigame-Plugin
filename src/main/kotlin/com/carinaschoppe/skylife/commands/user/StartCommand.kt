@@ -21,6 +21,8 @@ class StartCommand : CommandExecutor {
         val game: Game = try {
             GameCluster.lobbyGames.first { it.livingPlayers.contains(sender) }
         } catch (e: Exception) {
+
+            //no game found
             //TODO: send message that not exists
             return false
         }
