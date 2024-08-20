@@ -42,10 +42,10 @@ object Utility {
 
         //TODO: game over message
         game.livingPlayers.forEach {
-            it.sendMessage(Messages.PLAYER_WON(game.livingPlayers[0].name))
+            it.sendMessage(Messages.GAME_OVER())
         }
         game.spectators.forEach {
-            it.sendMessage(Messages.PLAYER_WON(game.livingPlayers[0].name))
+            it.sendMessage(Messages.GAME_OVER())
         }
 
     }

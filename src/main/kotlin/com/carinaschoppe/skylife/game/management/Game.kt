@@ -5,6 +5,7 @@ import com.carinaschoppe.skylife.game.management.gamestates.GameState
 import com.carinaschoppe.skylife.game.management.gamestates.IngameState
 import com.carinaschoppe.skylife.game.management.gamestates.LobbyState
 import com.carinaschoppe.skylife.game.miscellaneous.Utility
+import org.bukkit.block.Chest
 import org.bukkit.entity.Player
 
 class Game {
@@ -20,6 +21,9 @@ class Game {
     val gameStats = listOf(LobbyState(this), IngameState(this), EndState(this))
 
     lateinit var currentState: GameState
+
+    val gameChests = mutableListOf<Chest>()
+
 
     val livingPlayers = mutableListOf<Player>()
 

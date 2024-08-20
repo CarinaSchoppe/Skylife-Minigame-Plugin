@@ -2,6 +2,7 @@ package com.carinaschoppe.skylife.game.management.countdown
 
 import com.carinaschoppe.skylife.Skylife
 import com.carinaschoppe.skylife.game.management.Game
+import com.carinaschoppe.skylife.game.management.gamestates.IngameState
 import org.bukkit.Bukkit
 
 class ProtectionCountdown(game: Game) : Countdown(game) {
@@ -10,6 +11,10 @@ class ProtectionCountdown(game: Game) : Countdown(game) {
 
     override fun start() {
         countdown = Bukkit.getScheduler().runTaskTimer(Skylife.instance, Runnable {
+
+            if (game.currentState !is IngameState)
+                stop()
+
             duration--
             when (duration) {
                 0 -> stop()
