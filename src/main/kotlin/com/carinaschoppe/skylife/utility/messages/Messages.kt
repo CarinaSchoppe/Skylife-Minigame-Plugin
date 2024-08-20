@@ -9,7 +9,9 @@ object Messages {
     private val messagecolor: NamedTextColor = NamedTextColor.AQUA
     private val errorcolor: NamedTextColor = NamedTextColor.RED
 
-
+    val GAME_SAVED = fun(gameName: String): Component {
+        return Component.text("Game saved", messagecolor, TextDecoration.BOLD)
+    }
     val PLAYER_JOINS_GAME = fun(playerName: String): Component {
         return Component.text("Welcome ", messagecolor, TextDecoration.BOLD)
             .append(Component.text(playerName, namecolor, TextDecoration.BOLD, TextDecoration.UNDERLINED))
@@ -69,6 +71,12 @@ object Messages {
     }
     val ERROR_ARGUMENT = fun(): Component {
         return Component.text("ERROR: Invalid argument", errorcolor, TextDecoration.BOLD)
+    }
+    val ERROR_NOGAME = fun(): Component {
+        return Component.text("ERROR: No game found", errorcolor, TextDecoration.BOLD)
+    }
+    val ERROR_NOPATTERN = fun(): Component {
+        return Component.text("ERROR: No game pattern found", errorcolor, TextDecoration.BOLD)
     }
 }
 //NUMBER REMAINING PLAYERS
