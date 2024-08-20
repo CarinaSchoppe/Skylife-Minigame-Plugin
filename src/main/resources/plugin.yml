@@ -13,3 +13,15 @@ commands:
     description: Joins a game specify if youve got premium
     usage: /join
     aliases: [ ]
+  vanish:
+    description: Vanishes a Player or makes them visible
+    usage: /vanish
+    aliases: [ v ]
+  join:
+    description: Joins a game specify if youve got premium
+    usage: /join
+    aliases: [ ]
+  join:
+    description: Joins a game specify if youve got premium
+    usage: /join
+    aliases: [ ]

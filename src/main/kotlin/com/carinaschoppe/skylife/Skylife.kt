@@ -1,6 +1,11 @@
 package com.carinaschoppe.skylife
 
+import com.carinaschoppe.skylife.commands.admin.CreateGamePatternCommand
+import com.carinaschoppe.skylife.commands.admin.PlayerAmountCommand
+import com.carinaschoppe.skylife.commands.admin.SetLocationCommand
+import com.carinaschoppe.skylife.commands.admin.VanishCommand
 import com.carinaschoppe.skylife.commands.user.JoinCommand
+import com.carinaschoppe.skylife.commands.user.LeaveCommand
 import com.carinaschoppe.skylife.commands.user.StartCommand
 import com.carinaschoppe.skylife.game.miscellaneous.GameLoader
 import org.bukkit.Bukkit
@@ -30,6 +35,11 @@ class Skylife : JavaPlugin() {
         GameLoader.findAllGames().forEach { GameLoader.loadGameFromFile(it) }
         getCommand("join")?.setExecutor(JoinCommand())
         getCommand("start")?.setExecutor(StartCommand())
+        getCommand("game")?.setExecutor(CreateGamePatternCommand())
+        getCommand("setlocation")?.setExecutor(SetLocationCommand())
+        getCommand("playeramount")?.setExecutor(PlayerAmountCommand())
+        getCommand("vanish")?.setExecutor(VanishCommand())
+        getCommand("leave")?.setExecutor(LeaveCommand())
 
     }
 

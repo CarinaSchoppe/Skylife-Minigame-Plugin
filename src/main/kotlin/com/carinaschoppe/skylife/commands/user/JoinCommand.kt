@@ -16,7 +16,9 @@ class JoinCommand : CommandExecutor {
             return false
 
         if (args == null) {
-            //todo: send message
+            //Create args and add "random" to it
+            if (sender.hasPermission("skylife.join.random"))
+                GameCluster.addPlayerToRandomGame(sender)
             return false
         }
         if (args.size != 1) {

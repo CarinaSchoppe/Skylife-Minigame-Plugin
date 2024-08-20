@@ -4,6 +4,8 @@ import com.carinaschoppe.skylife.Skylife
 import com.carinaschoppe.skylife.game.management.gamestates.GameStates
 import com.carinaschoppe.skylife.game.miscellaneous.MapLoader
 import com.carinaschoppe.skylife.game.miscellaneous.Utility
+import com.carinaschoppe.skylife.game.miscellaneous.Utility.mainLocation
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 
 object GameCluster {
@@ -63,6 +65,25 @@ object GameCluster {
             val game = createGame(mapName)
             addPlayerToGame(player, game)
         }
+    }
+
+    fun removePlayerFromGame(player: Player) {
+        //TODO: here
+        //TODO: visibility and list checks as well as teleportation
+
+        val game = lobbyGames.firstOrNull { it.livingPlayers.contains(player) } ?: activeGames.firstOrNull { it.livingPlayers.contains(player) } ?: return
+        game.spectators.remove(player)
+        game.livingPlayers.remove(player)
+
+        player.teleport(mainLocation)
+
+        Bukkit.getOnlinePlayers().forEach {
+            it.showPlayer(Skylife.instance, player)
+            player.showPlayer(Skylife.instance, it)
+        }
+
+        //TODO: send message
+
     }
 
 

@@ -5,7 +5,6 @@ import com.carinaschoppe.skylife.game.management.gamestates.GameState
 import com.carinaschoppe.skylife.game.management.gamestates.IngameState
 import com.carinaschoppe.skylife.game.management.gamestates.LobbyState
 import com.carinaschoppe.skylife.game.miscellaneous.Utility
-import com.carinaschoppe.skylife.game.miscellaneous.Utility.mainLocation
 import org.bukkit.entity.Player
 
 class Game {
@@ -32,10 +31,10 @@ class Game {
     }
 
     fun cancel() {
-        livingPlayers.forEach { it.teleport(mainLocation) }
-        spectators.forEach { it.teleport(mainLocation) }
-        spectators.clear()
-        livingPlayers.clear()
+
+
+        livingPlayers.forEach { GameCluster.removePlayerFromGame(it) }
+        spectators.forEach { GameCluster.removePlayerFromGame(it) }
         GameCluster.activeGames.remove(this)
         Utility.unloadWorld(this)
     }
