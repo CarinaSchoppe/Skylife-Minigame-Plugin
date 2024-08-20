@@ -2,6 +2,7 @@ package com.carinaschoppe.skylife.game.management.countdown
 
 import com.carinaschoppe.skylife.Skylife
 import com.carinaschoppe.skylife.game.management.Game
+import com.carinaschoppe.skylife.utility.messages.Messages
 import org.bukkit.Bukkit
 
 class LobbyCountdown(game: Game) : Countdown(game) {
@@ -16,14 +17,23 @@ class LobbyCountdown(game: Game) : Countdown(game) {
                 duration = defaultDuration
                 return@Runnable
             }
-            duration -= 1
             when (duration) {
+                60 -> {
+                    game.livingPlayers.forEach {
+
+                        it.sendMessage(Messages.ROUND_STARTS(duration))
+
+                    }
+                }
                 0L -> stop()
             }
+            duration--
+
         }, 0, 20)
     }
 
     override fun stop() {
+        countdown.cancel()
         game.currentState.stop()
     }
 }

@@ -10,7 +10,7 @@ class EndCountdown(game: Game) : Countdown(game) {
 
     override fun start() {
         countdown = Bukkit.getScheduler().runTaskTimer(Skylife.instance, Runnable {
-            duration -= 1
+            duration--
             when (duration) {
                 0L -> stop()
             }
@@ -18,6 +18,7 @@ class EndCountdown(game: Game) : Countdown(game) {
     }
 
     override fun stop() {
+        countdown.cancel()
         game.currentState.stop()
     }
 

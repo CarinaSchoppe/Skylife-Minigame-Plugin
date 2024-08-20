@@ -53,12 +53,18 @@ object Messages {
         return Component.text("Player uses kit $kitName", messagecolor, TextDecoration.BOLD)
     }
 
-    val ROUND_STARTS = fun(roundTime: Int): Component {
-        return Component.text("Round starts in $roundTime", messagecolor, TextDecoration.BOLD)
+    val ROUND_STARTS = fun(roundTime: Long): Component {
+        return Component.text("Round starts in $roundTime seconds", messagecolor, TextDecoration.BOLD)
     }
-    val PROTECTION_TIME = fun(protectionTime: Int): Component {
+    val PROTECTION_TIME = fun(protectionTime: Long): Component {
         return Component.text("Protection time ends in $protectionTime seconds", messagecolor, TextDecoration.BOLD)
     }
+
+
+    //TODO: roundTimer message
+    //TODO: round ends message
+
+
     val PROTECTION_ENDS = fun(): Component {
         return Component.text("PROTECTION TIME IS OVER, FIGHT!!", messagecolor, TextDecoration.BOLD)
     }

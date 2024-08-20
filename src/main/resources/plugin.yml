@@ -3,7 +3,7 @@ version: '1.0-SNAPSHOT'
 main: com.carinaschoppe.skylife.Skylife
 api-version: '1.21'
 description: Skylife is a Skywars Main-System Plugin used for a remake of Smash and Skywars
-author: [ Carina Sophie Schoppe, Ceye4n ]
+author: [ Carina Sophie Schoppe (LazarusDE),  Ceye4n ]
 commands:
   start:
     description: Quickstarts a game
