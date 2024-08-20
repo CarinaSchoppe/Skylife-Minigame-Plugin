@@ -67,6 +67,7 @@ object Messages {
 
     //TODO: player jons needs Player ... joins [amount current / amount total]
 
+    //TODO: message kit xxx equipped
     //TODO: leave message
     //TODO: Missing x players to be able to start the game
     //TODO the game has been speeded up. (cause of /start)

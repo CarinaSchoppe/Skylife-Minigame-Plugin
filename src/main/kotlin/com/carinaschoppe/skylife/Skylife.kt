@@ -22,6 +22,8 @@ class Skylife : JavaPlugin() {
     //TODO: statistics
     //TODO: Skills
     //TODO: Items
+    //TODO: testing
+    //TODO: GUIs
     //TODO:
 
 
