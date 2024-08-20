@@ -9,3 +9,7 @@ commands:
     description: Quickstarts a game
     usage: /start
     aliases: [ ]
+  join:
+    description: Joins a game specify if youve got premium
+    usage: /join
+    aliases: [ ]

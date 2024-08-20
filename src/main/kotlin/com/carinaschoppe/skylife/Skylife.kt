@@ -1,5 +1,6 @@
 package com.carinaschoppe.skylife
 
+import com.carinaschoppe.skylife.commands.user.JoinCommand
 import com.carinaschoppe.skylife.game.miscellaneous.GameLoader
 import org.bukkit.Bukkit
 import org.bukkit.plugin.PluginManager
@@ -26,6 +27,8 @@ class Skylife : JavaPlugin() {
 
     private fun initialize(pluginManager: PluginManager) {
         GameLoader.findAllGames().forEach { GameLoader.loadGameFromFile(it) }
+        getCommand("join")?.setExecutor(JoinCommand())
+
     }
 
 
