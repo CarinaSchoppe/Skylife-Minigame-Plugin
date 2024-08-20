@@ -7,6 +7,7 @@ import net.kyori.adventure.text.format.TextDecoration
 object Messages {
     private val namecolor: NamedTextColor = NamedTextColor.GOLD
     private val messagecolor: NamedTextColor = NamedTextColor.AQUA
+    private val errorcolor: NamedTextColor = NamedTextColor.RED
 
 
     val PLAYER_JOINS_GAME = fun(playerName: String): Component {
@@ -27,13 +28,55 @@ object Messages {
         return (Component.text(playerName, namecolor, TextDecoration.BOLD, TextDecoration.UNDERLINED))
             .append(Component.text(" WON THE ROUND", messagecolor))
     }
+    val PLAYER_JOINED = fun(playerName: String): Component {
+        return (Component.text(playerName, namecolor, TextDecoration.BOLD, TextDecoration.UNDERLINED))
+            .append(Component.text(" joined", messagecolor))
+    }
 
+    val PLAYERS_ONLINE = fun(playerCount: Int): Component {
+        return Component.text("Players online: $playerCount", messagecolor, TextDecoration.BOLD)
+    }
+    val PLAYERS_REMAINING = fun(playerCount: Int): Component {
+        return Component.text("Players remaining: $playerCount", messagecolor, TextDecoration.BOLD)
+    }
+
+    val MAP_NAME = fun(mapName: String): Component {
+        return Component.text("Map: $mapName", messagecolor, TextDecoration.BOLD)
+    }
+
+    val TELEPORT = fun(): Component {
+        return Component.text("Teleporting all players", messagecolor, TextDecoration.BOLD)
+    }
+    val KIT = fun(kitName: String): Component {
+        return Component.text("Player uses kit $kitName", messagecolor, TextDecoration.BOLD)
+    }
+
+    val ROUND_STARTS = fun(roundTime: Int): Component {
+        return Component.text("Round starts in $roundTime", messagecolor, TextDecoration.BOLD)
+    }
+    val PROTECTION_TIME = fun(protectionTime: Int): Component {
+        return Component.text("Protection time ends in $protectionTime seconds", messagecolor, TextDecoration.BOLD)
+    }
+    val PROTECTION_ENDS = fun(): Component {
+        return Component.text("PROTECTION TIME IS OVER, FIGHT!!", messagecolor, TextDecoration.BOLD)
+    }
+
+    val ERROR_PERMISSION = fun(): Component {
+        return Component.text("ERROR: You don't have permission to use this command", errorcolor, TextDecoration.BOLD)
+    }
+    val ERROR_NOTPLAYER = fun(): Component {
+        return Component.text("ERROR: Command must be executed by a player", errorcolor, TextDecoration.BOLD)
+    }
+    val ERROR_ARGUMENT = fun(): Component {
+        return Component.text("ERROR: Invalid argument", errorcolor, TextDecoration.BOLD)
+    }
 }
 //NUMBER REMAINING PLAYERS
 //PLAYERNAME was killed by PLAYERNAME
 //PLAYER died
 //PLAYER joined
 //PLAYERNAME WON THE ROUND
+
 //nicht ide nötigen rechte
 //befehl muss von einem spieler ausgeführt werden
 //es fehlen argumente fuer diesen befehl
