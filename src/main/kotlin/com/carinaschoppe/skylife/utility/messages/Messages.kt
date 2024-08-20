@@ -63,8 +63,13 @@ object Messages {
         return Component.text("Protection time ends in $protectionTime seconds", messagecolor, TextDecoration.BOLD)
     }
 
-    //TODO: roundTimer message
-    //TODO: round ends message
+    //TODO: roundTimer message till game force shuts
+
+    //TODO: player jons needs Player ... joins [amount current / amount total]
+
+    //TODO: leave message
+    //TODO: Missing x players to be able to start the game
+    //TODO the game has been speeded up. (cause of /start)
 
 
     val PROTECTION_ENDS = fun(): Component {

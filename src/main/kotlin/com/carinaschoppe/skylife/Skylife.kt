@@ -15,6 +15,16 @@ import org.bukkit.plugin.java.JavaPlugin
 class Skylife : JavaPlugin() {
 
 
+    //TODO: messages
+    //TODO: events
+    //TODO: party
+    //TODO: scoreboard
+    //TODO: statistics
+    //TODO: Skills
+    //TODO: Items
+    //TODO:
+
+
     companion object {
         lateinit var instance: Skylife
         var prefix: String = "§8[§6SkyLife§8] §7"
