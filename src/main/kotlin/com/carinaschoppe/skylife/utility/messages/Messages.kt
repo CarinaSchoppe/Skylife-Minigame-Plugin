@@ -20,7 +20,9 @@ object Messages {
 //PLAYER died
 //PLAYER joined
 //PLAYERNAME WON THE ROUND
-
+//nicht ide nötigen rechte
+//befehl muss von einem spieler ausgeführt werden
+//es fehlen argumente fuer diesen befehl
 //Players online: PLAYERNUMBER
 
 //MAP: MAPNAME
