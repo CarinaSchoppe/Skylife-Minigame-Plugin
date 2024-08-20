@@ -5,14 +5,28 @@ import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
 
 object Messages {
+    private val namecolor: NamedTextColor = NamedTextColor.GOLD
+    private val messagecolor: NamedTextColor = NamedTextColor.AQUA
 
 
     val PLAYER_JOINS_GAME = fun(playerName: String): Component {
-        return Component.text("Welcome ", NamedTextColor.AQUA, TextDecoration.BOLD)
-            .append(Component.text(playerName, NamedTextColor.GOLD, TextDecoration.BOLD, TextDecoration.UNDERLINED))
-            .append(Component.text(" to the Skylife Server!", NamedTextColor.AQUA))
+        return Component.text("Welcome ", messagecolor, TextDecoration.BOLD)
+            .append(Component.text(playerName, namecolor, TextDecoration.BOLD, TextDecoration.UNDERLINED))
+            .append(Component.text(" to the Skylife Server!", messagecolor))
     }
-    
+    val PLAYER_DIED = fun(playerName: String): Component {
+        return (Component.text(playerName, namecolor, TextDecoration.BOLD, TextDecoration.UNDERLINED))
+            .append(Component.text(" died", messagecolor))
+    }
+    val PLAYER_KILLED = fun(playerName: String, killedBy: String): Component {
+        return (Component.text(playerName, namecolor, TextDecoration.BOLD, TextDecoration.UNDERLINED))
+            .append(Component.text(" was killed by", messagecolor))
+            .append(Component.text(killedBy, namecolor, TextDecoration.BOLD, TextDecoration.UNDERLINED))
+    }
+    val PLAYER_WON = fun(playerName: String): Component {
+        return (Component.text(playerName, namecolor, TextDecoration.BOLD, TextDecoration.UNDERLINED))
+            .append(Component.text(" WON THE ROUND", messagecolor))
+    }
 
 }
 //NUMBER REMAINING PLAYERS
