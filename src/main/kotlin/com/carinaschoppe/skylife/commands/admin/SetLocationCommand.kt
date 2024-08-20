@@ -1,6 +1,7 @@
 package com.carinaschoppe.skylife.commands.admin
 
 import com.carinaschoppe.skylife.game.management.GameCluster
+import com.carinaschoppe.skylife.utility.messages.Messages
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -11,20 +12,20 @@ class SetLocationCommand : CommandExecutor {
         if (command.label != "setlocation") return false
 
         if (args == null) {
+            sender.sendMessage(Messages.ERROR_ARGUMENT)
             return false
-            //TODO: send message
         }
 
 
         if (args.size != 2) {
+            sender.sendMessage(Messages.ERROR_ARGUMENT)
             return false
-            //TODO: send message
         }
 
 
         if (sender !is Player) {
+            sender.sendMessage(Messages.ERROR_NOTPLAYER)
             return false
-            //TODO: send message
         }
 
         val type = args[1]
@@ -40,8 +41,8 @@ class SetLocationCommand : CommandExecutor {
         when (type) {
             "lobby" -> {
                 if (!sender.hasPermission("skylife.setlocation.lobby")) {
+                    sender.sendMessage(Messages.ERROR_PERMISSION)
                     return false
-                    //TODO:send message
                 }
                 game.gameLocationManagement.lobbyLocation = sender.location
                 //TODO: message
@@ -49,8 +50,8 @@ class SetLocationCommand : CommandExecutor {
 
             "spawn" -> {
                 if (!sender.hasPermission("skylife.setlocation.spawn")) {
+                    sender.sendMessage(Messages.ERROR_PERMISSION)
                     return false
-                    //TODO: send message
                 }
                 game.gameLocationManagement.spawnLocations.add(sender.location)
                 //TODO: message
@@ -58,8 +59,8 @@ class SetLocationCommand : CommandExecutor {
 
             "spectator" -> {
                 if (!sender.hasPermission("skylife.setlocation.spectator")) {
+                    sender.sendMessage(Messages.ERROR_PERMISSION)
                     return false
-                    //TODO: send message
                 }
                 game.gameLocationManagement.spectatorLocation = sender.location
                 //TODO: message
