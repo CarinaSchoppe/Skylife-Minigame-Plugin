@@ -17,7 +17,6 @@ object StatsPlayers : IdTable<String>() {
     val name = varchar("name", 36)
     override val id: Column<EntityID<String>> = uuid.entityId()
     override val primaryKey = PrimaryKey(uuid, name = "UserUID")
-
 }
 
 class StatsPlayer(uuid: EntityID<String>) : Entity<String>(uuid) {

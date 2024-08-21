@@ -1,6 +1,9 @@
 package com.carinaschoppe.skylife.database
 
+import com.carinaschoppe.skylife.utility.statistics.StatsPlayers
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
 
 object DatabaseConnector {
@@ -17,6 +20,10 @@ object DatabaseConnector {
         }
         val url = "jdbc:sqlite:${file.absolutePath}"
         database = Database.connect(url)
+
+        transaction {
+            SchemaUtils.create(StatsPlayers)
+        }
     }
 
 }

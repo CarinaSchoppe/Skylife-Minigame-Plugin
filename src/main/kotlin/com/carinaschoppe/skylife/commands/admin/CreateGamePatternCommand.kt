@@ -47,7 +47,7 @@ class CreateGamePatternCommand : CommandExecutor {
                 //create a new gamepattern
                 var pattern = GamePattern(name)
                 GameCluster.gamePatterns.add(pattern)
-                sender.sendMessage(Messages.GAME_CREATED)
+                sender.sendMessage(Messages.GAME_CREATED(name))
             }
 
             "save" -> {
@@ -65,7 +65,6 @@ class CreateGamePatternCommand : CommandExecutor {
                     sender.sendMessage(Messages.GAME_SAVED)
                 }
             }
-
 
             "delete" -> {
                 if (!sender.hasPermission("skylife.delete")) {

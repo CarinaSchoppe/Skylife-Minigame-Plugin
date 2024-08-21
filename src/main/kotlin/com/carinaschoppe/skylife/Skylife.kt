@@ -7,6 +7,7 @@ import com.carinaschoppe.skylife.commands.user.JoinCommand
 import com.carinaschoppe.skylife.commands.user.LeaveCommand
 import com.carinaschoppe.skylife.commands.user.StartCommand
 import com.carinaschoppe.skylife.commands.user.StatsCommand
+import com.carinaschoppe.skylife.database.DatabaseConnector
 import com.carinaschoppe.skylife.game.miscellaneous.GameLoader
 import com.carinaschoppe.skylife.utility.messages.Messages
 import net.kyori.adventure.text.Component
@@ -39,10 +40,11 @@ class Skylife : JavaPlugin() {
         // Plugin startup logic
         instance = this
         initialize(Bukkit.getPluginManager())
-        Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text("Skylife has been started!", Messages.Me)))
+        Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text("Skylife has been started!", Messages.MESSAGE_COLOR)))
     }
 
     private fun initialize(pluginManager: PluginManager) {
+        DatabaseConnector.connectDatabase()
         GameLoader.findAllGames().forEach { GameLoader.loadGameFromFile(it) }
         getCommand("join")?.setExecutor(JoinCommand())
         getCommand("start")?.setExecutor(StartCommand())
@@ -56,6 +58,6 @@ class Skylife : JavaPlugin() {
 
     override fun onDisable() {
         // Plugin shutdown logic
-        Bukkit.getServer().consoleSender.sendMessage("${prefix} Skylife has been stopped!")
+        Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text("Skylife has been stopped!", Messages.ERROR_COLOR)))
     }
 }
