@@ -19,6 +19,17 @@ object Messages {
 
     val PREFIX: Component = Component.text("[", GRAY_COLOR, TextDecoration.BOLD).append(Component.text("Skylife", NamedTextColor.AQUA, TextDecoration.BOLD)).append(Component.text("] ", GRAY_COLOR, TextDecoration.BOLD))
 
+    val STATS = fun(kills: Int, deaths: Int, wins: Int, games: Int): Component {
+        return Component.text("Kills: ", MESSAGE_COLOR, TextDecoration.BOLD)
+        .append(Component.text(kills, NAME_COLOR, TextDecoration.BOLD))
+        .append(Component.text(" | Deaths: ", MESSAGE_COLOR, TextDecoration.BOLD))
+        .append(Component.text(deaths, NAME_COLOR, TextDecoration.BOLD))
+        .append(Component.text(" | Wins: ", MESSAGE_COLOR, TextDecoration.BOLD))
+        .append(Component.text(wins, NAME_COLOR, TextDecoration.BOLD))
+        .append(Component.text(" | Games: ", MESSAGE_COLOR, TextDecoration.BOLD))
+        .append(Component.text(games, NAME_COLOR, TextDecoration.BOLD))
+    }
+
     val INGAME_START = fun(): Component {
         return Component.text("Game started", MESSAGE_COLOR, TextDecoration.BOLD)
     }
