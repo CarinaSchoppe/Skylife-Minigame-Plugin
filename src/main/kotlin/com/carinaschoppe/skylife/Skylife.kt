@@ -8,6 +8,8 @@ import com.carinaschoppe.skylife.commands.user.LeaveCommand
 import com.carinaschoppe.skylife.commands.user.StartCommand
 import com.carinaschoppe.skylife.commands.user.StatsCommand
 import com.carinaschoppe.skylife.database.DatabaseConnector
+import com.carinaschoppe.skylife.events.player.PlayerDisconnectsServerEvent
+import com.carinaschoppe.skylife.events.player.PlayerJoinsServerEvent
 import com.carinaschoppe.skylife.game.miscellaneous.GameLoader
 import com.carinaschoppe.skylife.utility.messages.Messages
 import net.kyori.adventure.text.Component
@@ -53,6 +55,10 @@ class Skylife : JavaPlugin() {
         getCommand("playeramount")?.setExecutor(PlayerAmountCommand())
         getCommand("leave")?.setExecutor(LeaveCommand())
         getCommand("stats")?.setExecutor(StatsCommand())
+
+        pluginManager.registerEvents(PlayerJoinsServerEvent(), this)
+        pluginManager.registerEvents(PlayerDisconnectsServerEvent(), this)
+
     }
 
 
