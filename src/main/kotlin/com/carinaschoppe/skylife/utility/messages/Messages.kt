@@ -6,77 +6,81 @@ import net.kyori.adventure.text.format.TextDecoration
 
 object Messages {
 
-    //TODO: ADD PREFIX TO EVERY MESSAGE
+    //TODO: ADD PREFIX TO EVERY MESSAGE [Skylife]
     //TODO: messages of %player% or so in gold or so
 
-    private val namecolor: NamedTextColor = NamedTextColor.GOLD
-    private val messagecolor: NamedTextColor = NamedTextColor.AQUA
-    private val errorcolor: NamedTextColor = NamedTextColor.RED
+    val NAME_COLOR: NamedTextColor = NamedTextColor.GOLD
+    val MESSAGE_COLOR: NamedTextColor = NamedTextColor.GREEN
+    val ERROR_COLOR: NamedTextColor = NamedTextColor.RED
+    val GRAY_COLOR: NamedTextColor = NamedTextColor.GRAY
 
     val PLAYER_AMOUNT_SET = fun(): Component {
-        return Component.text("Player amount set", messagecolor, TextDecoration.BOLD)
+        return Component.text("Player amount set", MESSAGE_COLOR, TextDecoration.BOLD)
     }
+
+    val PREFIX: Component = Component.text("[", GRAY_COLOR, TextDecoration.BOLD).append(Component.text("Skylife", NamedTextColor.AQUA, TextDecoration.BOLD)).append(Component.text("] ", GRAY_COLOR, TextDecoration.BOLD))
+
     val GAME_CREATED = fun(gameName: String): Component {
-        return Component.text("Game $gameName created", messagecolor, TextDecoration.BOLD)
+        return Component.text("Game $gameName created", MESSAGE_COLOR, TextDecoration.BOLD)
     }
     val GAME_SAVED = fun(): Component {
-        return Component.text("Game saved", messagecolor, TextDecoration.BOLD)
+        return Component.text("Game saved", MESSAGE_COLOR, TextDecoration.BOLD)
     }
     val GAME_DELETED = fun(): Component {
-        return Component.text("Game deleted", messagecolor, TextDecoration.BOLD)
+        return Component.text("Game deleted", MESSAGE_COLOR, TextDecoration.BOLD)
     }
     val GAME_OVER = fun(): Component {
-        return Component.text("The game is over", messagecolor, TextDecoration.BOLD)
+        return Component.text("The game is over", MESSAGE_COLOR, TextDecoration.BOLD)
     }
     val LOCATION_ADDED = fun(): Component {
-        return Component.text("Location added", messagecolor, TextDecoration.BOLD)
+        return Component.text("Location added", MESSAGE_COLOR, TextDecoration.BOLD)
     }
     val PLAYER_JOINS_GAME = fun(playerName: String): Component {
-        return Component.text("Welcome ", messagecolor, TextDecoration.BOLD)
-            .append(Component.text(playerName, namecolor, TextDecoration.BOLD, TextDecoration.UNDERLINED))
-            .append(Component.text(" to the Skylife Server!", messagecolor))
+        return Component.text("Welcome ", MESSAGE_COLOR, TextDecoration.BOLD)
+            .append(Component.text(playerName, NAME_COLOR, TextDecoration.BOLD, TextDecoration.UNDERLINED))
+            .append(Component.text(" to the Skylife Server!", MESSAGE_COLOR))
     }
     val PLAYER_DIED = fun(playerName: String): Component {
-        return (Component.text(playerName, namecolor, TextDecoration.BOLD, TextDecoration.UNDERLINED))
-            .append(Component.text(" died", messagecolor))
+        return (Component.text(playerName, NAME_COLOR, TextDecoration.BOLD, TextDecoration.UNDERLINED))
+            .append(Component.text(" died", MESSAGE_COLOR))
     }
     val PLAYER_KILLED = fun(playerName: String, killedBy: String): Component {
-        return (Component.text(playerName, namecolor, TextDecoration.BOLD, TextDecoration.UNDERLINED))
-            .append(Component.text(" was killed by", messagecolor))
-            .append(Component.text(killedBy, namecolor, TextDecoration.BOLD, TextDecoration.UNDERLINED))
+        return (Component.text(playerName, NAME_COLOR, TextDecoration.BOLD, TextDecoration.UNDERLINED))
+            .append(Component.text(" was killed by", MESSAGE_COLOR))
+            .append(Component.text(killedBy, NAME_COLOR, TextDecoration.BOLD, TextDecoration.UNDERLINED))
     }
     val PLAYER_WON = fun(playerName: String): Component {
-        return (Component.text(playerName, namecolor, TextDecoration.BOLD, TextDecoration.UNDERLINED))
-            .append(Component.text(" WON THE ROUND", messagecolor))
+        return (Component.text(playerName, NAME_COLOR, TextDecoration.BOLD, TextDecoration.UNDERLINED))
+            .append(Component.text(" WON THE ROUND", MESSAGE_COLOR))
     }
     val PLAYER_JOINED = fun(playerName: String): Component {
-        return (Component.text(playerName, namecolor, TextDecoration.BOLD, TextDecoration.UNDERLINED))
-            .append(Component.text(" joined", messagecolor))
+        return (Component.text(playerName, NAME_COLOR, TextDecoration.BOLD, TextDecoration.UNDERLINED))
+            .append(Component.text(" joined", MESSAGE_COLOR))
     }
 
     val PLAYERS_ONLINE = fun(playerCount: Int): Component {
-        return Component.text("Players online: $playerCount", messagecolor, TextDecoration.BOLD)
+        return Component.text("Players online: $playerCount", MESSAGE_COLOR, TextDecoration.BOLD)
     }
     val PLAYERS_REMAINING = fun(playerCount: Int): Component {
-        return Component.text("Players remaining: $playerCount", messagecolor, TextDecoration.BOLD)
+        return Component.text("Players remaining: $playerCount", MESSAGE_COLOR, TextDecoration.BOLD)
     }
 
     val MAP_NAME = fun(mapName: String): Component {
-        return Component.text("Map: $mapName", messagecolor, TextDecoration.BOLD)
+        return Component.text("Map: $mapName", MESSAGE_COLOR, TextDecoration.BOLD)
     }
 
     val TELEPORT = fun(): Component {
-        return Component.text("Teleporting all players", messagecolor, TextDecoration.BOLD)
+        return Component.text("Teleporting all players", MESSAGE_COLOR, TextDecoration.BOLD)
     }
     val KIT = fun(kitName: String): Component {
-        return Component.text("Player uses kit $kitName", messagecolor, TextDecoration.BOLD)
+        return Component.text("Player uses kit $kitName", MESSAGE_COLOR, TextDecoration.BOLD)
     }
 
     val ROUND_STARTS = fun(roundTime: Int): Component {
-        return Component.text("Round starts in $roundTime seconds", messagecolor, TextDecoration.BOLD)
+        return Component.text("Round starts in $roundTime seconds", MESSAGE_COLOR, TextDecoration.BOLD)
     }
     val PROTECTION_TIME = fun(protectionTime: Int): Component {
-        return Component.text("Protection time ends in $protectionTime seconds", messagecolor, TextDecoration.BOLD)
+        return Component.text("Protection time ends in $protectionTime seconds", MESSAGE_COLOR, TextDecoration.BOLD)
     }
 
     //TODO: roundTimer message till game force shuts
@@ -90,32 +94,32 @@ object Messages {
 
 
     val PROTECTION_ENDS = fun(): Component {
-        return Component.text("PROTECTION TIME IS OVER, FIGHT!!", messagecolor, TextDecoration.BOLD)
+        return Component.text("PROTECTION TIME IS OVER, FIGHT!!", MESSAGE_COLOR, TextDecoration.BOLD)
     }
 
     val ERROR_PERMISSION = fun(): Component {
-        return Component.text("ERROR: You don't have permission to use this command", errorcolor, TextDecoration.BOLD)
+        return Component.text("ERROR: You don't have permission to use this command", ERROR_COLOR, TextDecoration.BOLD)
     }
     val ERROR_NOTPLAYER = fun(): Component {
-        return Component.text("ERROR: Command must be executed by a player", errorcolor, TextDecoration.BOLD)
+        return Component.text("ERROR: Command must be executed by a player", ERROR_COLOR, TextDecoration.BOLD)
     }
     val ERROR_ARGUMENT = fun(): Component {
-        return Component.text("ERROR: Invalid argument", errorcolor, TextDecoration.BOLD)
+        return Component.text("ERROR: Invalid argument", ERROR_COLOR, TextDecoration.BOLD)
     }
     val ERROR_NOGAME = fun(): Component {
-        return Component.text("ERROR: No game found", errorcolor, TextDecoration.BOLD)
+        return Component.text("ERROR: No game found", ERROR_COLOR, TextDecoration.BOLD)
     }
     val ERROR_NOPATTERN = fun(): Component {
-        return Component.text("ERROR: No game pattern found", errorcolor, TextDecoration.BOLD)
+        return Component.text("ERROR: No game pattern found", ERROR_COLOR, TextDecoration.BOLD)
     }
     val ERROR_PATTERN = fun(): Component {
-        return Component.text("ERROR: Game pattern already exists", errorcolor, TextDecoration.BOLD)
+        return Component.text("ERROR: Game pattern already exists", ERROR_COLOR, TextDecoration.BOLD)
     }
     val ERROR_PLAYER_NOT_FOUND = fun(): Component {
-        return Component.text("ERROR: Player not found", errorcolor, TextDecoration.BOLD)
+        return Component.text("ERROR: Player not found", ERROR_COLOR, TextDecoration.BOLD)
     }
     val ERROR_COMMAND = fun(): Component {
-        return Component.text("ERROR: Command failed", errorcolor, TextDecoration.BOLD)
+        return Component.text("ERROR: Command failed", ERROR_COLOR, TextDecoration.BOLD)
     }
 }
 //NUMBER REMAINING PLAYERS

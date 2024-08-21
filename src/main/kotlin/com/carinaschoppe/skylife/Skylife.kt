@@ -8,6 +8,8 @@ import com.carinaschoppe.skylife.commands.user.LeaveCommand
 import com.carinaschoppe.skylife.commands.user.StartCommand
 import com.carinaschoppe.skylife.commands.user.StatsCommand
 import com.carinaschoppe.skylife.game.miscellaneous.GameLoader
+import com.carinaschoppe.skylife.utility.messages.Messages
+import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.plugin.PluginManager
 import org.bukkit.plugin.java.JavaPlugin
@@ -29,7 +31,7 @@ class Skylife : JavaPlugin() {
 
     companion object {
         lateinit var instance: Skylife
-        var prefix: String = "§8[§6SkyLife§8] §7"
+
     }
 
 
@@ -37,7 +39,7 @@ class Skylife : JavaPlugin() {
         // Plugin startup logic
         instance = this
         initialize(Bukkit.getPluginManager())
-        Bukkit.getServer().consoleSender.sendMessage("${prefix} Skylife has been started!")
+        Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text("Skylife has been started!", Messages.Me)))
     }
 
     private fun initialize(pluginManager: PluginManager) {

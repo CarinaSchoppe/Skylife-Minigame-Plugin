@@ -2,9 +2,8 @@ package com.carinaschoppe.skylife.utility.configuration
 
 object Configurations {
 
-    val LOBBY_TIMER = 60
-    val INGAME_TIMER = 60 * 15
-    val END_TIMER = 10
-    val PREFIX = //TODO ADD PREFIX
+    var LOBBY_TIMER = 60
+    var INGAME_TIMER = 60 * 15
+    var END_TIMER = 10
 
 }
