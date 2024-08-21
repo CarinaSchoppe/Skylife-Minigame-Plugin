@@ -21,7 +21,9 @@ object Messages {
     val PREFIX: Component = Component.text("[", GRAY_COLOR, TextDecoration.BOLD).append(Component.text("Skylife", NamedTextColor.AQUA, TextDecoration.BOLD)).append(Component.text("] ", GRAY_COLOR, TextDecoration.BOLD))
 
     val GAME_CREATED = fun(gameName: String): Component {
-        return Component.text("Game $gameName created", MESSAGE_COLOR, TextDecoration.BOLD)
+        return Component.text("Game ", MESSAGE_COLOR, TextDecoration.BOLD)
+        .append(Component.text(gameName, NAME_COLOR, TextDecoration.BOLD))
+        .append(Component.text(" created", MESSAGE_COLOR))
     }
     val GAME_SAVED = fun(): Component {
         return Component.text("Game saved", MESSAGE_COLOR, TextDecoration.BOLD)
@@ -59,28 +61,36 @@ object Messages {
     }
 
     val PLAYERS_ONLINE = fun(playerCount: Int): Component {
-        return Component.text("Players online: $playerCount", MESSAGE_COLOR, TextDecoration.BOLD)
+        return Component.text("Players online: ", MESSAGE_COLOR, TextDecoration.BOLD)
+        .append(Component.text(playerCount, NAME_COLOR, TextDecoration.BOLD))
     }
     val PLAYERS_REMAINING = fun(playerCount: Int): Component {
-        return Component.text("Players remaining: $playerCount", MESSAGE_COLOR, TextDecoration.BOLD)
+        return Component.text("Players remaining: ", MESSAGE_COLOR, TextDecoration.BOLD)
+        .append(Component.text(playerCount, NAME_COLOR, TextDecoration.BOLD))
     }
 
     val MAP_NAME = fun(mapName: String): Component {
-        return Component.text("Map: $mapName", MESSAGE_COLOR, TextDecoration.BOLD)
+        return Component.text("Map: ", MESSAGE_COLOR, TextDecoration.BOLD)
+        .append(Component.text(mapName, NAME_COLOR, TextDecoration.BOLD))
     }
 
     val TELEPORT = fun(): Component {
         return Component.text("Teleporting all players", MESSAGE_COLOR, TextDecoration.BOLD)
     }
     val KIT = fun(kitName: String): Component {
-        return Component.text("Player uses kit $kitName", MESSAGE_COLOR, TextDecoration.BOLD)
+        return Component.text("Player uses kit ", MESSAGE_COLOR, TextDecoration.BOLD)
+        .append(Component.text(kitName, NAME_COLOR, TextDecoration.BOLD))
     }
 
     val ROUND_STARTS = fun(roundTime: Int): Component {
-        return Component.text("Round starts in $roundTime seconds", MESSAGE_COLOR, TextDecoration.BOLD)
+        return Component.text("Round starts in ", MESSAGE_COLOR, TextDecoration.BOLD)
+         .append(Component.text(roundTime, NAME_COLOR, TextDecoration.BOLD))
+         .append(Component.text(" seconds", MESSAGE_COLOR))
     }
     val PROTECTION_TIME = fun(protectionTime: Int): Component {
-        return Component.text("Protection time ends in $protectionTime seconds", MESSAGE_COLOR, TextDecoration.BOLD)
+        return Component.text("Protection time ends in ", MESSAGE_COLOR, TextDecoration.BOLD)
+        .append(Component.text(protectionTime, NAME_COLOR, TextDecoration.BOLD))
+        .append(Component.text(" seconds", MESSAGE_COLOR))
     }
 
     //TODO: roundTimer message till game force shuts
