@@ -15,11 +15,16 @@ object DatabaseConnector {
 
 
     fun connectDatabase() {
-        val file = File("/Skylife/database.db")
+
+        //get current Server folder
+
+
+        val file = File(Bukkit.getServer().pluginsFolder, "Skylife/database.db")
         if (!file.exists()) {
             file.parentFile.mkdirs()
             file.createNewFile()
         }
+
         val url = "jdbc:sqlite:${file.absolutePath}"
         database = Database.connect(url)
 

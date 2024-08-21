@@ -3,6 +3,7 @@ package com.carinaschoppe.skylife.game.miscellaneous
 import com.carinaschoppe.skylife.game.management.GameCluster
 import com.carinaschoppe.skylife.game.management.GamePattern
 import com.google.gson.Gson
+import org.bukkit.Bukkit
 import java.io.File
 
 object GameLoader {
@@ -18,7 +19,7 @@ object GameLoader {
 
     fun deleteGameFile(gamePattern: GamePattern) {
 
-        val folder = File("/Skylife/games")
+        val folder = File(Bukkit.getServer().pluginsFolder, "/Skylife/games")
         if (!folder.exists()) {
             folder.mkdir()
         }
@@ -30,7 +31,7 @@ object GameLoader {
 
     fun saveGameToFile(gamePattern: GamePattern) {
 
-        val folder = File("/Skylife/games")
+        val folder = File(Bukkit.getServer().pluginsFolder, "/Skylife/games")
         if (!folder.exists()) {
             folder.mkdir()
         }
@@ -46,7 +47,7 @@ object GameLoader {
 
     fun findAllGames(): List<File> {
         val files = mutableListOf<File>()
-        File("/Skylife/games").listFiles { _, name -> name.endsWith(".json") }?.let { files.addAll(it) }
+        File(Bukkit.getServer().pluginsFolder, "/Skylife/games").listFiles { _, name -> name.endsWith(".json") }?.let { files.addAll(it) }
         return files
     }
 

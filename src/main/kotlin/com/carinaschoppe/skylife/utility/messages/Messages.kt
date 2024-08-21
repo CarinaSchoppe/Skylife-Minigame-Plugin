@@ -17,6 +17,9 @@ object Messages {
         return PREFIX.append(Component.text("Player amount set", MESSAGE_COLOR, TextDecoration.BOLD))
     }
 
+    val DATABASE_CONNECTED = PREFIX.append(Component.text("The Database was successfully connected!", MESSAGE_COLOR, TextDecoration.BOLD))
+    val DATABASE_TABLES_CREATED = PREFIX.append(Component.text("The Database tables where successfully created!", MESSAGE_COLOR, TextDecoration.BOLD))
+
     val STATS = fun(kills: Int, deaths: Int, wins: Int, games: Int): Component {
         return PREFIX.append(Component.text("Kills: ", MESSAGE_COLOR, TextDecoration.BOLD))
         .append(Component.text(kills, NAME_COLOR, TextDecoration.BOLD))
