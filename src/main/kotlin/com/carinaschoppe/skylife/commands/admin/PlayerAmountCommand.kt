@@ -33,7 +33,7 @@ class PlayerAmountCommand : CommandExecutor {
             GameCluster.gamePatterns.first { it.mapName == args[0] }
         } catch (e: Exception) {
 
-            //TODO: sendmessage
+            sender.sendMessage(Messages.ERROR_COMMAND)
             return false
         }
         val type = args[1]
@@ -46,7 +46,7 @@ class PlayerAmountCommand : CommandExecutor {
                 return false
             }
             game.minPlayers = amount
-            //TODO: message
+            sender.sendMessage(Messages.PLAYER_AMOUNT_SET)
         } else if (type == "max") {
 
             if (!sender.hasPermission("skylife.playeramount.min")) {
@@ -54,7 +54,7 @@ class PlayerAmountCommand : CommandExecutor {
                 return false
             }
             game.maxPlayers = amount
-            //TODO: message
+            sender.sendMessage(Messages.PLAYER_AMOUNT_SET)
         }
 
 
