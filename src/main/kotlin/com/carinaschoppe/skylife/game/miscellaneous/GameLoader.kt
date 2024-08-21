@@ -18,7 +18,7 @@ object GameLoader {
 
     fun deleteGameFile(gamePattern: GamePattern) {
 
-        val folder = File("games")
+        val folder = File("/Skylife/games")
         if (!folder.exists()) {
             folder.mkdir()
         }
@@ -30,7 +30,7 @@ object GameLoader {
 
     fun saveGameToFile(gamePattern: GamePattern) {
 
-        val folder = File("games")
+        val folder = File("/Skylife/games")
         if (!folder.exists()) {
             folder.mkdir()
         }
@@ -46,7 +46,7 @@ object GameLoader {
 
     fun findAllGames(): List<File> {
         val files = mutableListOf<File>()
-        File("games").listFiles { _, name -> name.endsWith(".json") }?.let { files.addAll(it) }
+        File("/Skylife/games").listFiles { _, name -> name.endsWith(".json") }?.let { files.addAll(it) }
         return files
     }
 

@@ -20,13 +20,11 @@ repositories {
 }
 
 dependencies {
-
     //exposed ORM DAO
     implementation("org.jetbrains.exposed:exposed-core:+")
     implementation("org.jetbrains.exposed:exposed-dao:+")
     implementation("org.jetbrains.exposed:exposed-jdbc:+")
     implementation("org.xerial:sqlite-jdbc:+")
-
 
     implementation("com.google.code.gson:gson:+")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:+")

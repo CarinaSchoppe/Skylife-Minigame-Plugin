@@ -8,7 +8,7 @@ commands:
   start:
     description: Quickstarts a game
     usage: /start
-    aliases: [ ]
+    aliases: [ s ]
   join:
     description: Joins a game specify if youve got premium
     usage: /join
@@ -34,3 +34,7 @@ commands:
       description: Capable of creating a game
       usage: /game
       aliases: [ ]
+    stats:
+      description: Shows the stats of a player or of yourself
+      usage: /stats
+      aliases: [ stat ]

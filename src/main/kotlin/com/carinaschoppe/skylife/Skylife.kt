@@ -7,6 +7,7 @@ import com.carinaschoppe.skylife.commands.admin.VanishCommand
 import com.carinaschoppe.skylife.commands.user.JoinCommand
 import com.carinaschoppe.skylife.commands.user.LeaveCommand
 import com.carinaschoppe.skylife.commands.user.StartCommand
+import com.carinaschoppe.skylife.commands.user.StatsCommand
 import com.carinaschoppe.skylife.game.miscellaneous.GameLoader
 import org.bukkit.Bukkit
 import org.bukkit.plugin.PluginManager
@@ -52,6 +53,7 @@ class Skylife : JavaPlugin() {
         getCommand("playeramount")?.setExecutor(PlayerAmountCommand())
         getCommand("vanish")?.setExecutor(VanishCommand())
         getCommand("leave")?.setExecutor(LeaveCommand())
+        getCommand("stats")?.setExecutor(StatsCommand())
 
     }
 
