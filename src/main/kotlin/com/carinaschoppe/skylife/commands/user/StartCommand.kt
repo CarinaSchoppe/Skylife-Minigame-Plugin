@@ -24,7 +24,7 @@ class StartCommand : CommandExecutor {
         val game: Game = try {
             GameCluster.lobbyGames.first { it.livingPlayers.contains(sender) }
         } catch (e: Exception) {
-            sender.sendMessage(Messages.ERROR_NOGAME)
+            sender.sendMessage(Messages.ERROR_NO_GAME)
             return false
         }
 

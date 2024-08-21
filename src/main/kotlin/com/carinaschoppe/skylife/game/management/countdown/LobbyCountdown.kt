@@ -9,6 +9,10 @@ class LobbyCountdown(game: Game) : Countdown(game) {
     override val defaultDuration: Int = 60
 
     var idle = false
+    private fun message() {
+        game.livingPlayers.forEach { it.sendMessage(Messages.LOBBY_TIMER(duration)) }
+        game.spectators.forEach { it.sendMessage(Messages.LOBBY_TIMER(duration)) }
+    }
 
     override fun start() {
         countdown = Bukkit.getScheduler().runTaskTimer(Skylife.instance, Runnable {
@@ -18,13 +22,8 @@ class LobbyCountdown(game: Game) : Countdown(game) {
                 return@Runnable
             }
             when (duration) {
-                60 -> {
-                    game.livingPlayers.forEach {
-
-                        it.sendMessage(Messages.ROUND_STARTS(duration))
-
-                    }
-                }
+                60, 30, 15, 10 -> message()
+                in 9..1 -> message()
                 0 -> stop()
             }
             duration--

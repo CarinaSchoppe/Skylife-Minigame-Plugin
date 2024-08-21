@@ -30,13 +30,20 @@ class IngameState(game: Game) : GameState(game) {
 
         for (i in 0 until game.livingPlayers.size) {
             //Translate location
+            game.livingPlayers[i].sendMessage(Messages.TELEPORT)
             game.livingPlayers[i].teleport(Utility.locationWorldConverter(locations[i], game))
             StatsUtility.addStatsToPlayerWhenJoiningGame(game.livingPlayers[i])
             game.livingPlayers[i].sendMessage(Messages.INGAME_START)
+            game.livingPlayers[i].sendMessage(Messages.MAP_NAME(game.gamePattern.mapName))
+            game.livingPlayers[i].sendMessage(Messages.TELEPORT)
+
+            //TODO add Kit functionality
         }
 
         game.spectators.forEach {
             it.sendMessage(Messages.INGAME_START)
+            it.sendMessage(Messages.TELEPORT)
+            it.sendMessage(Messages.MAP_NAME(game.gamePattern.mapName))
             it.teleport(Utility.locationWorldConverter(game.gamePattern.gameLocationManagement.spectatorLocation, game))
         }
     }

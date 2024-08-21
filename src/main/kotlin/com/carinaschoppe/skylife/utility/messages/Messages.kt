@@ -18,6 +18,7 @@ object Messages {
     }
 
     val DATABASE_CONNECTED = PREFIX.append(Component.text("The Database was successfully connected!", MESSAGE_COLOR, TextDecoration.BOLD))
+
     val DATABASE_TABLES_CREATED = PREFIX.append(Component.text("The Database tables where successfully created!", MESSAGE_COLOR, TextDecoration.BOLD))
 
     val STATS = fun(own: Boolean, kills: Int, deaths: Int, wins: Int, games: Int, name: String?): Component {
@@ -123,7 +124,7 @@ object Messages {
         .append(Component.text(kitName, NAME_COLOR, TextDecoration.BOLD))
     }
 
-    val ROUND_STARTS = fun(roundTime: Int): Component {
+    val LOBBY_TIMER = fun(roundTime: Int): Component {
         return PREFIX.append(Component.text("Round starts in ", MESSAGE_COLOR, TextDecoration.BOLD))
          .append(Component.text(roundTime, NAME_COLOR, TextDecoration.BOLD))
          .append(Component.text(" seconds", MESSAGE_COLOR))
@@ -136,7 +137,6 @@ object Messages {
     val ROUND_SPEED_ALL = fun(): Component {
         return PREFIX.append(Component.text("The Round has been sped up", MESSAGE_COLOR, TextDecoration.BOLD))
     }
-
 
     val ROUND_SPEED_LOW = fun(): Component {
         return PREFIX.append(Component.text("You can´t speed up the round cause its allready speeded up", MESSAGE_COLOR, TextDecoration.BOLD))
@@ -155,10 +155,10 @@ object Messages {
     val ERROR_ARGUMENT = fun(): Component {
         return PREFIX.append(Component.text("ERROR: Invalid argument", ERROR_COLOR, TextDecoration.BOLD))
     }
-    val ERROR_NOGAME = fun(): Component {
+    val ERROR_NO_GAME = fun(): Component {
         return PREFIX.append(Component.text("ERROR: No game found", ERROR_COLOR, TextDecoration.BOLD))
     }
-    val ERROR_NOPATTERN = fun(): Component {
+    val ERROR_NO_PATTERN = fun(): Component {
         return PREFIX.append(Component.text("ERROR: No game pattern found", ERROR_COLOR, TextDecoration.BOLD))
     }
     val ERROR_PATTERN = fun(): Component {

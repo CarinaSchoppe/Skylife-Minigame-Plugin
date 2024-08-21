@@ -38,7 +38,7 @@ class SetLocationCommand : CommandExecutor {
         val game = try {
             GameCluster.gamePatterns.first { it.mapName == args[0] }
         } catch (e: Exception) {
-            sender.sendMessage(Messages.ERROR_NOPATTERN)
+            sender.sendMessage(Messages.ERROR_NO_PATTERN)
             return false
         }
 

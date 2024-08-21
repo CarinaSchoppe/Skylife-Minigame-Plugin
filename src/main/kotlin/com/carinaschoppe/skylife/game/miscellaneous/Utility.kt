@@ -2,15 +2,25 @@ package com.carinaschoppe.skylife.game.miscellaneous
 
 import com.carinaschoppe.skylife.game.management.Game
 import com.carinaschoppe.skylife.game.management.gamestates.IngameState
+import com.carinaschoppe.skylife.game.skills.Kit
 import com.carinaschoppe.skylife.utility.messages.Messages
 import org.bukkit.Bukkit
 import org.bukkit.Location
+import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 import java.io.File
 
 object Utility {
 
 
     lateinit var mainLocation: Location
+
+
+    //TODO: Kits
+    val playerKits = mutableMapOf<Player, Kit>()
+
+    //TODO: items
+    val chestItems = mutableSetOf<ItemStack>()
 
 
     fun locationWorldConverter(location: Location, game: Game): Location {
