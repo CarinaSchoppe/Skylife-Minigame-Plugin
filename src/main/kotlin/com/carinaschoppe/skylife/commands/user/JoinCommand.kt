@@ -10,12 +10,15 @@ import org.bukkit.entity.Player
 class JoinCommand : CommandExecutor {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
         if (command.label != "join") return false
-        if (sender !is Player)
+        if (sender !is Player) {
+            sender.sendMessage(Messages.ERROR_NOTPLAYER)
             return false
+        }
 
-        if (!sender.hasPermission("skylife.join"))
+        if (!sender.hasPermission("skylife.join")) {
+            sender.sendMessage(Messages.ERROR_PERMISSION)
             return false
-
+        }
         if (args == null) {
             //Create args and add "random" to it
             if (sender.hasPermission("skylife.join.random"))

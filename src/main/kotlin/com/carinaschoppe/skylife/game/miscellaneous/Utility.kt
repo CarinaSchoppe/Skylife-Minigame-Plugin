@@ -43,31 +43,24 @@ object Utility {
             return false
         }
 
-
         //TODO: fehlt da was?
-
         game.currentState.stop()
         return true
     }
 
 
     fun endingMatchMessage(game: Game) {
-        if (game.livingPlayers.size == 1) {
-            game.livingPlayers.forEach {
-                //TODO: do stats winning
-                it.sendMessage(Messages.PLAYER_WON(game.livingPlayers[0].name))
-            }
-            game.spectators.forEach {
-                it.sendMessage(Messages.PLAYER_WON(game.livingPlayers[0].name))
-            }
-        }
-
         game.livingPlayers.forEach {
+            if (game.livingPlayers.size == 1)
+                it.sendMessage(Messages.PLAYER_WON(game.livingPlayers[0].name))
             it.sendMessage(Messages.GAME_OVER())
         }
         game.spectators.forEach {
+            if (game.livingPlayers.size == 1)
+                it.sendMessage(Messages.PLAYER_WON(game.livingPlayers[0].name))
             it.sendMessage(Messages.GAME_OVER())
         }
+
 
     }
 

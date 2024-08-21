@@ -12,6 +12,12 @@ import org.bukkit.entity.Player
 class CreateGamePatternCommand : CommandExecutor {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
         if (command.label != "game") return false
+        if (sender !is Player) {
+            sender.sendMessage(Messages.ERROR_NOTPLAYER)
+            return false
+        }
+
+
 
         if (args == null) {
             sender.sendMessage(Messages.ERROR_ARGUMENT)
@@ -24,11 +30,6 @@ class CreateGamePatternCommand : CommandExecutor {
             return false
         }
 
-
-        if (sender !is Player) {
-            sender.sendMessage(Messages.ERROR_NOTPLAYER)
-            return false
-        }
 
         val type = args[0]
         val name = args[1]

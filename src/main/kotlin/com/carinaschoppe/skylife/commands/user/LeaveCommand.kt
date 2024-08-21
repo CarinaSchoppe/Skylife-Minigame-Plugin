@@ -12,7 +12,10 @@ class LeaveCommand : CommandExecutor {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
         if (command.label != "start") return false
-        if (sender !is Player) return false
+        if (sender !is Player) {
+            sender.sendMessage(Messages.ERROR_NOTPLAYER)
+            return false
+        }
 
         if (!sender.hasPermission("skylife.leave")) {
             sender.sendMessage(Messages.ERROR_PERMISSION)

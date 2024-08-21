@@ -20,8 +20,8 @@ object Messages {
     val DATABASE_CONNECTED = PREFIX.append(Component.text("The Database was successfully connected!", MESSAGE_COLOR, TextDecoration.BOLD))
     val DATABASE_TABLES_CREATED = PREFIX.append(Component.text("The Database tables where successfully created!", MESSAGE_COLOR, TextDecoration.BOLD))
 
-    val STATS = fun(kills: Int, deaths: Int, wins: Int, games: Int): Component {
-        return PREFIX.append(Component.text("Kills: ", MESSAGE_COLOR, TextDecoration.BOLD))
+    val STATS = fun(own: Boolean, kills: Int, deaths: Int, wins: Int, games: Int, name: String?): Component {
+        return PREFIX.append(if (own) Component.text("Your stats: ", MESSAGE_COLOR, TextDecoration.BOLD) else Component.text("The stats of $name: ", MESSAGE_COLOR, TextDecoration.BOLD)).append(Component.text("Kills: ", MESSAGE_COLOR, TextDecoration.BOLD))
         .append(Component.text(kills, NAME_COLOR, TextDecoration.BOLD))
         .append(Component.text(" | Deaths: ", MESSAGE_COLOR, TextDecoration.BOLD))
         .append(Component.text(deaths, NAME_COLOR, TextDecoration.BOLD))
@@ -62,9 +62,9 @@ object Messages {
             .append(Component.text(playerName, NAME_COLOR, TextDecoration.BOLD, TextDecoration.UNDERLINED))
             .append(Component.text(" to the Skylife Server!", MESSAGE_COLOR))
     }
-    val PLAYER_JOINS_GAME = fun(GameName: String): Component {
+    val PLAYER_JOINS_GAME = fun(gameName: String): Component {
         return PREFIX.append(Component.text("you joined the game ", MESSAGE_COLOR))
-            .append(Component.text(GameName, NAME_COLOR, TextDecoration.BOLD, TextDecoration.UNDERLINED))
+            .append(Component.text(gameName, NAME_COLOR, TextDecoration.BOLD, TextDecoration.UNDERLINED))
     }
     val PLAYER_DIED = fun(playerName: String): Component {
         return PREFIX.append(Component.text(playerName, NAME_COLOR, TextDecoration.BOLD, TextDecoration.UNDERLINED))
@@ -79,14 +79,19 @@ object Messages {
         return PREFIX.append(Component.text(playerName, NAME_COLOR, TextDecoration.BOLD, TextDecoration.UNDERLINED))
             .append(Component.text(" WON THE ROUND", MESSAGE_COLOR))
     }
-    val PLAYER_JOINED = fun(playerName: String, playerCount: Int, requiredPlayers: Int): Component {
+    val PLAYER_JOINED = fun(playerName: String, playerCount: Int, maxPlayers: Int): Component {
         return PREFIX.append(Component.text(playerName, NAME_COLOR, TextDecoration.BOLD, TextDecoration.UNDERLINED))
             .append(Component.text(" joined ", MESSAGE_COLOR))
-            .append(Component.text("($playerCount/$requiredPlayers)", NAME_COLOR, TextDecoration.BOLD, TextDecoration.UNDERLINED))
+            .append(Component.text("($playerCount/$maxPlayers)", NAME_COLOR, TextDecoration.BOLD, TextDecoration.UNDERLINED))
     }
     val PLAYER_LEFT = fun(playerName: String): Component {
         return PREFIX.append(Component.text(playerName, NAME_COLOR, TextDecoration.BOLD, TextDecoration.UNDERLINED))
-            .append(Component.text(" left", MESSAGE_COLOR))
+            .append(Component.text(" left the game!", MESSAGE_COLOR))
+    }
+
+    val OWN_PLAYER_LEFT = fun(): Component {
+        return PREFIX
+            .append(Component.text("you left the game!", MESSAGE_COLOR))
     }
     val PLAYER_MISSING = fun(playerCount: Int, requiredPlayers: Int): Component {
         val missingPlayers = requiredPlayers - playerCount
@@ -128,9 +133,15 @@ object Messages {
         .append(Component.text(protectionTime, NAME_COLOR, TextDecoration.BOLD))
         .append(Component.text(" seconds", MESSAGE_COLOR))
     }
-    val ROUND_SPEED = fun(): Component {
-        return PREFIX.append(Component.text("the Round has sped up", MESSAGE_COLOR, TextDecoration.BOLD))
+    val ROUND_SPEED_ALL = fun(): Component {
+        return PREFIX.append(Component.text("The Round has been sped up", MESSAGE_COLOR, TextDecoration.BOLD))
     }
+
+
+    val ROUND_SPEED_LOW = fun(): Component {
+        return PREFIX.append(Component.text("You can´t speed up the round cause its allready speeded up", MESSAGE_COLOR, TextDecoration.BOLD))
+    }
+
     val PROTECTION_ENDS = fun(): Component {
         return PREFIX.append(Component.text("PROTECTION TIME IS OVER, FIGHT!!", MESSAGE_COLOR, TextDecoration.BOLD))
     }

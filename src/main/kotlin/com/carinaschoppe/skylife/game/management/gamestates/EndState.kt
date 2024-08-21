@@ -13,12 +13,13 @@ class EndState(game: Game) : GameState(game) {
 
     override fun start() {
         game.currentState = this
-        //todo: broadcast message to all players
+
+
         countdown.start()
         Utility.endingMatchMessage(game)
         //add winning Stats to Player
         if (game.livingPlayers.size == 1)
-            StatsUtility.addWinStatsToPlayer(game.livingPlayers.first())
+            StatsUtility.addWinStatsToPlayer(game.livingPlayers.firstOrNull() ?: return)
     }
 
 

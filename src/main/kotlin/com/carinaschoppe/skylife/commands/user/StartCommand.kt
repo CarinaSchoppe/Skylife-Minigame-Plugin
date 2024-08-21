@@ -13,12 +13,14 @@ class StartCommand : CommandExecutor {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
         if (command.label != "start") return false
-        if (sender !is Player)
+        if (sender !is Player) {
+            sender.sendMessage(Messages.ERROR_NOTPLAYER)
             return false
-
-        if (!sender.hasPermission("skylife.start"))
+        }
+        if (!sender.hasPermission("skylife.start")) {
+            sender.sendMessage(Messages.ERROR_PERMISSION)
             return false
-
+        }
         val game: Game = try {
             GameCluster.lobbyGames.first { it.livingPlayers.contains(sender) }
         } catch (e: Exception) {
@@ -28,13 +30,13 @@ class StartCommand : CommandExecutor {
 
         val countdown = game.currentState.countdown as LobbyCountdown
         countdown.duration = if (countdown.duration > 5) {
-            //TODO send message
+            game.livingPlayers.forEach { it.sendMessage(Messages.ROUND_SPEED_ALL) }
+            game.spectators.forEach { it.sendMessage(Messages.ROUND_SPEED_ALL) }
             5
-
         } else {
-
-            //TODO: send message
+            sender.sendMessage(Messages.ROUND_SPEED_LOW)
             countdown.duration
+
         }
 
 

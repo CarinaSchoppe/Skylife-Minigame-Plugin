@@ -10,7 +10,10 @@ import org.bukkit.entity.Player
 class PlayerAmountCommand : CommandExecutor {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
         if (command.label != "playeramount") return false
-
+        if (sender !is Player) {
+            sender.sendMessage(Messages.ERROR_NOTPLAYER)
+            return false
+        }
 
         if (args == null) {
             sender.sendMessage(Messages.ERROR_ARGUMENT)
@@ -24,10 +27,6 @@ class PlayerAmountCommand : CommandExecutor {
         }
 
 
-        if (sender !is Player) {
-            sender.sendMessage(Messages.ERROR_NOTPLAYER)
-            return false
-        }
 
         val game = try {
             GameCluster.gamePatterns.first { it.mapName == args[0] }
