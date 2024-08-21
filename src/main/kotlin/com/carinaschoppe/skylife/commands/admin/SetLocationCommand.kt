@@ -33,8 +33,7 @@ class SetLocationCommand : CommandExecutor {
         val game = try {
             GameCluster.gamePatterns.first { it.mapName == args[0] }
         } catch (e: Exception) {
-
-            //TODO: sendmessage
+            sender.sendMessage(Messages.ERROR_NOPATTERN)
             return false
         }
 
@@ -45,7 +44,7 @@ class SetLocationCommand : CommandExecutor {
                     return false
                 }
                 game.gameLocationManagement.lobbyLocation = sender.location
-                //TODO: message
+                sender.sendMessage(Messages.LOCATION_ADDED)
             }
 
             "spawn" -> {
@@ -54,7 +53,7 @@ class SetLocationCommand : CommandExecutor {
                     return false
                 }
                 game.gameLocationManagement.spawnLocations.add(sender.location)
-                //TODO: message
+                sender.sendMessage(Messages.LOCATION_ADDED)
             }
 
             "spectator" -> {
@@ -63,7 +62,7 @@ class SetLocationCommand : CommandExecutor {
                     return false
                 }
                 game.gameLocationManagement.spectatorLocation = sender.location
-                //TODO: message
+                sender.sendMessage(Messages.LOCATION_ADDED)
             }
         }
         return false

@@ -3,6 +3,7 @@ package com.carinaschoppe.skylife.commands.user
 import com.carinaschoppe.skylife.game.management.Game
 import com.carinaschoppe.skylife.game.management.GameCluster
 import com.carinaschoppe.skylife.game.management.countdown.LobbyCountdown
+import com.carinaschoppe.skylife.utility.messages.Messages
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -21,9 +22,7 @@ class StartCommand : CommandExecutor {
         val game: Game = try {
             GameCluster.lobbyGames.first { it.livingPlayers.contains(sender) }
         } catch (e: Exception) {
-
-            //no game found
-            //TODO: send message that not exists
+            sender.sendMessage(Messages.ERROR_NOGAME)
             return false
         }
 
