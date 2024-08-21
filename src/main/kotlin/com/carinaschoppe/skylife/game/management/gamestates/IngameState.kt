@@ -22,6 +22,7 @@ class IngameState(game: Game) : GameState(game) {
         protectionCountdown.start()
 
 
+        //TODO: is something missing in this method?
         //adding stats
         game.livingPlayers.forEach { StatsUtility.addStatsToPlayerWhenJoiningGame(it) }
 

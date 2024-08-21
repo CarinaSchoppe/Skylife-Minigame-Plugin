@@ -24,7 +24,6 @@ class Game {
 
     val gameChests = mutableListOf<Chest>()
 
-
     val livingPlayers = mutableListOf<Player>()
 
     val spectators = mutableListOf<Player>()
@@ -35,8 +34,6 @@ class Game {
     }
 
     fun cancel() {
-
-
         livingPlayers.forEach { GameCluster.removePlayerFromGame(it) }
         spectators.forEach { GameCluster.removePlayerFromGame(it) }
         GameCluster.activeGames.remove(this)

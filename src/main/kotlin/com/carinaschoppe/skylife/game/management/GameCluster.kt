@@ -41,8 +41,7 @@ object GameCluster {
         }
     }
 
-
-    fun addPlayerToGame(player: Player, game: Game) {
+    private fun addPlayerToGame(player: Player, game: Game) {
         game.livingPlayers.add(player)
         if (!game.gameStateInitialized() && game.livingPlayers.size >= 2) {
             game.currentState = game.gameStats[GameStates.LOBBY_STATE.id]
@@ -68,19 +67,15 @@ object GameCluster {
     }
 
     fun removePlayerFromGame(player: Player) {
-
         val game = lobbyGames.firstOrNull { it.livingPlayers.contains(player) } ?: activeGames.firstOrNull { it.livingPlayers.contains(player) } ?: return
         game.spectators.remove(player)
         game.livingPlayers.remove(player)
-
-
         player.teleport(mainLocation)
-
         Bukkit.getOnlinePlayers().forEach {
             it.showPlayer(Skylife.instance, player)
             player.showPlayer(Skylife.instance, it)
         }
-        Utility.checkGameDone(game)
+        Utility.checkGameOver(game)
 
 
         //TODO: update scoreboard

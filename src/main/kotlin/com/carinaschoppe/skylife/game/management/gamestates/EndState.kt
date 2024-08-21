@@ -4,6 +4,7 @@ import com.carinaschoppe.skylife.game.management.Game
 import com.carinaschoppe.skylife.game.management.countdown.Countdown
 import com.carinaschoppe.skylife.game.management.countdown.EndCountdown
 import com.carinaschoppe.skylife.game.miscellaneous.Utility
+import com.carinaschoppe.skylife.utility.statistics.StatsUtility
 
 class EndState(game: Game) : GameState(game) {
 
@@ -15,6 +16,9 @@ class EndState(game: Game) : GameState(game) {
         //todo: broadcast message to all players
         countdown.start()
         Utility.endingMatchMessage(game)
+        //add winning Stats to Player
+        if (game.livingPlayers.size == 1)
+            StatsUtility.addWinStatsToPlayer(game.livingPlayers.first())
     }
 
 

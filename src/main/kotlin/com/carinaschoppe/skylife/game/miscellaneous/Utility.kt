@@ -1,6 +1,7 @@
 package com.carinaschoppe.skylife.game.miscellaneous
 
 import com.carinaschoppe.skylife.game.management.Game
+import com.carinaschoppe.skylife.game.management.gamestates.IngameState
 import com.carinaschoppe.skylife.utility.messages.Messages
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -30,10 +31,21 @@ object Utility {
     }
 
 
-    fun checkGameDone(game: Game): Boolean {
+    fun checkGameOver(game: Game): Boolean {
+        if (game.currentState !is IngameState) return false
+
+
         if (game.livingPlayers.size > 2) {
             return false
         }
+
+        if (game.livingPlayers.isNullOrEmpty()) {
+            return false
+        }
+
+
+        //TODO: fehlt da was?
+
         game.currentState.stop()
         return true
     }

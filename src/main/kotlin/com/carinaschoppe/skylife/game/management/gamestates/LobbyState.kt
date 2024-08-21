@@ -15,7 +15,7 @@ class LobbyState(game: Game) : GameState(game) {
 
 
     override fun stop() {
-        game.gameStats.get(game.gameStats.indexOf(this) + 1).start()
+        game.gameStats[game.gameStats.indexOf(this) + 1].start()
     }
 
     override val gameStateID: Int = GameStates.LOBBY_STATE.id

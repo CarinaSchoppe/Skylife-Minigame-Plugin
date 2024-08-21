@@ -3,7 +3,6 @@ package com.carinaschoppe.skylife
 import com.carinaschoppe.skylife.commands.admin.CreateGamePatternCommand
 import com.carinaschoppe.skylife.commands.admin.PlayerAmountCommand
 import com.carinaschoppe.skylife.commands.admin.SetLocationCommand
-import com.carinaschoppe.skylife.commands.admin.VanishCommand
 import com.carinaschoppe.skylife.commands.user.JoinCommand
 import com.carinaschoppe.skylife.commands.user.LeaveCommand
 import com.carinaschoppe.skylife.commands.user.StartCommand
@@ -20,7 +19,7 @@ class Skylife : JavaPlugin() {
     //TODO: events
     //TODO: party
     //TODO: scoreboard
-    //TODO: statistics
+    //TODO: statistics (kill, death)
     //TODO: Skills
     //TODO: Items
     //TODO: testing
@@ -51,7 +50,6 @@ class Skylife : JavaPlugin() {
         getCommand("game")?.setExecutor(CreateGamePatternCommand())
         getCommand("setlocation")?.setExecutor(SetLocationCommand())
         getCommand("playeramount")?.setExecutor(PlayerAmountCommand())
-        getCommand("vanish")?.setExecutor(VanishCommand())
         getCommand("leave")?.setExecutor(LeaveCommand())
         getCommand("stats")?.setExecutor(StatsCommand())
 

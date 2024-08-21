@@ -9,10 +9,22 @@ object StatsUtility {
     fun addStatsToPlayerWhenLeave(player: Player) {
         //get player from Database
         val statsPlayer = statsPlayers.first { it.uuid == player.uniqueId.toString() }
-
         if (GameCluster.activeGames.any { (it.livingPlayers.contains(player) || it.spectators.contains(player)) && it.currentState is IngameState }) statsPlayer.deaths++
+    }
 
+    fun addWinStatsToPlayer(player: Player) {
+        val statsPlayer = statsPlayers.first { it.uuid == player.uniqueId.toString() }
+        statsPlayer.wins++
+    }
 
+    fun addDeathStatsToPlayer(player: Player) {
+        val statsPlayer = statsPlayers.first { it.uuid == player.uniqueId.toString() }
+        statsPlayer.deaths++
+    }
+
+    fun addKillStatsToPlayer(player: Player) {
+        val statsPlayer = statsPlayers.first { it.uuid == player.uniqueId.toString() }
+        statsPlayer.kills++
     }
 
     fun addStatsPlayerWhenFirstJoin(player: Player) {
@@ -25,7 +37,6 @@ object StatsUtility {
             wins = 0
             games = 0
         }
-
         statsPlayers.add(statsPlayer)
 
     }

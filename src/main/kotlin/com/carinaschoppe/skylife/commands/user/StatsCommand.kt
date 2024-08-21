@@ -32,7 +32,7 @@ class StatsCommand : CommandExecutor {
         }
         val player = args?.get(0)
         val statsPlayer = StatsUtility.statsPlayers.firstOrNull { it.name == player } ?: run {
-            sender.sendMessage(Messages.ERROR_PLAYER_NOT_FOUND)
+            sender.sendMessage(Messages.ERROR_PLAYER_NOT_FOUND())
             return false
         }
         //TODO: send stats message of other player

@@ -13,10 +13,6 @@ commands:
     description: Joins a game specify if youve got premium
     usage: /join
     aliases: [ ]
-  vanish:
-    description: Vanishes a Player or makes them visible
-    usage: /vanish
-    aliases: [ v ]
   leave:
     description: Leave the current game and go back to the lobby
     usage: /leave
@@ -25,7 +21,6 @@ commands:
     description: Capable of setting the required amount of players for a game
     usage: /playeramount
     aliases: [ pm ]
-
     setlocation:
       description: Capable of setting up the locations for a game
       usage: /setlocation
