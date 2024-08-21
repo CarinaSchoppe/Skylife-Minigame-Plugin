@@ -9,9 +9,10 @@ object StatsUtility {
 
     fun addStatsToPlayerWhenLeave(player: Player) {
         //get player from Database
-        val statsPlayer = statsPlayers.first { it.uuid == player.uniqueId.toString() }
+        transaction {
+            val statsPlayer = statsPlayers.first { it.uuid == player.uniqueId.toString() }
         if (GameCluster.activeGames.any { it.livingPlayers.contains(player) && it.currentState is IngameState }) {
-            transaction {
+
                 statsPlayer.deaths
             }
         }
@@ -19,24 +20,27 @@ object StatsUtility {
 
 
     fun addWinStatsToPlayer(player: Player) {
-        val statsPlayer = statsPlayers.first { it.uuid == player.uniqueId.toString() }
         transaction {
+            val statsPlayer = statsPlayers.first { it.uuid == player.uniqueId.toString() }
+
             statsPlayer.wins++
 
         }
     }
 
     fun addDeathStatsToPlayer(player: Player) {
-        val statsPlayer = statsPlayers.first { it.uuid == player.uniqueId.toString() }
         transaction {
+            val statsPlayer = statsPlayers.first { it.uuid == player.uniqueId.toString() }
+
             statsPlayer.deaths++
 
         }
     }
 
     fun addKillStatsToPlayer(player: Player) {
-        val statsPlayer = statsPlayers.first { it.uuid == player.uniqueId.toString() }
         transaction {
+            val statsPlayer = statsPlayers.first { it.uuid == player.uniqueId.toString() }
+
             statsPlayer.kills++
 
         }
@@ -44,7 +48,8 @@ object StatsUtility {
 
     fun addStatsPlayerWhenFirstJoin(player: Player) {
         //add stats
-        val statsPlayer: StatsPlayer = statsPlayers.firstOrNull { it.uuid == player.uniqueId.toString() } ?: StatsPlayer.new {
+        transaction {
+            val statsPlayer: StatsPlayer = statsPlayers.firstOrNull { it.uuid == player.uniqueId.toString() } ?: StatsPlayer.new {
             uuid = player.uniqueId.toString()
             kills = 0
             name = player.name
@@ -52,7 +57,7 @@ object StatsUtility {
             wins = 0
             games = 0
         }
-        transaction {
+
             statsPlayers.add(statsPlayer)
 
         }
