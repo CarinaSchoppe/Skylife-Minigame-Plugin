@@ -11,11 +11,11 @@ object Messages {
     val ERROR_COLOR: NamedTextColor = NamedTextColor.RED
     val GRAY_COLOR: NamedTextColor = NamedTextColor.GRAY
 
+     val PREFIX: Component = Component.text("[", GRAY_COLOR, TextDecoration.BOLD).append(Component.text("Skylife", NamedTextColor.AQUA, TextDecoration.BOLD)).append(Component.text("] ", GRAY_COLOR, TextDecoration.BOLD))
+
     val PLAYER_AMOUNT_SET = fun(): Component {
         return PREFIX.append(Component.text("Player amount set", MESSAGE_COLOR, TextDecoration.BOLD))
     }
-
-    val PREFIX: Component = Component.text("[", GRAY_COLOR, TextDecoration.BOLD).append(Component.text("Skylife", NamedTextColor.AQUA, TextDecoration.BOLD)).append(Component.text("] ", GRAY_COLOR, TextDecoration.BOLD))
 
     val STATS = fun(kills: Int, deaths: Int, wins: Int, games: Int): Component {
         return PREFIX.append(Component.text("Kills: ", MESSAGE_COLOR, TextDecoration.BOLD))
@@ -46,13 +46,22 @@ object Messages {
     val GAME_OVER = fun(): Component {
         return PREFIX.append(Component.text("The game is over", MESSAGE_COLOR, TextDecoration.BOLD))
     }
+    val GAME_END_TIMER = fun(timer: Int): Component {
+        return PREFIX.append(Component.text("Game will end in ", MESSAGE_COLOR, TextDecoration.BOLD))
+        .append(Component.text(timer, NAME_COLOR, TextDecoration.BOLD))
+        .append(Component.text(" seconds", MESSAGE_COLOR))
+    }
     val LOCATION_ADDED = fun(): Component {
         return PREFIX.append(Component.text("Location added", MESSAGE_COLOR, TextDecoration.BOLD))
     }
-    val PLAYER_JOINS_GAME = fun(playerName: String): Component {
+    val PLAYER_JOINS_SERVER = fun(playerName: String): Component {
         return PREFIX.append(Component.text("Welcome ", MESSAGE_COLOR, TextDecoration.BOLD))
             .append(Component.text(playerName, NAME_COLOR, TextDecoration.BOLD, TextDecoration.UNDERLINED))
             .append(Component.text(" to the Skylife Server!", MESSAGE_COLOR))
+    }
+    val PLAYER_JOINS_GAME = fun(GameName: String): Component {
+        return PREFIX.append(Component.text("you joined the game ", MESSAGE_COLOR))
+            .append(Component.text(GameName, NAME_COLOR, TextDecoration.BOLD, TextDecoration.UNDERLINED))
     }
     val PLAYER_DIED = fun(playerName: String): Component {
         return PREFIX.append(Component.text(playerName, NAME_COLOR, TextDecoration.BOLD, TextDecoration.UNDERLINED))
@@ -67,11 +76,23 @@ object Messages {
         return PREFIX.append(Component.text(playerName, NAME_COLOR, TextDecoration.BOLD, TextDecoration.UNDERLINED))
             .append(Component.text(" WON THE ROUND", MESSAGE_COLOR))
     }
-    val PLAYER_JOINED = fun(playerName: String): Component {
+    val PLAYER_JOINED = fun(playerName: String, playerCount: Int, requiredPlayers: Int): Component {
         return PREFIX.append(Component.text(playerName, NAME_COLOR, TextDecoration.BOLD, TextDecoration.UNDERLINED))
-            .append(Component.text(" joined", MESSAGE_COLOR))
+            .append(Component.text(" joined ", MESSAGE_COLOR))
+            .append(Component.text("($playerCount/$requiredPlayers)", NAME_COLOR, TextDecoration.BOLD, TextDecoration.UNDERLINED))
     }
-
+    val PLAYER_LEFT = fun(playerName: String): Component {
+        return PREFIX.append(Component.text(playerName, NAME_COLOR, TextDecoration.BOLD, TextDecoration.UNDERLINED))
+            .append(Component.text(" left", MESSAGE_COLOR))
+    }
+    val PLAYER_MISSING = fun(playerCount: Int, requiredPlayers: Int): Component {
+        val missingPlayers = requiredPlayers - playerCount
+        return PREFIX.append(Component.text("Missing ", MESSAGE_COLOR, TextDecoration.BOLD))
+            .append(Component.text(missingPlayers, NAME_COLOR, TextDecoration.BOLD, TextDecoration.UNDERLINED))
+            .append(Component.text(" out of the ", MESSAGE_COLOR))
+            .append(Component.text(requiredPlayers, NAME_COLOR, TextDecoration.BOLD, TextDecoration.UNDERLINED))
+            .append(Component.text(" Players required", MESSAGE_COLOR))
+    }
     val PLAYERS_ONLINE = fun(playerCount: Int): Component {
         return PREFIX.append(Component.text("Players online: ", MESSAGE_COLOR, TextDecoration.BOLD))
         .append(Component.text(playerCount, NAME_COLOR, TextDecoration.BOLD))
@@ -104,29 +125,9 @@ object Messages {
         .append(Component.text(protectionTime, NAME_COLOR, TextDecoration.BOLD))
         .append(Component.text(" seconds", MESSAGE_COLOR))
     }
-
-    //TODO: roundTimer message till game force shuts
-    //TODO: player jons needs Player ... joins [amount current / amount total]
-    //TODO: message kit xxx equipped
-    //TODO: leave message
-    //TODO: Missing x players to be able to start the game
-    //TODO the game has been speeded up. (cause of /start)
-    //TODO: Game over message
-    //TODO: game started message
-    //TODO: you joined the game "Gamename"
-    //TODO: the player x joined the game (current / total)
-    //TODO: Stats (for own player and for other player)
-    //              kills = 0
-    //            deaths = 0
-    //            wins = 0
-    //            games = 0
-
-
-    val DATABASE_CONNECTED = PREFIX.append(Component.text("Database Connected", MESSAGE_COLOR, TextDecoration.BOLD))
-
-    val DATABASE_TABLES_CREATED = PREFIX.append(Component.text("Database tables successfully created", MESSAGE_COLOR, TextDecoration.BOLD))
-
-
+    val ROUND_SPEED = fun(): Component {
+        return PREFIX.append(Component.text("the Round has sped up", MESSAGE_COLOR, TextDecoration.BOLD))
+    }
     val PROTECTION_ENDS = fun(): Component {
         return PREFIX.append(Component.text("PROTECTION TIME IS OVER, FIGHT!!", MESSAGE_COLOR, TextDecoration.BOLD))
     }
