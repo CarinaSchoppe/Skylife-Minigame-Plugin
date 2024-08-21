@@ -45,7 +45,7 @@ class SetLocationCommand : CommandExecutor {
                     return false
                 }
                 game.gameLocationManagement.lobbyLocation = sender.location
-                //TODO: message
+                sender.sendMessage(Messages.LOCATION_ADDED)
             }
 
             "spawn" -> {
@@ -54,7 +54,7 @@ class SetLocationCommand : CommandExecutor {
                     return false
                 }
                 game.gameLocationManagement.spawnLocations.add(sender.location)
-                //TODO: message
+                sender.sendMessage(Messages.LOCATION_ADDED)
             }
 
             "spectator" -> {
@@ -63,7 +63,7 @@ class SetLocationCommand : CommandExecutor {
                     return false
                 }
                 game.gameLocationManagement.spectatorLocation = sender.location
-                //TODO: message
+                sender.sendMessage(Messages.LOCATION_ADDED)
             }
         }
         return false

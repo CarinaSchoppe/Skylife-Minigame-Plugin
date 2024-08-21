@@ -41,13 +41,13 @@ class CreateGamePatternCommand : CommandExecutor {
                     return false
                 }
                 if (GameCluster.gamePatterns.any { it.mapName == name }) {
-                    //todo: send message
+                    sender.sendMessage(Messages.ERROR_PATTERN)
                     return false
                 }
                 //create a new gamepattern
                 var pattern = GamePattern(name)
                 GameCluster.gamePatterns.add(pattern)
-                //TODO: message
+                sender.sendMessage(Messages.GAME_CREATED)
             }
 
             "save" -> {
@@ -62,7 +62,7 @@ class CreateGamePatternCommand : CommandExecutor {
 
                     val game = GameCluster.gamePatterns.first { it.mapName == name }
                     GameLoader.saveGameToFile(game)
-                    //TODO: send message
+                    sender.sendMessage(Messages.GAME_SAVED)
                 }
             }
 
@@ -78,7 +78,7 @@ class CreateGamePatternCommand : CommandExecutor {
                     val game = GameCluster.gamePatterns.first { it.mapName == name }
                     GameCluster.gamePatterns.remove(game)
                     GameLoader.deleteGameFile(game)
-                    //TODO: send message
+                    sender.sendMessage(Messages.GAME_DELETED)
                 }
             }
         }

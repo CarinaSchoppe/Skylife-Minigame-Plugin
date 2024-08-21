@@ -9,11 +9,21 @@ object Messages {
     private val messagecolor: NamedTextColor = NamedTextColor.AQUA
     private val errorcolor: NamedTextColor = NamedTextColor.RED
 
-    val GAME_SAVED = fun(gameName: String): Component {
+
+    val GAME_CREATED = fun(): Component {
+        return Component.text("Game created", messagecolor, TextDecoration.BOLD)
+    }
+    val GAME_SAVED = fun(): Component {
         return Component.text("Game saved", messagecolor, TextDecoration.BOLD)
+    }
+    val GAME_DELETED = fun(): Component {
+        return Component.text("Game deleted", messagecolor, TextDecoration.BOLD)
     }
     val GAME_OVER = fun(): Component {
         return Component.text("The game is over", messagecolor, TextDecoration.BOLD)
+    }
+    val LOCATION_ADDED = fun(): Component {
+        return Component.text("Location added", messagecolor, TextDecoration.BOLD)
     }
     val PLAYER_JOINS_GAME = fun(playerName: String): Component {
         return Component.text("Welcome ", messagecolor, TextDecoration.BOLD)
@@ -91,6 +101,9 @@ object Messages {
     }
     val ERROR_NOPATTERN = fun(): Component {
         return Component.text("ERROR: No game pattern found", errorcolor, TextDecoration.BOLD)
+    }
+    val ERROR_PATTERN = fun(): Component {
+        return Component.text("ERROR: Game pattern already exists", errorcolor, TextDecoration.BOLD)
     }
 }
 //NUMBER REMAINING PLAYERS

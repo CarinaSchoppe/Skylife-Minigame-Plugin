@@ -1,6 +1,7 @@
 package com.carinaschoppe.skylife.commands.user
 
 import com.carinaschoppe.skylife.game.management.GameCluster
+import com.carinaschoppe.skylife.utility.messages.Messages
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -14,7 +15,7 @@ class LeaveCommand : CommandExecutor {
             return false
 
         if (!sender.hasPermission("skylife.leave")) {
-            //TODO: send message
+            sender.sendMessage(Messages.ERROR_PERMISSION)
             return false
         }
 

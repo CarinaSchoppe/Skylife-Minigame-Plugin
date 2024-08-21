@@ -1,6 +1,7 @@
 package com.carinaschoppe.skylife.commands.admin
 
 import com.carinaschoppe.skylife.Skylife
+import com.carinaschoppe.skylife.utility.messages.Messages
 import com.carinaschoppe.skylife.utility.miscellaneous.Utility
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
@@ -16,7 +17,7 @@ class VanishCommand : CommandExecutor {
             return false
 
         if (!sender.hasPermission("skylife.vanish")) {
-            //TODO: send message
+            sender.sendMessage(Messages.ERROR_PERMISSION)
             return false
         }
 
