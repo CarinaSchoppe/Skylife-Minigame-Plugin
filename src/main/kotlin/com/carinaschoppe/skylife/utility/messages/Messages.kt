@@ -5,6 +5,10 @@ import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
 
 object Messages {
+
+    //TODO: ADD PREFIX TO EVERY MESSAGE
+    //TODO: messages of %player% or so in gold or so
+
     private val namecolor: NamedTextColor = NamedTextColor.GOLD
     private val messagecolor: NamedTextColor = NamedTextColor.AQUA
     private val errorcolor: NamedTextColor = NamedTextColor.RED
@@ -12,8 +16,8 @@ object Messages {
     val PLAYER_AMOUNT_SET = fun(): Component {
         return Component.text("Player amount set", messagecolor, TextDecoration.BOLD)
     }
-    val GAME_CREATED = fun(): Component {
-        return Component.text("Game created", messagecolor, TextDecoration.BOLD)
+    val GAME_CREATED = fun(gameName: String): Component {
+        return Component.text("Game $gameName created", messagecolor, TextDecoration.BOLD)
     }
     val GAME_SAVED = fun(): Component {
         return Component.text("Game saved", messagecolor, TextDecoration.BOLD)

@@ -1,0 +1,3 @@
+package com.carinaschoppe.skylife.utility.configuration
+
+object ConfigurationLoader

@@ -24,7 +24,7 @@ class Skylife : JavaPlugin() {
     //TODO: Items
     //TODO: testing
     //TODO: GUIs
-    //TODO:
+    //Config files
 
 
     companion object {
@@ -36,10 +36,7 @@ class Skylife : JavaPlugin() {
     override fun onEnable() {
         // Plugin startup logic
         instance = this
-
-
         initialize(Bukkit.getPluginManager())
-
         Bukkit.getServer().consoleSender.sendMessage("${prefix} Skylife has been started!")
     }
 
@@ -52,7 +49,6 @@ class Skylife : JavaPlugin() {
         getCommand("playeramount")?.setExecutor(PlayerAmountCommand())
         getCommand("leave")?.setExecutor(LeaveCommand())
         getCommand("stats")?.setExecutor(StatsCommand())
-
     }
 
 

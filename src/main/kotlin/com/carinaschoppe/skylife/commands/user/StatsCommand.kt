@@ -21,7 +21,7 @@ class StatsCommand : CommandExecutor {
 
         if (args == null) {
             //show own stats
-            val statsPlayer = StatsUtility.statsPlayers.first { it.uuid == sender.player.uniqueId.toString() }
+            val statsPlayer = StatsUtility.statsPlayers.first { it.uuid == sender.player?.uniqueId.toString() }
             //TODO: send message
 
 
