@@ -23,8 +23,6 @@ class IngameState(game: Game) : GameState(game) {
 
 
         //TODO: is something missing in this method?
-        //adding stats
-        game.livingPlayers.forEach { StatsUtility.addStatsToPlayerWhenJoiningGame(it) }
 
         hideSpectators()
         //teleport all players
@@ -32,13 +30,13 @@ class IngameState(game: Game) : GameState(game) {
 
         for (i in 0 until game.livingPlayers.size) {
             //Translate location
-            game.livingPlayers.toTypedArray()[i].teleport(Utility.locationWorldConverter(locations[i], game))
-
-            //TODO: message here
-            game.livingPlayers.toTypedArray()[i].sendMessage(Messages.INGAME_START())
+            game.livingPlayers[i].teleport(Utility.locationWorldConverter(locations[i], game))
+            StatsUtility.addStatsToPlayerWhenJoiningGame(game.livingPlayers[i])
+            game.livingPlayers[i].sendMessage(Messages.INGAME_START)
         }
 
         game.spectators.forEach {
+            it.sendMessage(Messages.INGAME_START)
             it.teleport(Utility.locationWorldConverter(game.gamePattern.gameLocationManagement.spectatorLocation, game))
         }
     }
