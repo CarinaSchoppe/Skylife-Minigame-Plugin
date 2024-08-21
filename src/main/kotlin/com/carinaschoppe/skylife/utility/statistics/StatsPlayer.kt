@@ -20,8 +20,6 @@ object StatsPlayers : IdTable<String>() {
 }
 
 class StatsPlayer(uuid: EntityID<String>) : Entity<String>(uuid) {
-
-
     companion object : EntityClass<String, StatsPlayer>(StatsPlayers)
 
     var uuid by StatsPlayers.uuid
@@ -30,6 +28,5 @@ class StatsPlayer(uuid: EntityID<String>) : Entity<String>(uuid) {
     var wins by StatsPlayers.wins
     var games by StatsPlayers.games
     var name by StatsPlayers.name
-
 
 }

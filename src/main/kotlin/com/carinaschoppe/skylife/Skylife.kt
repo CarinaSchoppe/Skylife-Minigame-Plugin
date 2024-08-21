@@ -8,6 +8,7 @@ import com.carinaschoppe.skylife.commands.user.LeaveCommand
 import com.carinaschoppe.skylife.commands.user.StartCommand
 import com.carinaschoppe.skylife.commands.user.StatsCommand
 import com.carinaschoppe.skylife.database.DatabaseConnector
+import com.carinaschoppe.skylife.events.player.PlayerDeathEvent
 import com.carinaschoppe.skylife.events.player.PlayerDisconnectsServerEvent
 import com.carinaschoppe.skylife.events.player.PlayerJoinsServerEvent
 import com.carinaschoppe.skylife.game.miscellaneous.GameLoader
@@ -58,6 +59,7 @@ class Skylife : JavaPlugin() {
 
         pluginManager.registerEvents(PlayerJoinsServerEvent(), this)
         pluginManager.registerEvents(PlayerDisconnectsServerEvent(), this)
+        pluginManager.registerEvents(PlayerDeathEvent(), this)
 
     }
 
