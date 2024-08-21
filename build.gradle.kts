@@ -27,7 +27,6 @@ dependencies {
     implementation("org.xerial:sqlite-jdbc:+")
 
     implementation("com.google.code.gson:gson:+")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:+")
     testImplementation(kotlin("test"))
     compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
     implementation(kotlin("stdlib"))
