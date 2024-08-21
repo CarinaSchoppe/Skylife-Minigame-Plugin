@@ -6,8 +6,6 @@ import net.kyori.adventure.text.format.TextDecoration
 
 object Messages {
 
-    //TODO: ADD PREFIX TO EVERY MESSAGE [Skylife]
-
     val NAME_COLOR: NamedTextColor = NamedTextColor.GOLD
     val MESSAGE_COLOR: NamedTextColor = NamedTextColor.GREEN
     val ERROR_COLOR: NamedTextColor = NamedTextColor.RED
@@ -97,13 +95,22 @@ object Messages {
     }
 
     //TODO: roundTimer message till game force shuts
-
     //TODO: player jons needs Player ... joins [amount current / amount total]
-
     //TODO: message kit xxx equipped
     //TODO: leave message
     //TODO: Missing x players to be able to start the game
     //TODO the game has been speeded up. (cause of /start)
+    //TODO: Game over message
+    //TODO: game started message
+    //TODO: you joined the game "Gamename"
+    //TODO: the player x joined the game (current / total)
+    //TODO: Stats (for own player and for other player)
+    //              kills = 0
+    //            deaths = 0
+    //            wins = 0
+    //            games = 0
+
+
 
 
     val PROTECTION_ENDS = fun(): Component {
@@ -135,34 +142,4 @@ object Messages {
         return Component.text("ERROR: Command failed", ERROR_COLOR, TextDecoration.BOLD)
     }
 }
-//NUMBER REMAINING PLAYERS
-//PLAYERNAME was killed by PLAYERNAME
-//PLAYER died
-//PLAYER joined
-//PLAYERNAME WON THE ROUND
-
-//nicht ide nötigen rechte
-//befehl muss von einem spieler ausgeführt werden
-//es fehlen argumente fuer diesen befehl
-//Players online: PLAYERNUMBER
-
-//MAP: MAPNAME
-//round starts in 5
-//round starts in 4
-//round starts in 3
-//round starts in 2
-//round starts in 1
-//TELEPORTING ALL PLAYERS
-//PLAYER uses kit KIT
-//round starts in 3
-//round starts in 2
-//round starts in 1
-//protection time ends in 30 seconds
-//protection time ends in 10 seconds
-//protection time ends in 5 seconds
-//protection time ends in 3 seconds
-//protection time ends in 2 seconds
-//protection time ends in 1 seconds
-//PROTECTION TIME IS OVER, FIGHT!!
-
 
