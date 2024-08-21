@@ -7,7 +7,6 @@ import net.kyori.adventure.text.format.TextDecoration
 object Messages {
 
     //TODO: ADD PREFIX TO EVERY MESSAGE [Skylife]
-    //TODO: messages of %player% or so in gold or so
 
     val NAME_COLOR: NamedTextColor = NamedTextColor.GOLD
     val MESSAGE_COLOR: NamedTextColor = NamedTextColor.GREEN
