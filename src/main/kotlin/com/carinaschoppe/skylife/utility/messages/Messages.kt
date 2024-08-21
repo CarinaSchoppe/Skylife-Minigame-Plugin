@@ -7,7 +7,6 @@ import net.kyori.adventure.text.format.TextDecoration
 object Messages {
 
     //TODO: ADD PREFIX TO EVERY MESSAGE [Skylife]
-    //TODO: messages of %player% or so in gold or so
 
     val NAME_COLOR: NamedTextColor = NamedTextColor.GOLD
     val MESSAGE_COLOR: NamedTextColor = NamedTextColor.GREEN
@@ -19,6 +18,10 @@ object Messages {
     }
 
     val PREFIX: Component = Component.text("[", GRAY_COLOR, TextDecoration.BOLD).append(Component.text("Skylife", NamedTextColor.AQUA, TextDecoration.BOLD)).append(Component.text("] ", GRAY_COLOR, TextDecoration.BOLD))
+
+    val INGAME_START = fun(): Component {
+        return Component.text("Game started", MESSAGE_COLOR, TextDecoration.BOLD)
+    }
 
     val GAME_CREATED = fun(gameName: String): Component {
         return Component.text("Game ", MESSAGE_COLOR, TextDecoration.BOLD)
