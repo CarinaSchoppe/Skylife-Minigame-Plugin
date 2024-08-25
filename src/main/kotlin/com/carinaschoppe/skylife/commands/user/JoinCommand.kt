@@ -17,7 +17,7 @@ class JoinCommand : CommandExecutor {
 
 
         //Check if player is allready in a game
-        GameCluster.lobbyGames.firstOrNull { it.livingPlayers.contains(sender) or it.spectators.contains(sender) } ?: GameCluster.activeGames.firstOrNull { it.livingPlayers.contains(sender) or it.spectators.contains(sender) } ?: run {
+        if (GameCluster.lobbyGames.any { game -> game.livingPlayers.contains(sender) or game.spectators.contains(sender) } or GameCluster.activeGames.any { game -> game.livingPlayers.contains(sender) or game.spectators.contains(sender) }) {
             sender.sendMessage(Messages.instance.ALLREADY_IN_GAME)
             return false
         }

@@ -4,7 +4,6 @@ import com.carinaschoppe.skylife.game.management.GameCluster
 import com.carinaschoppe.skylife.game.management.gamestates.EndState
 import com.carinaschoppe.skylife.game.management.gamestates.IngameState
 import com.carinaschoppe.skylife.game.management.gamestates.LobbyState
-import com.carinaschoppe.skylife.utility.messages.Messages
 import io.papermc.paper.event.player.AsyncChatEvent
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
@@ -19,7 +18,6 @@ class PlayerChatsEvent : Listener {
 
         //check if player is in a game
         val game = GameCluster.lobbyGames.firstOrNull { it.livingPlayers.contains(event.player) or it.spectators.contains(event.player) } ?: GameCluster.activeGames.firstOrNull { it.livingPlayers.contains(event.player) or it.spectators.contains(event.player) } ?: run {
-            event.player.sendMessage(Messages.instance.ALLREADY_IN_GAME)
             return
         }
         event.isCancelled = true

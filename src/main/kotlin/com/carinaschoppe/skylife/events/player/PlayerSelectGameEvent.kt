@@ -1,6 +1,7 @@
 package com.carinaschoppe.skylife.events.player
 
 import com.carinaschoppe.skylife.utility.ui.inventoryholders.GameOverviewHolderFactory
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -16,7 +17,7 @@ class PlayerSelectGameEvent : Listener {
         event.isCancelled = true
         //get name of clicked item
         val item = event.currentItem ?: return
-        val name = item.itemMeta?.displayName()?.examinableName()
+        val name = PlainTextComponentSerializer.plainText().serialize(item.itemMeta?.displayName()!!)
         if (name == "") {
             return
         }
