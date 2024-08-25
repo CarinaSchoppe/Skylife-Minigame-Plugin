@@ -31,7 +31,13 @@ class StatsCommand : CommandExecutor {
             }
 
 
-        } else if (args.size != 1) {
+        } else if (args.size == 0) {
+            transaction {
+                val statsPlayer = StatsUtility.statsPlayers.first { it.uuid == sender.player?.uniqueId.toString() }
+                sender.sendMessage(Messages.instance.STATS(true, statsPlayer.kills, statsPlayer.deaths, statsPlayer.wins, statsPlayer.games, statsPlayer.name))
+            }
+            return false
+        } else if (args.size == 1) {
 
             sender.sendMessage(Messages.instance.ERROR_ARGUMENT)
             return false

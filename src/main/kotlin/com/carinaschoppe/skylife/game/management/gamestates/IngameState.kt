@@ -52,6 +52,8 @@ class IngameState(game: Game) : GameState(game) {
             it.sendMessage(Messages.instance.MAP_NAME(game.gamePattern.mapName))
             it.teleport(Utility.locationWorldConverter(GameLocationManagement.skylifeLocationToLocationConverter(game.gamePattern.gameLocationManagement.spectatorLocation), game))
         }
+
+        Utility.checkGameOver(game)
     }
 
 

@@ -27,7 +27,6 @@ class LobbyCountdown(game: Game) : Countdown(game, Configurations.instance.LOBBY
                 0 -> stop()
             }
             duration--
-
         }, 0, 20)
     }
 

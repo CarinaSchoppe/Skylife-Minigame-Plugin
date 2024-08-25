@@ -41,11 +41,11 @@ object Utility {
     fun checkGameOver(game: Game): Boolean {
         if (game.currentState !is IngameState) return false
 
-
         if (game.livingPlayers.size > 2) {
             return false
         }
 
+        Bukkit.getServer().consoleSender.sendMessage("Game Over: '${game.gameID}'")
         //TODO: fehlt da was?
         game.currentState.stop()
         return true
