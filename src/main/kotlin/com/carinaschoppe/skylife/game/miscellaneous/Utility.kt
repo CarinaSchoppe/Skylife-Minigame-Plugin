@@ -46,10 +46,6 @@ object Utility {
             return false
         }
 
-        if (game.livingPlayers.isNullOrEmpty()) {
-            return false
-        }
-
         //TODO: fehlt da was?
         game.currentState.stop()
         return true
