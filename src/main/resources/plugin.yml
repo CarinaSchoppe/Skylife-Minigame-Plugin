@@ -3,33 +3,26 @@ version: '1.0-SNAPSHOT'
 main: com.carinaschoppe.skylife.Skylife
 api-version: '1.21'
 description: Skylife is a Skywars Main-System Plugin used for a remake of Smash and Skywars
-author: [ Carina Sophie Schoppe (LazarusDE),  Ceye4n ]
+author: [ Carina Sophie Schoppe (LazarusDE), Ceye4n ]
 commands:
   start:
     description: Quickstarts a game
-    usage: /start
     aliases: [ s ]
   join:
     description: Joins a game specify if youve got premium
-    usage: /join
     aliases: [ ]
   leave:
     description: Leave the current game and go back to the lobby
-    usage: /leave
     aliases: [ l, hub, spawn, lobby ]
   playeramount:
     description: Capable of setting the required amount of players for a game
-    usage: /playeramount
     aliases: [ pm ]
   setlocation:
       description: Capable of setting up the locations for a game
-      usage: /setlocation
       aliases: [ sl ]
   game:
       description: Capable of creating a game
-      usage: /game
       aliases: [ ]
   stats:
       description: Shows the stats of a player or of yourself
-      usage: /stats
       aliases: [ stat ]

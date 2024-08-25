@@ -34,8 +34,8 @@ class Game {
     }
 
     fun cancel() {
-        livingPlayers.forEach { GameCluster.removePlayerFromGame(it) }
-        spectators.forEach { GameCluster.removePlayerFromGame(it) }
+        livingPlayers.toList().forEach { GameCluster.removePlayerFromGame(it) }
+        spectators.toList().forEach { GameCluster.removePlayerFromGame(it) }
         GameCluster.activeGames.remove(this)
         Utility.unloadWorld(this)
     }
