@@ -14,12 +14,12 @@ class StatsCommand : CommandExecutor {
         if (command.label != "vanish") return false
 
         if (sender !is Player) {
-            sender.sendMessage(Messages.ERROR_NOTPLAYER)
+            sender.sendMessage(Messages.instance.ERROR_NOTPLAYER)
             return false
         }
 
         if (!sender.hasPermission("skylife.stats")) {
-            sender.sendMessage(Messages.ERROR_PERMISSION)
+            sender.sendMessage(Messages.instance.ERROR_PERMISSION)
             return false
         }
 
@@ -27,13 +27,13 @@ class StatsCommand : CommandExecutor {
             //show own stats
             transaction {
                 val statsPlayer = StatsUtility.statsPlayers.first { it.uuid == sender.player?.uniqueId.toString() }
-                sender.sendMessage(Messages.STATS(true, statsPlayer.kills, statsPlayer.deaths, statsPlayer.wins, statsPlayer.games, statsPlayer.name))
+                sender.sendMessage(Messages.instance.STATS(true, statsPlayer.kills, statsPlayer.deaths, statsPlayer.wins, statsPlayer.games, statsPlayer.name))
             }
 
 
         } else if (args.size != 1) {
 
-            sender.sendMessage(Messages.ERROR_ARGUMENT)
+            sender.sendMessage(Messages.instance.ERROR_ARGUMENT)
             return false
         }
         val player = args?.get(0)
@@ -42,13 +42,13 @@ class StatsCommand : CommandExecutor {
             try {
                 statsPlayer = StatsUtility.statsPlayers.firstOrNull { it.name == player }
             } catch (e: Exception) {
-                sender.sendMessage(Messages.ERROR_PLAYER_NOT_FOUND())
+                sender.sendMessage(Messages.instance.ERROR_PLAYER_NOT_FOUND())
                 return@transaction
             }
         }
         if (statsPlayer == null)
             return false
-        sender.sendMessage(Messages.STATS(false, statsPlayer!!.kills, statsPlayer!!.deaths, statsPlayer!!.wins, statsPlayer!!.games, statsPlayer!!.name))
+        sender.sendMessage(Messages.instance.STATS(false, statsPlayer!!.kills, statsPlayer!!.deaths, statsPlayer!!.wins, statsPlayer!!.games, statsPlayer!!.name))
 
         return false
     }

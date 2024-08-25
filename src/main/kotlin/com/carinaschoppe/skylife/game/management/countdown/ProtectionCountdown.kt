@@ -3,15 +3,16 @@ package com.carinaschoppe.skylife.game.management.countdown
 import com.carinaschoppe.skylife.Skylife
 import com.carinaschoppe.skylife.game.management.Game
 import com.carinaschoppe.skylife.game.management.gamestates.IngameState
+import com.carinaschoppe.skylife.utility.configuration.Configurations
 import com.carinaschoppe.skylife.utility.messages.Messages
 import org.bukkit.Bukkit
 
-class ProtectionCountdown(game: Game) : Countdown(game) {
+class ProtectionCountdown(game: Game) : Countdown(game, Configurations.instance.PROTECTION_TIMER) {
 
-    override val defaultDuration: Int = 10
+
     private fun message() {
-        game.livingPlayers.forEach { it.sendMessage(Messages.PROTECTION_TIME(duration)) }
-        game.spectators.forEach { it.sendMessage(Messages.PROTECTION_TIME(duration)) }
+        game.livingPlayers.forEach { it.sendMessage(Messages.instance.PROTECTION_TIME(duration)) }
+        game.spectators.forEach { it.sendMessage(Messages.instance.PROTECTION_TIME(duration)) }
     }
 
     override fun start() {
@@ -30,8 +31,8 @@ class ProtectionCountdown(game: Game) : Countdown(game) {
     }
 
     override fun stop() {
-        game.livingPlayers.forEach { it.sendMessage(Messages.PROTECTION_ENDS) }
-        game.spectators.forEach { it.sendMessage(Messages.PROTECTION_ENDS) }
+        game.livingPlayers.forEach { it.sendMessage(Messages.instance.PROTECTION_ENDS) }
+        game.spectators.forEach { it.sendMessage(Messages.instance.PROTECTION_ENDS) }
         countdown.cancel()
     }
 }

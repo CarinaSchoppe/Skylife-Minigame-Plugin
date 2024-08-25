@@ -8,7 +8,6 @@ import java.io.File
 object MapLoader {
 
     fun loadGameWorld(game: Game) {
-
         val source = File(Bukkit.getServer().worldContainer, "game_maps/${game.gamePattern.mapName}")
         val worldName = game.gameID.toString()
         val destination = File(Bukkit.getServer().worldContainer, worldName)

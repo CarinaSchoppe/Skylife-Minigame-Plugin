@@ -4,7 +4,11 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
 
-object Messages {
+class Messages {
+
+    companion object {
+        lateinit var instance: Messages
+    }
 
     val NAME_COLOR: NamedTextColor = NamedTextColor.GOLD
     val MESSAGE_COLOR: NamedTextColor = NamedTextColor.GREEN
@@ -169,6 +173,10 @@ object Messages {
     }
     val ERROR_COMMAND = fun(): Component {
         return PREFIX.append(Component.text("ERROR: Command failed", ERROR_COLOR, TextDecoration.BOLD))
+    }
+
+    val GAME_PATTERN_NOT_FULLY_DONE = fun(gameName: String): Component {
+        return PREFIX.append(Component.text("ERROR: the Game ", ERROR_COLOR, TextDecoration.BOLD).append(Component.text(gameName, NAME_COLOR, TextDecoration.BOLD)).append(Component.text(" is not fully instantiated", ERROR_COLOR, TextDecoration.BOLD)))
     }
 }
 

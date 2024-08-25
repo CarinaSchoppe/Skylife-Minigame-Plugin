@@ -9,4 +9,5 @@ class GamePattern(val mapName: String) {
 
     val gameLocationManagement = GameLocationManagement()
 
+
 }

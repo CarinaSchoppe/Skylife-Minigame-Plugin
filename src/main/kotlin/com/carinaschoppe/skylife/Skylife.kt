@@ -12,11 +12,15 @@ import com.carinaschoppe.skylife.events.player.PlayerDeathEvent
 import com.carinaschoppe.skylife.events.player.PlayerDisconnectsServerEvent
 import com.carinaschoppe.skylife.events.player.PlayerJoinsServerEvent
 import com.carinaschoppe.skylife.game.miscellaneous.GameLoader
+import com.carinaschoppe.skylife.utility.configuration.ConfigurationLoader
+import com.carinaschoppe.skylife.utility.configuration.Configurations
 import com.carinaschoppe.skylife.utility.messages.Messages
+import com.carinaschoppe.skylife.utility.statistics.StatsUtility
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.plugin.PluginManager
 import org.bukkit.plugin.java.JavaPlugin
+import java.io.File
 
 class Skylife : JavaPlugin() {
 
@@ -42,12 +46,18 @@ class Skylife : JavaPlugin() {
     override fun onEnable() {
         // Plugin startup logic
         instance = this
+        Configurations.instance = Configurations()
+        Messages.instance = Messages()
         initialize(Bukkit.getPluginManager())
-        Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text("Skylife has been started!", Messages.MESSAGE_COLOR)))
+        Bukkit.getServer().consoleSender.sendMessage(Messages.instance.PREFIX.append(Component.text("Skylife has been started!", Messages.instance.MESSAGE_COLOR)))
     }
 
     private fun initialize(pluginManager: PluginManager) {
+        ConfigurationLoader.saveConfiguration()
+        ConfigurationLoader.loadConfiguration()
+
         DatabaseConnector.connectDatabase()
+        StatsUtility.loadAllPlayersIntoStatsPlayer()
         GameLoader.findAllGames().forEach { GameLoader.loadGameFromFile(it) }
         getCommand("join")?.setExecutor(JoinCommand())
         getCommand("start")?.setExecutor(StartCommand())
@@ -61,11 +71,19 @@ class Skylife : JavaPlugin() {
         pluginManager.registerEvents(PlayerDisconnectsServerEvent(), this)
         pluginManager.registerEvents(PlayerDeathEvent(), this)
 
+
+        //Create game_maps folder if
+        val folder = File(Bukkit.getServer().worldContainer, "game_maps")
+
+        if (!folder.exists()) {
+            folder.mkdir()
+        }
+
     }
 
 
     override fun onDisable() {
         // Plugin shutdown logic
-        Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text("Skylife has been stopped!", Messages.ERROR_COLOR)))
+        Bukkit.getServer().consoleSender.sendMessage(Messages.instance.PREFIX.append(Component.text("Skylife has been stopped!", Messages.instance.ERROR_COLOR)))
     }
 }

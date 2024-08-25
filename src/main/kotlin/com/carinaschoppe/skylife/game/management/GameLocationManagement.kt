@@ -11,5 +11,7 @@ class GameLocationManagement {
 
     var spawnLocations = mutableSetOf<Location>()
 
-
+    fun gamePatternComplete(): Boolean {
+        return ::lobbyLocation.isInitialized and ::spectatorLocation.isInitialized and spawnLocations.isNotEmpty()
+    }
 }

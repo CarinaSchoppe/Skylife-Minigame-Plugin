@@ -1,9 +1,15 @@
 package com.carinaschoppe.skylife.utility.configuration
 
-object Configurations {
+class Configurations {
 
-    var LOBBY_TIMER = 60
-    var INGAME_TIMER = 60 * 15
-    var END_TIMER = 10
+    companion object {
+        lateinit var instance: Configurations
+
+    }
+
+    val LOBBY_TIMER = 60
+    val INGAME_TIMER = 60 * 15
+    val END_TIMER = 10
+    val PROTECTION_TIMER = 10
 
 }

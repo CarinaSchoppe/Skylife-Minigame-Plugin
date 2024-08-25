@@ -3,15 +3,15 @@ package com.carinaschoppe.skylife.game.management.countdown
 import com.carinaschoppe.skylife.Skylife
 import com.carinaschoppe.skylife.game.management.Game
 import com.carinaschoppe.skylife.game.management.gamestates.EndState
+import com.carinaschoppe.skylife.utility.configuration.Configurations
 import com.carinaschoppe.skylife.utility.messages.Messages
 import org.bukkit.Bukkit
 
-class IngameCountdown(game: Game) : Countdown(game) {
+class IngameCountdown(game: Game) : Countdown(game, Configurations.instance.INGAME_TIMER) {
 
-    override val defaultDuration: Int = 15 * 60
     private fun message() {
-        game.livingPlayers.forEach { it.sendMessage(Messages.GAME_END_TIMER(duration)) }
-        game.spectators.forEach { it.sendMessage(Messages.GAME_END_TIMER(duration)) }
+        game.livingPlayers.forEach { it.sendMessage(Messages.instance.GAME_END_TIMER(duration)) }
+        game.spectators.forEach { it.sendMessage(Messages.instance.GAME_END_TIMER(duration)) }
     }
 
     override fun start() {

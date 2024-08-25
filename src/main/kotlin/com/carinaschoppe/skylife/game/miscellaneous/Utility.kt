@@ -62,13 +62,13 @@ object Utility {
     fun endingMatchMessage(game: Game) {
         game.livingPlayers.forEach {
             if (game.livingPlayers.size == 1)
-                it.sendMessage(Messages.PLAYER_WON(game.livingPlayers[0].name))
-            it.sendMessage(Messages.GAME_OVER())
+                it.sendMessage(Messages.instance.PLAYER_WON(game.livingPlayers[0].name))
+            it.sendMessage(Messages.instance.GAME_OVER())
         }
         game.spectators.forEach {
             if (game.livingPlayers.size == 1)
-                it.sendMessage(Messages.PLAYER_WON(game.livingPlayers[0].name))
-            it.sendMessage(Messages.GAME_OVER())
+                it.sendMessage(Messages.instance.PLAYER_WON(game.livingPlayers[0].name))
+            it.sendMessage(Messages.instance.GAME_OVER())
         }
 
 

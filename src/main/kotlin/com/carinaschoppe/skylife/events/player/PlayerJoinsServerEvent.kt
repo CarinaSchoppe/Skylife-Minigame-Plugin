@@ -12,7 +12,7 @@ class PlayerJoinsServerEvent : Listener {
     fun onPlayerJoin(event: PlayerJoinEvent) {
         event.joinMessage(null)
         StatsUtility.addStatsPlayerWhenFirstJoin(event.player)
-        event.player.sendMessage(Messages.PLAYER_JOINS_SERVER(event.player.name))
+        event.player.sendMessage(Messages.instance.PLAYER_JOINS_SERVER(event.player.name))
 
     }
 

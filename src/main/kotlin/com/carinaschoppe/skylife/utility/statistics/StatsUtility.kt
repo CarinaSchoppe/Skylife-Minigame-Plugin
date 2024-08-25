@@ -2,10 +2,23 @@ package com.carinaschoppe.skylife.utility.statistics
 
 import com.carinaschoppe.skylife.game.management.GameCluster
 import com.carinaschoppe.skylife.game.management.gamestates.IngameState
+import com.carinaschoppe.skylife.utility.messages.Messages
+import net.kyori.adventure.text.Component
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object StatsUtility {
+
+
+    fun loadAllPlayersIntoStatsPlayer() {
+        transaction {
+            statsPlayers.addAll(StatsPlayer.all())
+        }
+
+        Bukkit.getServer().consoleSender.sendMessage(Messages.instance.PREFIX.append(Component.text("Stats loaded!", Messages.instance.MESSAGE_COLOR)))
+
+    }
 
     fun addStatsToPlayerWhenLeave(player: Player) {
         //get player from Database

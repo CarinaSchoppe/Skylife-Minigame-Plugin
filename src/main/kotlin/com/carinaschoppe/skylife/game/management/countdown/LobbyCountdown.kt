@@ -2,16 +2,16 @@ package com.carinaschoppe.skylife.game.management.countdown
 
 import com.carinaschoppe.skylife.Skylife
 import com.carinaschoppe.skylife.game.management.Game
+import com.carinaschoppe.skylife.utility.configuration.Configurations
 import com.carinaschoppe.skylife.utility.messages.Messages
 import org.bukkit.Bukkit
 
-class LobbyCountdown(game: Game) : Countdown(game) {
-    override val defaultDuration: Int = 60
+class LobbyCountdown(game: Game) : Countdown(game, Configurations.instance.LOBBY_TIMER) {
 
     var idle = false
     private fun message() {
-        game.livingPlayers.forEach { it.sendMessage(Messages.LOBBY_TIMER(duration)) }
-        game.spectators.forEach { it.sendMessage(Messages.LOBBY_TIMER(duration)) }
+        game.livingPlayers.forEach { it.sendMessage(Messages.instance.LOBBY_TIMER(duration)) }
+        game.spectators.forEach { it.sendMessage(Messages.instance.LOBBY_TIMER(duration)) }
     }
 
     override fun start() {
