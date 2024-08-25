@@ -21,7 +21,7 @@ class GameOverviewCommand : CommandExecutor {
             return false
         }
 
-        sender.openInventory(GUIs.LEVEL_SELECT_INVENTORY)
+        sender.openInventory(GUIs.LEVEL_SELECT_INVENTORY())
 
         return false
     }
