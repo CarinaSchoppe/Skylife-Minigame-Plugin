@@ -1,6 +1,6 @@
 package com.carinaschoppe.skylife.events.player
 
-import com.carinaschoppe.skylife.utility.ui.GUIs
+import com.carinaschoppe.skylife.utility.ui.inventoryholders.GameOverviewHolder
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -9,7 +9,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 class PlayerSelectGameEvent : Listener {
     @EventHandler(ignoreCancelled = true)
     fun onInventoryClick(event: InventoryClickEvent) {
-        if (event.clickedInventory != GUIs.LEVEL_SELECT_INVENTORY) {
+        if (event.clickedInventory?.getHolder(false) !is GameOverviewHolder) {
             return
         }
 

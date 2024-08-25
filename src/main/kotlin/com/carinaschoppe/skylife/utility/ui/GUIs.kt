@@ -1,5 +1,6 @@
 package com.carinaschoppe.skylife.utility.ui
 
+import com.carinaschoppe.skylife.utility.ui.inventoryholders.GameOverviewHolder
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
@@ -29,7 +30,7 @@ object GUIs {
             }
         }
 
-        return GUIBuilder("Level Select", rows * cols)
+        return GUIBuilder(GameOverviewHolder())
             .addItems(map)
             .fillerPanel()
             .build()
