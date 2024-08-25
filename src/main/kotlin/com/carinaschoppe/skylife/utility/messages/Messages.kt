@@ -98,6 +98,25 @@ class Messages {
         return PREFIX
             .append(Component.text("you left the game!", MESSAGE_COLOR))
     }
+
+    val ALLREADY_IN_GAME = fun(): Component {
+        return PREFIX
+            .append(Component.text("ERROR: You are allready in a game!", ERROR_COLOR))
+    }
+
+    val CANT_BREAK_BLOCK = fun(): Component {
+        return PREFIX
+            .append(Component.text("ERROR: You cant break a block while not beeing in a live game!", ERROR_COLOR))
+    }
+
+    val CANT_PLACE_BLOCK = fun(): Component {
+        return PREFIX
+            .append(Component.text("ERROR: You cant place a block while not beeing in a live game!", ERROR_COLOR))
+    }
+    val CANT_DAMAGE = fun(): Component {
+        return PREFIX
+            .append(Component.text("ERROR: You cant cause any damage while not beeing in a live game!", ERROR_COLOR))
+    }
     val PLAYER_MISSING = fun(playerCount: Int, requiredPlayers: Int): Component {
         val missingPlayers = requiredPlayers - playerCount
         return PREFIX.append(Component.text("Missing ", MESSAGE_COLOR, TextDecoration.BOLD))

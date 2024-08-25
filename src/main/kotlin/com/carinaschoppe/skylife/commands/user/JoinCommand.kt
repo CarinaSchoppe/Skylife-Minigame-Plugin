@@ -15,6 +15,14 @@ class JoinCommand : CommandExecutor {
             return false
         }
 
+
+        //Check if player is allready in a game
+        GameCluster.lobbyGames.firstOrNull { it.livingPlayers.contains(sender) or it.spectators.contains(sender) } ?: GameCluster.activeGames.firstOrNull { it.livingPlayers.contains(sender) or it.spectators.contains(sender) } ?: run {
+            sender.sendMessage(Messages.instance.ALLREADY_IN_GAME)
+            return false
+        }
+
+
         if (!sender.hasPermission("skylife.join")) {
             sender.sendMessage(Messages.instance.ERROR_PERMISSION)
             return false

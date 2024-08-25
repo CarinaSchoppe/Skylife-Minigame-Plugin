@@ -8,9 +8,7 @@ import com.carinaschoppe.skylife.commands.user.LeaveCommand
 import com.carinaschoppe.skylife.commands.user.StartCommand
 import com.carinaschoppe.skylife.commands.user.StatsCommand
 import com.carinaschoppe.skylife.database.DatabaseConnector
-import com.carinaschoppe.skylife.events.player.PlayerDeathEvent
-import com.carinaschoppe.skylife.events.player.PlayerDisconnectsServerEvent
-import com.carinaschoppe.skylife.events.player.PlayerJoinsServerEvent
+import com.carinaschoppe.skylife.events.player.*
 import com.carinaschoppe.skylife.game.miscellaneous.GameLoader
 import com.carinaschoppe.skylife.utility.configuration.ConfigurationLoader
 import com.carinaschoppe.skylife.utility.configuration.Configurations
@@ -70,6 +68,9 @@ class Skylife : JavaPlugin() {
         pluginManager.registerEvents(PlayerJoinsServerEvent(), this)
         pluginManager.registerEvents(PlayerDisconnectsServerEvent(), this)
         pluginManager.registerEvents(PlayerDeathEvent(), this)
+        pluginManager.registerEvents(PlayerChatsEvent(), this)
+        pluginManager.registerEvents(PlayerPlacesBlockEvent(), this)
+        pluginManager.registerEvents(PlayerBreaksBlockEvent(), this)
 
 
         //Create game_maps folder if
