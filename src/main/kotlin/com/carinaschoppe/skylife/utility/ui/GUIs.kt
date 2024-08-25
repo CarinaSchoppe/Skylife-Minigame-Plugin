@@ -11,10 +11,9 @@ object GUIs {
         val rows = 9
         val cols = 4
 
-        // Create a grid initialized with empty slots (null or any placeholder)
 
         // Sample list of items to place into the grid
-        val items = listOf("Item1", "Item2", "Item3", "Item4", "Item5", "Item6")
+        val items = listOf(Items.LEVEL_PADERBORN)
 
         var itemIndex = 0
 
@@ -24,11 +23,9 @@ object GUIs {
             val col = index % cols
 
             // Skip the first and last rows and columns
-            if (row in 1 until (rows - 1) && col in 1 until (cols - 1)) {
-                if (itemIndex < items.size) {
-                    map[Items.LEVEL_PADERBORN] = index
-                    itemIndex++
-                }
+            if (row in 1 until (rows - 1) && col in 1 until (cols - 1) && itemIndex < items.size) {
+                map[items[itemIndex]] = index
+                itemIndex++
             }
         }
 

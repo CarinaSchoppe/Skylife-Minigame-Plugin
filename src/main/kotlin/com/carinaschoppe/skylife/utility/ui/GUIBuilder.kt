@@ -25,7 +25,7 @@ class GUIBuilder(inventoryName: String, val size: Int) {
 
     fun fillerPanel(): GUIBuilder {
         for (i in 0 until size) {
-            if (inventory.getItem(i) != null)
+            if (inventory.getItem(i) == null)
                 setItem(i, Items.FILLER_PANEL)
         }
         return this
