@@ -2,8 +2,6 @@ package com.carinaschoppe.skylife.commands.admin
 
 import com.carinaschoppe.skylife.game.management.GameCluster
 import com.carinaschoppe.skylife.game.management.GameLocationManagement
-import com.carinaschoppe.skylife.utility.configuration.ConfigurationLoader
-import com.carinaschoppe.skylife.utility.configuration.Configurations
 import com.carinaschoppe.skylife.utility.messages.Messages
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -78,9 +76,8 @@ class SetLocationCommand : CommandExecutor {
                     sender.sendMessage(Messages.instance.ERROR_PERMISSION)
                     return false
                 }
-                Configurations.instance.mainLocation = GameLocationManagement.locationToSkylifeLocationConverter(sender.location)
+                game.gameLocationManagement.mainLocation = GameLocationManagement.locationToSkylifeLocationConverter(sender.location)
                 sender.sendMessage(Messages.instance.LOCATION_ADDED("main", game.mapName))
-                ConfigurationLoader.saveConfiguration()
             }
         }
         return false

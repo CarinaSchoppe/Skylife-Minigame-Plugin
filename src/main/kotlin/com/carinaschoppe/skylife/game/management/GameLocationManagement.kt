@@ -11,11 +11,12 @@ class GameLocationManagement {
 
 
     lateinit var spectatorLocation: SkylifeLocation
+    lateinit var mainLocation: SkylifeLocation
 
     val spawnLocations = mutableSetOf<SkylifeLocation>()
 
     fun gamePatternComplete(): Boolean {
-        return ::lobbyLocation.isInitialized and ::spectatorLocation.isInitialized and spawnLocations.isNotEmpty()
+        return ::lobbyLocation.isInitialized and ::spectatorLocation.isInitialized and spawnLocations.isNotEmpty() and ::mainLocation.isInitialized
     }
 
 

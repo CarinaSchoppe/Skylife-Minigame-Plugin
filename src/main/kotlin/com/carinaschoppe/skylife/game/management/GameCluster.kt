@@ -5,7 +5,6 @@ import com.carinaschoppe.skylife.game.management.gamestates.EndState
 import com.carinaschoppe.skylife.game.management.gamestates.GameStates
 import com.carinaschoppe.skylife.game.miscellaneous.MapLoader
 import com.carinaschoppe.skylife.game.miscellaneous.Utility
-import com.carinaschoppe.skylife.utility.configuration.Configurations
 import com.carinaschoppe.skylife.utility.messages.Messages.Companion.instance
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
@@ -98,7 +97,7 @@ object GameCluster {
         val game = lobbyGames.firstOrNull { it.livingPlayers.contains(player) } ?: activeGames.firstOrNull { it.livingPlayers.contains(player) } ?: return
         game.spectators.remove(player)
         game.livingPlayers.remove(player)
-        player.teleport(GameLocationManagement.skylifeLocationToLocationConverter(Configurations.instance.mainLocation))
+        player.teleport(GameLocationManagement.skylifeLocationToLocationConverter(game.gamePattern.gameLocationManagement.mainLocation))
         Bukkit.getOnlinePlayers().forEach {
             it.showPlayer(Skylife.instance, player)
             player.showPlayer(Skylife.instance, it)
