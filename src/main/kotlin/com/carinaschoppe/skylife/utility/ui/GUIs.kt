@@ -30,7 +30,7 @@ object GUIs {
             }
         }
 
-        return GUIBuilder(GameOverviewHolderFactory())
+        return GUIBuilder(GameOverviewHolderFactory().initInventory())
             .addItems(map)
             .fillerPanel()
             .build()
