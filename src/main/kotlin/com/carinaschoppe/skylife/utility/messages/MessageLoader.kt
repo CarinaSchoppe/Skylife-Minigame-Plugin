@@ -1,5 +1,6 @@
 package com.carinaschoppe.skylife.utility.messages
 
+import com.carinaschoppe.skylife.Skylife
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import net.kyori.adventure.text.Component
@@ -10,7 +11,7 @@ import java.io.File
 object MessageLoader {
 
     fun saveMessages() {
-        val file = File(Bukkit.getServer().pluginsFolder, "Skylife/messages.json")
+        val file = File(Bukkit.getServer().pluginsFolder, Skylife.folderLocation + "messages.json")
 
         if (!file.exists()) {
             file.createNewFile()
@@ -27,7 +28,7 @@ object MessageLoader {
     }
 
     fun loadMessages() {
-        val file = File(Bukkit.getServer().pluginsFolder, "Skylife/messages.json")
+        val file = File(Bukkit.getServer().pluginsFolder, Skylife.folderLocation + "messages.json")
 
 
         if (!file.exists()) {

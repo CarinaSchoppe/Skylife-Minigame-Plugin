@@ -39,7 +39,7 @@ class Skylife : JavaPlugin() {
 
     companion object {
         lateinit var instance: Skylife
-
+        val folderLocation = "/Skylife/"
     }
 
 

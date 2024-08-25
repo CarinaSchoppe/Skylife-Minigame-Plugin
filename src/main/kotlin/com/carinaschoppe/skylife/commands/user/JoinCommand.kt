@@ -39,8 +39,10 @@ class JoinCommand : CommandExecutor {
         } else {
             if (sender.hasPermission("skylife.join.map")) {
                 val mapName = args[0]
-                if (GameCluster.lobbyGames.any { it.gamePattern.mapName == mapName }) {
+                if (GameCluster.gamePatterns.any { it.mapName == mapName }) {
                     GameCluster.addPlayerToGame(sender, mapName)
+                } else {
+                    sender.sendMessage(Messages.instance.GAME_NOT_EXISTS(mapName))
                 }
             } else {
                 sender.sendMessage(Messages.instance.ERROR_PERMISSION)

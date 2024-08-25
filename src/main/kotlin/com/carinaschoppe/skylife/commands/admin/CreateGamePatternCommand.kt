@@ -46,7 +46,7 @@ class CreateGamePatternCommand : CommandExecutor {
                     return false
                 }
                 //create a new gamepattern
-                var pattern = GamePattern(name)
+                val pattern = GamePattern(name)
                 GameCluster.gamePatterns.add(pattern)
                 sender.sendMessage(Messages.instance.GAME_CREATED(name))
             }

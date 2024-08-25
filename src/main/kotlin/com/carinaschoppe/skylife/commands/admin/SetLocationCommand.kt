@@ -1,6 +1,7 @@
 package com.carinaschoppe.skylife.commands.admin
 
 import com.carinaschoppe.skylife.game.management.GameCluster
+import com.carinaschoppe.skylife.game.management.GameLocationManagement
 import com.carinaschoppe.skylife.utility.messages.Messages
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -48,8 +49,8 @@ class SetLocationCommand : CommandExecutor {
                     sender.sendMessage(Messages.instance.ERROR_PERMISSION)
                     return false
                 }
-                game.gameLocationManagement.lobbyLocation = sender.location
-                sender.sendMessage(Messages.instance.LOCATION_ADDED)
+                game.gameLocationManagement.lobbyLocation = GameLocationManagement.locationToSkylifeLocationConverter(sender.location)
+                sender.sendMessage(Messages.instance.LOCATION_ADDED("lobby", game.mapName))
             }
 
             "spawn" -> {
@@ -57,8 +58,8 @@ class SetLocationCommand : CommandExecutor {
                     sender.sendMessage(Messages.instance.ERROR_PERMISSION)
                     return false
                 }
-                game.gameLocationManagement.spawnLocations.add(sender.location)
-                sender.sendMessage(Messages.instance.LOCATION_ADDED)
+                game.gameLocationManagement.spawnLocations.add(GameLocationManagement.locationToSkylifeLocationConverter(sender.location))
+                sender.sendMessage(Messages.instance.LOCATION_ADDED("spawn", game.mapName, game.gameLocationManagement.spawnLocations.size))
             }
 
             "spectator" -> {
@@ -66,8 +67,8 @@ class SetLocationCommand : CommandExecutor {
                     sender.sendMessage(Messages.instance.ERROR_PERMISSION)
                     return false
                 }
-                game.gameLocationManagement.spectatorLocation = sender.location
-                sender.sendMessage(Messages.instance.LOCATION_ADDED)
+                game.gameLocationManagement.spectatorLocation = GameLocationManagement.locationToSkylifeLocationConverter(sender.location)
+                sender.sendMessage(Messages.instance.LOCATION_ADDED("spectator", game.mapName))
             }
         }
         return false

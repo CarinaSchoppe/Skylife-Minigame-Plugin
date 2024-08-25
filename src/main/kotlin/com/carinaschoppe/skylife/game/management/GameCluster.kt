@@ -28,6 +28,7 @@ object GameCluster {
         game.gamePattern = gamePatterns.first { it.mapName == mapName }
         MapLoader.loadGameWorld(game)
         lobbyGames.add(game)
+        Bukkit.getServer().consoleSender.sendMessage("Created Game: '${game.gamePattern.mapName}'")
         return game
     }
 
@@ -52,7 +53,7 @@ object GameCluster {
             game.currentState.start()
         }
         player.sendMessage(instance.PLAYER_JOINS_GAME(game.gamePattern.mapName))
-        player.teleport(Utility.locationWorldConverter(game.gamePattern.gameLocationManagement.lobbyLocation, game))
+        player.teleport(Utility.locationWorldConverter(GameLocationManagement.skylifeLocationToLocationConverter(game.gamePattern.gameLocationManagement.lobbyLocation), game))
 
 
         //message player joined

@@ -1,5 +1,6 @@
 package com.carinaschoppe.skylife.utility.configuration
 
+import com.carinaschoppe.skylife.Skylife
 import com.carinaschoppe.skylife.utility.messages.Messages
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -12,7 +13,7 @@ object ConfigurationLoader {
 
     fun saveConfiguration() {
 
-        val file = File(Bukkit.getServer().pluginsFolder, "Skylife/config.json")
+        val file = File(Bukkit.getServer().pluginsFolder, Skylife.folderLocation + "config.json")
 
         if (!file.exists()) {
             file.createNewFile()
@@ -27,7 +28,7 @@ object ConfigurationLoader {
     }
 
     fun loadConfiguration() {
-        val file = File(Bukkit.getServer().pluginsFolder, "Skylife/config.json")
+        val file = File(Bukkit.getServer().pluginsFolder, Skylife.folderLocation + "config.json")
 
         if (!file.exists()) {
             saveConfiguration()

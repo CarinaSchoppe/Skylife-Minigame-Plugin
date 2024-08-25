@@ -1,5 +1,6 @@
 package com.carinaschoppe.skylife.database
 
+import com.carinaschoppe.skylife.Skylife
 import com.carinaschoppe.skylife.utility.messages.Messages
 import com.carinaschoppe.skylife.utility.statistics.StatsPlayers
 import org.bukkit.Bukkit
@@ -13,7 +14,7 @@ object DatabaseConnector {
     lateinit var database: Database
 
     fun connectDatabase() {
-        val file = File(Bukkit.getServer().pluginsFolder, "Skylife/database.db")
+        val file = File(Bukkit.getServer().pluginsFolder, Skylife.folderLocation + "database.db")
         if (!file.exists()) {
             file.parentFile.mkdirs()
             file.createNewFile()

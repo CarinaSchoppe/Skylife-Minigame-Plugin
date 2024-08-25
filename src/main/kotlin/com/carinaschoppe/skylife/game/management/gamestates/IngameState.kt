@@ -2,6 +2,7 @@ package com.carinaschoppe.skylife.game.management.gamestates
 
 import com.carinaschoppe.skylife.Skylife
 import com.carinaschoppe.skylife.game.management.Game
+import com.carinaschoppe.skylife.game.management.GameLocationManagement
 import com.carinaschoppe.skylife.game.management.countdown.Countdown
 import com.carinaschoppe.skylife.game.management.countdown.IngameCountdown
 import com.carinaschoppe.skylife.game.management.countdown.ProtectionCountdown
@@ -31,7 +32,7 @@ class IngameState(game: Game) : GameState(game) {
         for (i in 0 until game.livingPlayers.size) {
             //Translate location
             game.livingPlayers[i].sendMessage(Messages.instance.TELEPORT)
-            game.livingPlayers[i].teleport(Utility.locationWorldConverter(locations[i], game))
+            game.livingPlayers[i].teleport(Utility.locationWorldConverter(GameLocationManagement.skylifeLocationToLocationConverter(locations[i]), game))
             StatsUtility.addStatsToPlayerWhenJoiningGame(game.livingPlayers[i])
             game.livingPlayers[i].sendMessage(Messages.instance.INGAME_START)
             game.livingPlayers[i].sendMessage(Messages.instance.MAP_NAME(game.gamePattern.mapName))
@@ -44,7 +45,7 @@ class IngameState(game: Game) : GameState(game) {
             it.sendMessage(Messages.instance.INGAME_START)
             it.sendMessage(Messages.instance.TELEPORT)
             it.sendMessage(Messages.instance.MAP_NAME(game.gamePattern.mapName))
-            it.teleport(Utility.locationWorldConverter(game.gamePattern.gameLocationManagement.spectatorLocation, game))
+            it.teleport(Utility.locationWorldConverter(GameLocationManagement.skylifeLocationToLocationConverter(game.gamePattern.gameLocationManagement.spectatorLocation), game))
         }
     }
 

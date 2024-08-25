@@ -59,8 +59,8 @@ class Messages {
         .append(Component.text(timer, NAME_COLOR, TextDecoration.BOLD))
         .append(Component.text(" seconds", MESSAGE_COLOR))
     }
-    val LOCATION_ADDED = fun(): Component {
-        return PREFIX.append(Component.text("Location added", MESSAGE_COLOR, TextDecoration.BOLD))
+    fun LOCATION_ADDED(type: String, gameName: String, amount: Int = -1): Component {
+        return PREFIX.append(Component.text("Location to game ", MESSAGE_COLOR, TextDecoration.BOLD).append(Component.text(gameName, NAME_COLOR, TextDecoration.BOLD)).append(Component.text(" and type ", MESSAGE_COLOR, TextDecoration.BOLD)).append(Component.text(type, NAME_COLOR, TextDecoration.BOLD)).append(Component.text(" has been added", MESSAGE_COLOR, TextDecoration.BOLD)).append(if (amount != -1) Component.text(" Amount: ", MESSAGE_COLOR, TextDecoration.BOLD).append(Component.text(amount, NAME_COLOR, TextDecoration.BOLD)) else Component.empty()))
     }
     val PLAYER_JOINS_SERVER = fun(playerName: String): Component {
         return PREFIX.append(Component.text("Welcome ", MESSAGE_COLOR, TextDecoration.BOLD))
@@ -110,6 +110,12 @@ class Messages {
         return PREFIX.append(Component.text("Players online: ", MESSAGE_COLOR, TextDecoration.BOLD))
         .append(Component.text(playerCount, NAME_COLOR, TextDecoration.BOLD))
     }
+
+    val GAME_NOT_EXISTS = fun(gameName: String): Component {
+        return PREFIX.append(Component.text("ERROR: The Game: ", ERROR_COLOR, TextDecoration.BOLD))
+            .append(Component.text(gameName, NAME_COLOR, TextDecoration.BOLD)).append(Component.text(" does not exist", ERROR_COLOR, TextDecoration.BOLD))
+    }
+
     val PLAYERS_REMAINING = fun(playerCount: Int): Component {
         return PREFIX.append(Component.text("Players remaining: ", MESSAGE_COLOR, TextDecoration.BOLD))
         .append(Component.text(playerCount, NAME_COLOR, TextDecoration.BOLD))
