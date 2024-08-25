@@ -99,6 +99,11 @@ class Messages {
             .append(Component.text("you left the game!", MESSAGE_COLOR))
     }
 
+    val NOT_INGAME = fun(): Component {
+        return PREFIX
+            .append(Component.text("ERROR: you must be in a game!", ERROR_COLOR))
+    }
+
     val ALLREADY_IN_GAME = fun(): Component {
         return PREFIX
             .append(Component.text("ERROR: You are allready in a game!", ERROR_COLOR))

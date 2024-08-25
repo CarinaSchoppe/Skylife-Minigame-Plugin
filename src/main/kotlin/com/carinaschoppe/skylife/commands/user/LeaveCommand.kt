@@ -17,6 +17,11 @@ class LeaveCommand : CommandExecutor {
             return false
         }
 
+        if (!(GameCluster.lobbyGames.any { game -> game.livingPlayers.contains(sender) or game.spectators.contains(sender) } or GameCluster.activeGames.any { game -> game.livingPlayers.contains(sender) or game.spectators.contains(sender) })) {
+            sender.sendMessage(instance.NOT_INGAME)
+            return false
+        }
+
         if (!sender.hasPermission("skylife.leave")) {
             sender.sendMessage(instance.ERROR_PERMISSION)
             return false
