@@ -27,7 +27,6 @@ class EndCountdown(game: Game) : Countdown(game, Configurations.instance.END_TIM
                 60, 45, 30, 15 -> {
                     message()
                 }
-
                 in 1..10 -> {
                     message()
                 }

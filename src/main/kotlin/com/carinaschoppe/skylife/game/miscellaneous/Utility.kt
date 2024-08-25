@@ -13,9 +13,6 @@ import java.io.File
 object Utility {
 
 
-    lateinit var mainLocation: Location
-
-
     //TODO: Kits
     val playerKits = mutableMapOf<Player, Kit>()
 

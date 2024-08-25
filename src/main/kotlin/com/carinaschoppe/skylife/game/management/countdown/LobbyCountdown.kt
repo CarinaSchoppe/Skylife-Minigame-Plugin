@@ -23,7 +23,7 @@ class LobbyCountdown(game: Game) : Countdown(game, Configurations.instance.LOBBY
             }
             when (duration) {
                 60, 30, 15, 10 -> message()
-                in 9..1 -> message()
+                in 1..9 -> message()
                 0 -> stop()
             }
             duration--

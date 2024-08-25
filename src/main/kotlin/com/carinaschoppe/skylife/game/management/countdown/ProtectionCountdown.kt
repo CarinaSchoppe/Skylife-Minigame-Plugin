@@ -17,14 +17,12 @@ class ProtectionCountdown(game: Game) : Countdown(game, Configurations.instance.
 
     override fun start() {
         countdown = Bukkit.getScheduler().runTaskTimer(Skylife.instance, Runnable {
-
             if (game.currentState !is IngameState) {
                 stop()
             }
-
             duration--
             when (duration) {
-                in 10..1 -> message()
+                in 1..10 -> message()
                 0 -> stop()
             }
         }, 0, 20)
