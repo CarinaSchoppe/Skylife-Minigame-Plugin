@@ -2,6 +2,7 @@ package com.carinaschoppe.skylife.game.management.gamestates
 
 import com.carinaschoppe.skylife.Skylife
 import com.carinaschoppe.skylife.game.management.Game
+import com.carinaschoppe.skylife.game.management.GameCluster
 import com.carinaschoppe.skylife.game.management.GameLocationManagement
 import com.carinaschoppe.skylife.game.management.countdown.Countdown
 import com.carinaschoppe.skylife.game.management.countdown.IngameCountdown
@@ -15,10 +16,14 @@ class IngameState(game: Game) : GameState(game) {
 
 
     override val countdown: Countdown = IngameCountdown(game)
-    val protectionCountdown: Countdown = ProtectionCountdown(game)
+    private val protectionCountdown: Countdown = ProtectionCountdown(game)
 
     override fun start() {
         game.currentState = this
+
+        GameCluster.lobbyGames.remove(game)
+        GameCluster.activeGames.add(game)
+
         countdown.start()
         protectionCountdown.start()
 

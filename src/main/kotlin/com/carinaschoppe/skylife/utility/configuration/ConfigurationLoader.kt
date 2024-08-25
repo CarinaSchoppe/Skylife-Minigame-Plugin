@@ -23,7 +23,7 @@ object ConfigurationLoader {
 
         val json: String = gson.toJson(Configurations.instance)
         file.writeText(json)
-        Bukkit.getServer().sendMessage(Messages.instance.PREFIX.append(Component.text("Configuration saved!", Messages.instance.MESSAGE_COLOR)))
+        Bukkit.getServer().consoleSender.sendMessage(Messages.instance.PREFIX.append(Component.text("Configuration saved!", Messages.instance.MESSAGE_COLOR)))
 
     }
 
@@ -40,7 +40,7 @@ object ConfigurationLoader {
         val config: Configurations = gson.fromJson(json, Configurations::class.java)
 
         Configurations.instance = config
-        Bukkit.getServer().sendMessage(Messages.instance.PREFIX.append(Component.text("Configuration loaded!", Messages.instance.MESSAGE_COLOR)))
+        Bukkit.getServer().consoleSender.sendMessage(Messages.instance.PREFIX.append(Component.text("Configuration loaded!", Messages.instance.MESSAGE_COLOR)))
     }
 
 

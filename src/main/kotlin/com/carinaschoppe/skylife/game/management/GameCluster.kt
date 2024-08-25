@@ -51,9 +51,10 @@ object GameCluster {
             game.currentState.start()
         }
         player.sendMessage(instance.PLAYER_JOINS_GAME(game.gamePattern.mapName))
+
+        Bukkit.getServer().consoleSender.sendMessage(Utility.locationWorldConverter(GameLocationManagement.skylifeLocationToLocationConverter(game.gamePattern.gameLocationManagement.lobbyLocation), game).toString())
+
         player.teleport(Utility.locationWorldConverter(GameLocationManagement.skylifeLocationToLocationConverter(game.gamePattern.gameLocationManagement.lobbyLocation), game))
-
-
         //message player joined
 
         game.livingPlayers.forEach {
@@ -111,7 +112,7 @@ object GameCluster {
             return
         }
 
-        player.sendMessage(instance.OWN_PLAYER_LEFT)
+
 
         game.livingPlayers.forEach {
             it.sendMessage(instance.PLAYER_LEFT(player.name))
