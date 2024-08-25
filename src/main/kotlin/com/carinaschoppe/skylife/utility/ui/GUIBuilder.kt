@@ -1,10 +1,10 @@
 package com.carinaschoppe.skylife.utility.ui
 
-import com.carinaschoppe.skylife.utility.ui.inventoryholders.InventoryHolder
+import com.carinaschoppe.skylife.utility.ui.inventoryholders.InventoryHolderFactory
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
-class GUIBuilder(val holder: InventoryHolder) {
+class GUIBuilder(val holder: InventoryHolderFactory) {
 
 
     fun build(): Inventory {
@@ -22,7 +22,7 @@ class GUIBuilder(val holder: InventoryHolder) {
     }
 
     fun fillerPanel(): GUIBuilder {
-        for (i in 0 until holder.inventory.size) {
+        for (i in 0 until holder.internalInventory.size) {
             if (holder.inventory.getItem(i) == null)
                 setItem(i, Items.FILLER_PANEL)
         }

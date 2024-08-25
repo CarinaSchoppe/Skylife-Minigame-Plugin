@@ -1,6 +1,6 @@
 package com.carinaschoppe.skylife.utility.ui
 
-import com.carinaschoppe.skylife.utility.ui.inventoryholders.GameOverviewHolder
+import com.carinaschoppe.skylife.utility.ui.inventoryholders.GameOverviewHolderFactory
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
@@ -30,7 +30,7 @@ object GUIs {
             }
         }
 
-        return GUIBuilder(GameOverviewHolder())
+        return GUIBuilder(GameOverviewHolderFactory())
             .addItems(map)
             .fillerPanel()
             .build()
