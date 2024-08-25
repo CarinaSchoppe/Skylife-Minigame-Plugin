@@ -25,7 +25,6 @@ object StatsUtility {
         transaction {
             val statsPlayer = statsPlayers.first { it.uuid == player.uniqueId.toString() }
         if (GameCluster.activeGames.any { it.livingPlayers.contains(player) && it.currentState is IngameState }) {
-
                 statsPlayer.deaths
             }
         }

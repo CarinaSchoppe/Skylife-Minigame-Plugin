@@ -2,7 +2,7 @@ package com.carinaschoppe.skylife.game.miscellaneous
 
 import com.carinaschoppe.skylife.game.management.Game
 import com.carinaschoppe.skylife.game.management.gamestates.IngameState
-import com.carinaschoppe.skylife.game.skills.Kit
+import com.carinaschoppe.skylife.game.skills.SkillInterface
 import com.carinaschoppe.skylife.utility.messages.Messages
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -14,7 +14,7 @@ object Utility {
 
 
     //TODO: Kits
-    val playerKits = mutableMapOf<Player, Kit>()
+    val playerKits = mutableMapOf<Player, SkillInterface>()
 
     //TODO: items
     val chestItems = mutableSetOf<ItemStack>()
