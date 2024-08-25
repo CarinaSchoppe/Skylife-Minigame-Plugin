@@ -73,6 +73,7 @@ class Skylife : JavaPlugin() {
         pluginManager.registerEvents(PlayerBreaksBlockEvent(), this)
         pluginManager.registerEvents(PlayerMovesIntoGameEvent(), this)
         pluginManager.registerEvents(PlayerDamagesEvent(), this)
+        pluginManager.registerEvents(PlayerSelectGameEvent(), this)
 
 
         //Create game_maps folder if

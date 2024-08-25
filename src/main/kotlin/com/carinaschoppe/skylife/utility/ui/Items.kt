@@ -9,5 +9,5 @@ object Items {
 
     val FILLER_PANEL: ItemStack = ItemBuilder(Material.GLASS_PANE).addName("").addEnchantment(Enchantment.LOYALTY, 1).build()
 
-    val LEVEL_PADERBORN: ItemStack = ItemBuilder(Material.IRON_SHOVEL).addName("Paderborn").addLore("Minilevel fast Rounds").build()
+    val LEVEL_PADERBORN: ItemStack = ItemBuilder(Material.IRON_SHOVEL).addName("test").addLore("Minilevel fast Rounds").build()
 }

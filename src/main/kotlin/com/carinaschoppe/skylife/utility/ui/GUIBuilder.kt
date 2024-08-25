@@ -31,4 +31,9 @@ class GUIBuilder(inventoryName: String, val size: Int) {
         return this
     }
 
+    fun addItems(items: Map<ItemStack, Int>): GUIBuilder {
+        items.forEach { item, slot -> setItem(slot, item) }
+        return this
+    }
+
 }
