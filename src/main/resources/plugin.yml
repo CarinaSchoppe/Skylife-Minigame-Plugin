@@ -26,3 +26,6 @@ commands:
   stats:
       description: Shows the stats of a player or of yourself
       aliases: [ stat ]
+  overview:
+    description: Shows an inventory with a list of games to play
+    aliases: [ ov, games ]

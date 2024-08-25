@@ -3,10 +3,7 @@ package com.carinaschoppe.skylife
 import com.carinaschoppe.skylife.commands.admin.CreateGamePatternCommand
 import com.carinaschoppe.skylife.commands.admin.PlayerAmountCommand
 import com.carinaschoppe.skylife.commands.admin.SetLocationCommand
-import com.carinaschoppe.skylife.commands.user.JoinCommand
-import com.carinaschoppe.skylife.commands.user.LeaveCommand
-import com.carinaschoppe.skylife.commands.user.StartCommand
-import com.carinaschoppe.skylife.commands.user.StatsCommand
+import com.carinaschoppe.skylife.commands.user.*
 import com.carinaschoppe.skylife.database.DatabaseConnector
 import com.carinaschoppe.skylife.events.player.*
 import com.carinaschoppe.skylife.game.miscellaneous.GameLoader
@@ -64,6 +61,7 @@ class Skylife : JavaPlugin() {
         getCommand("playeramount")?.setExecutor(PlayerAmountCommand())
         getCommand("leave")?.setExecutor(LeaveCommand())
         getCommand("stats")?.setExecutor(StatsCommand())
+        getCommand("overview")?.setExecutor(GameOverviewCommand())
 
         pluginManager.registerEvents(PlayerJoinsServerEvent(), this)
         pluginManager.registerEvents(PlayerDisconnectsServerEvent(), this)
