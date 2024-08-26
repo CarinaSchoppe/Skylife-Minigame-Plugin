@@ -98,6 +98,9 @@ object GameCluster {
         val game = lobbyGames.firstOrNull { it.livingPlayers.contains(player) } ?: activeGames.firstOrNull { it.livingPlayers.contains(player) } ?: return
         game.spectators.remove(player)
         game.livingPlayers.remove(player)
+        player.allowFlight = false
+        player.clearActivePotionEffects()
+        player.gameMode = GameMode.ADVENTURE
         player.teleport(GameLocationManagement.skylifeLocationToLocationConverter(game.gamePattern.gameLocationManagement.mainLocation))
         Bukkit.getOnlinePlayers().forEach {
             it.showPlayer(Skylife.instance, player)

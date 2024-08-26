@@ -9,7 +9,6 @@ class PlayerDisconnectsServerEvent : Listener {
     @EventHandler(ignoreCancelled = true)
     fun onPlayerQuit(event: PlayerQuitEvent) {
         event.player.performCommand("leave")
-
         event.quitMessage(null)
     }
 

@@ -7,6 +7,7 @@ import com.carinaschoppe.skylife.game.miscellaneous.Utility
 import com.carinaschoppe.skylife.utility.messages.Messages
 import com.carinaschoppe.skylife.utility.statistics.StatsUtility
 import org.bukkit.Bukkit
+import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -29,6 +30,7 @@ class PlayerDeathEvent : Listener {
         //respawn player
         Bukkit.getScheduler().runTaskLater(Skylife.instance, Runnable {
             event.player.spigot().respawn()
+            event.player.gameMode = GameMode.SPECTATOR
             event.player.teleport(Utility.locationWorldConverter(GameLocationManagement.skylifeLocationToLocationConverter(game.gamePattern.gameLocationManagement.spectatorLocation), game))
         }, 1L)
 
