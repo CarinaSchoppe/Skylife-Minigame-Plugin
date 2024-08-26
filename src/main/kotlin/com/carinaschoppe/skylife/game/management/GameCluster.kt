@@ -7,6 +7,7 @@ import com.carinaschoppe.skylife.game.miscellaneous.MapLoader
 import com.carinaschoppe.skylife.game.miscellaneous.Utility
 import com.carinaschoppe.skylife.utility.messages.Messages.Companion.instance
 import org.bukkit.Bukkit
+import org.bukkit.GameMode
 import org.bukkit.entity.Player
 
 object GameCluster {
@@ -43,7 +44,8 @@ object GameCluster {
 
     private fun addPlayerToGame(player: Player, game: Game) {
         //TODO: mehr hier?
-
+        player.gameMode = GameMode.SURVIVAL
+        player.allowFlight = false
         game.livingPlayers.add(player)
         if (!game.gameStateInitialized() && game.livingPlayers.size >= game.gamePattern.minPlayers) {
             game.currentState = game.gameStats[GameStates.LOBBY_STATE.id]
@@ -57,6 +59,7 @@ object GameCluster {
         //message player joined
 
         game.livingPlayers.forEach {
+            it.showPlayer(Skylife.instance, player)
             it.sendMessage(instance.PLAYER_JOINED(player.name, game.livingPlayers.size, game.gamePattern.maxPlayers))
             if (!game.gameStateInitialized() && game.livingPlayers.size < game.gamePattern.minPlayers) {
                 //missing players
@@ -66,16 +69,13 @@ object GameCluster {
 
         game.spectators.forEach {
             it.sendMessage(instance.PLAYER_JOINED(player.name, game.livingPlayers.size, game.gamePattern.maxPlayers))
+            it.showPlayer(Skylife.instance, player)
             player.hidePlayer(Skylife.instance, it)
             if (!game.gameStateInitialized() && game.livingPlayers.size < game.gamePattern.minPlayers) {
                 //missing players
                 it.sendMessage(instance.PLAYER_MISSING(game.livingPlayers.size, game.gamePattern.minPlayers))
             }
         }
-
-
-
-
 
 
     }
