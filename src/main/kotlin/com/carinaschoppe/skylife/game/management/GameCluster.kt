@@ -46,6 +46,7 @@ object GameCluster {
         //TODO: mehr hier?
         player.gameMode = GameMode.SURVIVAL
         player.allowFlight = false
+        player.clearActivePotionEffects()
         game.livingPlayers.add(player)
         if (!game.gameStateInitialized() && game.livingPlayers.size >= game.gamePattern.minPlayers) {
             game.currentState = game.gameStats[GameStates.LOBBY_STATE.id]

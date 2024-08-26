@@ -64,6 +64,7 @@ class Skylife : JavaPlugin() {
         getCommand("overview")?.setExecutor(GameOverviewCommand())
 
         pluginManager.registerEvents(PlayerJoinsServerEvent(), this)
+        pluginManager.registerEvents(PlayerLoosesSaturationEvent(), this)
         pluginManager.registerEvents(PlayerDisconnectsServerEvent(), this)
         pluginManager.registerEvents(PlayerDeathEvent(), this)
         pluginManager.registerEvents(PlayerChatsEvent(), this)
