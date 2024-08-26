@@ -13,7 +13,7 @@ commands:
     aliases: [ ]
   leave:
     description: Leave the current game and go back to the lobby
-    aliases: [ l, hub, spawn, lobby ]
+    aliases: [ l, hub, spawn, lobby, back ]
   playeramount:
     description: Capable of setting the required amount of players for a game
     aliases: [ pm ]
