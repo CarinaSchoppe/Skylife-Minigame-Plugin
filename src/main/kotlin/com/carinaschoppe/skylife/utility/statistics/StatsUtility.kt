@@ -1,7 +1,7 @@
 package com.carinaschoppe.skylife.utility.statistics
 
-import com.carinaschoppe.skylife.game.management.GameCluster
-import com.carinaschoppe.skylife.game.management.gamestates.IngameState
+import com.carinaschoppe.skylife.game.GameCluster
+import com.carinaschoppe.skylife.game.gamestates.IngameState
 import com.carinaschoppe.skylife.utility.messages.Messages
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
@@ -15,16 +15,20 @@ object StatsUtility {
         transaction {
             statsPlayers.addAll(StatsPlayer.all())
         }
-
         Bukkit.getServer().consoleSender.sendMessage(Messages.instance.PREFIX.append(Component.text("Stats loaded!", Messages.instance.MESSAGE_COLOR)))
+    }
 
+    fun loadStatsPlayerWhenFirstJoin(player: Player) {
+        transaction {
+            statsPlayers.add(StatsPlayer[player.uniqueId.toString()])
+        }
     }
 
     fun addStatsToPlayerWhenLeave(player: Player) {
         //get player from Database
         transaction {
             val statsPlayer = statsPlayers.first { it.uuid == player.uniqueId.toString() }
-        if (GameCluster.activeGames.any { it.livingPlayers.contains(player) && it.currentState is IngameState }) {
+            if (GameCluster.activeGames.any { it.livingPlayers.contains(player) && it.currentState is IngameState }) {
                 statsPlayer.deaths
             }
         }
@@ -62,13 +66,13 @@ object StatsUtility {
         //add stats
         transaction {
             val statsPlayer: StatsPlayer = statsPlayers.firstOrNull { it.uuid == player.uniqueId.toString() } ?: StatsPlayer.new {
-            uuid = player.uniqueId.toString()
-            kills = 0
-            name = player.name
-            deaths = 0
-            wins = 0
-            games = 0
-        }
+                uuid = player.uniqueId.toString()
+                kills = 0
+                name = player.name
+                deaths = 0
+                wins = 0
+                games = 0
+            }
 
             statsPlayers.add(statsPlayer)
 

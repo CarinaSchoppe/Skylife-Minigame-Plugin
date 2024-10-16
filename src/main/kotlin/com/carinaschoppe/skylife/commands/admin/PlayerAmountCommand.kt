@@ -1,6 +1,6 @@
 package com.carinaschoppe.skylife.commands.admin
 
-import com.carinaschoppe.skylife.game.management.GameCluster
+import com.carinaschoppe.skylife.game.GameCluster
 import com.carinaschoppe.skylife.utility.messages.Messages
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor

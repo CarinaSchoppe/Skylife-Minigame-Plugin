@@ -6,11 +6,11 @@ import com.carinaschoppe.skylife.commands.admin.SetLocationCommand
 import com.carinaschoppe.skylife.commands.user.*
 import com.carinaschoppe.skylife.database.DatabaseConnector
 import com.carinaschoppe.skylife.events.player.*
-import com.carinaschoppe.skylife.game.miscellaneous.GameLoader
+import com.carinaschoppe.skylife.events.skills.SlowFallBootsSkillListener
+import com.carinaschoppe.skylife.game.GameLoader
 import com.carinaschoppe.skylife.utility.configuration.ConfigurationLoader
 import com.carinaschoppe.skylife.utility.configuration.Configurations
 import com.carinaschoppe.skylife.utility.messages.Messages
-import com.carinaschoppe.skylife.utility.statistics.StatsUtility
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.plugin.PluginManager
@@ -20,16 +20,15 @@ import java.io.File
 class Skylife : JavaPlugin() {
 
 
-    //TODO: messages
     //TODO: events
-    //TODO: party
+    //TODO: party (maybe)
     //TODO: scoreboard
-    //TODO: statistics (kill, death)
+    //TODO: statistics (kill, death) (done maybe)
     //TODO: Skills
     //TODO: Items
-    //TODO: testing
+    //TODO: testing (later)
     //TODO: GUIs
-    //Config files
+    //TODO: Config files with postgreSQL
 
 
     companion object {
@@ -52,7 +51,6 @@ class Skylife : JavaPlugin() {
         ConfigurationLoader.loadConfiguration()
 
         DatabaseConnector.connectDatabase()
-        StatsUtility.loadAllPlayersIntoStatsPlayer()
         GameLoader.findAllGames().forEach { GameLoader.loadGameFromFile(it) }
         getCommand("join")?.setExecutor(JoinCommand())
         getCommand("start")?.setExecutor(StartCommand())
@@ -62,18 +60,20 @@ class Skylife : JavaPlugin() {
         getCommand("leave")?.setExecutor(LeaveCommand())
         getCommand("stats")?.setExecutor(StatsCommand())
         getCommand("overview")?.setExecutor(GameOverviewCommand())
+        getCommand("skills")?.setExecutor(SkillsCommand())
 
-        pluginManager.registerEvents(PlayerJoinsServerEvent(), this)
-        pluginManager.registerEvents(PlayerLoosesSaturationEvent(), this)
-        pluginManager.registerEvents(PlayerDisconnectsServerEvent(), this)
-        pluginManager.registerEvents(PlayerDeathEvent(), this)
-        pluginManager.registerEvents(PlayerChatsEvent(), this)
-        pluginManager.registerEvents(PlayerPlacesBlockEvent(), this)
-        pluginManager.registerEvents(PlayerBreaksBlockEvent(), this)
-        pluginManager.registerEvents(PlayerMovesIntoGameEvent(), this)
-        pluginManager.registerEvents(PlayerDamagesEvent(), this)
-        pluginManager.registerEvents(PlayerSelectGameEvent(), this)
+        pluginManager.registerEvents(PlayerJoinsServerListener(), this)
+        pluginManager.registerEvents(PlayerLoosesSaturationListener(), this)
+        pluginManager.registerEvents(PlayerDisconnectsServerListener(), this)
+        pluginManager.registerEvents(PlayerDeathListener(), this)
+        pluginManager.registerEvents(PlayerChatsListener(), this)
+        pluginManager.registerEvents(PlayerPlacesBlockListener(), this)
+        pluginManager.registerEvents(PlayerBreaksBlockListener(), this)
+        pluginManager.registerEvents(PlayerMovesIntoGameListener(), this)
+        pluginManager.registerEvents(PlayerDamagesListener(), this)
+        pluginManager.registerEvents(PlayerSelectGameListener(), this)
 
+        addSkillListeners(pluginManager)
 
         //Create game_maps folder if
         val folder = File(Bukkit.getServer().worldContainer, "game_maps")
@@ -82,6 +82,10 @@ class Skylife : JavaPlugin() {
             folder.mkdir()
         }
 
+    }
+
+    private fun addSkillListeners(pluginManager: PluginManager) {
+        pluginManager.registerEvents(SlowFallBootsSkillListener(), this)
     }
 
 

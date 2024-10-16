@@ -1,8 +1,8 @@
 package com.carinaschoppe.skylife.commands.user
 
-import com.carinaschoppe.skylife.game.management.Game
-import com.carinaschoppe.skylife.game.management.GameCluster
-import com.carinaschoppe.skylife.game.management.countdown.LobbyCountdown
+import com.carinaschoppe.skylife.game.Game
+import com.carinaschoppe.skylife.game.GameCluster
+import com.carinaschoppe.skylife.game.countdown.LobbyCountdown
 import com.carinaschoppe.skylife.utility.messages.Messages
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor

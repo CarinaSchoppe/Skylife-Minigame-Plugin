@@ -1,8 +1,8 @@
 package com.carinaschoppe.skylife.commands.admin
 
-import com.carinaschoppe.skylife.game.management.GameCluster
-import com.carinaschoppe.skylife.game.management.GamePattern
-import com.carinaschoppe.skylife.game.miscellaneous.GameLoader
+import com.carinaschoppe.skylife.game.GameCluster
+import com.carinaschoppe.skylife.game.GameLoader
+import com.carinaschoppe.skylife.game.GamePattern
 import com.carinaschoppe.skylife.utility.messages.Messages
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -61,7 +61,7 @@ class CreateGamePatternCommand : CommandExecutor {
 
                     val game = GameCluster.gamePatterns.first { it.mapName == name }
 
-                    if (!game.gameLocationManagement.gamePatternComplete()) {
+                    if (!game.gameLocationManager.gamePatternComplete()) {
                         sender.sendMessage(Messages.instance.GAME_PATTERN_NOT_FULLY_DONE(game.mapName))
                         return false
                     }

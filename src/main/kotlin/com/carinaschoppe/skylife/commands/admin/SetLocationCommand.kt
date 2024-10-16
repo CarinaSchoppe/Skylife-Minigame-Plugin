@@ -1,7 +1,7 @@
 package com.carinaschoppe.skylife.commands.admin
 
-import com.carinaschoppe.skylife.game.management.GameCluster
-import com.carinaschoppe.skylife.game.management.GameLocationManagement
+import com.carinaschoppe.skylife.game.GameCluster
+import com.carinaschoppe.skylife.game.managers.GameLocationManager
 import com.carinaschoppe.skylife.utility.messages.Messages
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -49,7 +49,7 @@ class SetLocationCommand : CommandExecutor {
                     sender.sendMessage(Messages.instance.ERROR_PERMISSION)
                     return false
                 }
-                game.gameLocationManagement.lobbyLocation = GameLocationManagement.locationToSkylifeLocationConverter(sender.location)
+                game.gameLocationManager.lobbyLocation = GameLocationManager.locationToSkylifeLocationConverter(sender.location)
                 sender.sendMessage(Messages.instance.LOCATION_ADDED("lobby", game.mapName))
             }
 
@@ -58,8 +58,8 @@ class SetLocationCommand : CommandExecutor {
                     sender.sendMessage(Messages.instance.ERROR_PERMISSION)
                     return false
                 }
-                game.gameLocationManagement.spawnLocations.add(GameLocationManagement.locationToSkylifeLocationConverter(sender.location))
-                sender.sendMessage(Messages.instance.LOCATION_ADDED("spawn", game.mapName, game.gameLocationManagement.spawnLocations.size))
+                game.gameLocationManager.spawnLocations.add(GameLocationManager.locationToSkylifeLocationConverter(sender.location))
+                sender.sendMessage(Messages.instance.LOCATION_ADDED("spawn", game.mapName, game.gameLocationManager.spawnLocations.size))
             }
 
             "spectator" -> {
@@ -67,7 +67,7 @@ class SetLocationCommand : CommandExecutor {
                     sender.sendMessage(Messages.instance.ERROR_PERMISSION)
                     return false
                 }
-                game.gameLocationManagement.spectatorLocation = GameLocationManagement.locationToSkylifeLocationConverter(sender.location)
+                game.gameLocationManager.spectatorLocation = GameLocationManager.locationToSkylifeLocationConverter(sender.location)
                 sender.sendMessage(Messages.instance.LOCATION_ADDED("spectator", game.mapName))
             }
 
@@ -76,7 +76,7 @@ class SetLocationCommand : CommandExecutor {
                     sender.sendMessage(Messages.instance.ERROR_PERMISSION)
                     return false
                 }
-                game.gameLocationManagement.mainLocation = GameLocationManagement.locationToSkylifeLocationConverter(sender.location)
+                game.gameLocationManager.mainLocation = GameLocationManager.locationToSkylifeLocationConverter(sender.location)
                 sender.sendMessage(Messages.instance.LOCATION_ADDED("main", game.mapName))
             }
         }
