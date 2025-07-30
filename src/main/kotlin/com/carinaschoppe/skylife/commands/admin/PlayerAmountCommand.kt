@@ -8,14 +8,14 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 class PlayerAmountCommand : CommandExecutor {
-    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
+    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (command.label != "playeramount") return false
         if (sender !is Player) {
             sender.sendMessage(Messages.instance.ERROR_NOTPLAYER)
             return false
         }
 
-        if (args == null) {
+        if (args.isEmpty()) {
             sender.sendMessage(Messages.instance.ERROR_ARGUMENT)
             return false
         }

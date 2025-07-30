@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.carinaschoppe"
-version = "1.0-SNAPSHOT"
+version = "1.1"
 description = "Skylife is a Skywars Main-System Plugin used for a remake of Smash and Skywars"
 
 repositories {
@@ -28,7 +28,7 @@ dependencies {
 
     implementation("com.google.code.gson:gson:+")
     testImplementation(kotlin("test"))
-    compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.+")
     implementation(kotlin("stdlib"))
 }
 
@@ -59,10 +59,10 @@ tasks {
     }
 
     runServer {
-        minecraftVersion("1.21.1")
+        minecraftVersion("1.21.8")
     }
 }
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(24))
 }

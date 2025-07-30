@@ -9,7 +9,7 @@ import org.bukkit.entity.Player
 
 class SkillsCommand : CommandExecutor {
 
-    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
+    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (command.label != "skills") return false
         if (sender !is Player) {
             sender.sendMessage(Messages.instance.ERROR_NOTPLAYER)

@@ -6,7 +6,7 @@ import com.carinaschoppe.skylife.utility.messages.Messages
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
 object StatsUtility {
 
