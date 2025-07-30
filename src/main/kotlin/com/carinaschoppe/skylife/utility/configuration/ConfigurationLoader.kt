@@ -15,6 +15,12 @@ object ConfigurationLoader {
 
         val file = File(Bukkit.getServer().pluginsFolder, Skylife.folderLocation + "config.json")
 
+        //check if path exists if not create and than check for file
+
+        if (!file.parentFile.exists()) {
+            file.parentFile.mkdirs()
+        }
+
         if (!file.exists()) {
             file.createNewFile()
         }
