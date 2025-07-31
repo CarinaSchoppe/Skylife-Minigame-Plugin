@@ -8,17 +8,17 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
-class StatsCommand : CommandExecutor {
+class PlayersStatsCommand : CommandExecutor {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (command.label != "stats") return false
 
         if (sender !is Player) {
-            sender.sendMessage(Messages.instance.ERROR_NOTPLAYER)
+            sender.sendMessage(Messages.ERROR_NOTPLAYER)
             return false
         }
 
         if (!sender.hasPermission("skylife.stats")) {
-            sender.sendMessage(Messages.instance.ERROR_PERMISSION)
+            sender.sendMessage(Messages.ERROR_PERMISSION)
             return false
         }
 
@@ -26,11 +26,11 @@ class StatsCommand : CommandExecutor {
             //show own stats
             transaction {
                 val statsPlayer = StatsUtility.statsPlayers.first { it.uuid == sender.player?.uniqueId.toString() }
-                sender.sendMessage(Messages.instance.STATS(true, statsPlayer.kills, statsPlayer.deaths, statsPlayer.wins, statsPlayer.games, statsPlayer.name))
+                sender.sendMessage(Messages.STATS(true, statsPlayer.kills, statsPlayer.deaths, statsPlayer.wins, statsPlayer.games, statsPlayer.name))
             }
          } else if (args.size == 1) {
 
-            sender.sendMessage(Messages.instance.ERROR_ARGUMENT)
+            sender.sendMessage(Messages.ERROR_ARGUMENT)
             return false
         }
         val player = args?.get(0)
@@ -40,9 +40,9 @@ class StatsCommand : CommandExecutor {
                 if (statsPlayer == null) {
                     return@transaction
                 }
-                sender.sendMessage(Messages.instance.STATS(false, statsPlayer.kills, statsPlayer.deaths, statsPlayer.wins, statsPlayer.games, statsPlayer.name))
+                sender.sendMessage(Messages.STATS(false, statsPlayer.kills, statsPlayer.deaths, statsPlayer.wins, statsPlayer.games, statsPlayer.name))
             } catch (e: Exception) {
-                sender.sendMessage(Messages.instance.ERROR_PLAYER_NOT_FOUND())
+                sender.sendMessage(Messages.ERROR_PLAYER_NOT_FOUND())
                 return@transaction
             }
         }

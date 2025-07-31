@@ -41,22 +41,22 @@ class PlayerDeathListener : Listener {
         if (event.damageSource.causingEntity is Player) {
             val killer = event.damageSource.causingEntity as Player
             game.livingPlayers.forEach {
-                it.sendMessage(Messages.instance.PLAYER_KILLED(event.player.name, killer.name))
-                it.sendMessage(Messages.instance.PLAYERS_REMAINING(game.livingPlayers.size))
+                it.sendMessage(Messages.PLAYER_KILLED(event.player.name, killer.name))
+                it.sendMessage(Messages.PLAYERS_REMAINING(game.livingPlayers.size))
             }
             game.spectators.forEach {
-                it.sendMessage(Messages.instance.PLAYER_KILLED(event.player.name, killer.name))
-                it.sendMessage(Messages.instance.PLAYERS_REMAINING(game.livingPlayers.size))
+                it.sendMessage(Messages.PLAYER_KILLED(event.player.name, killer.name))
+                it.sendMessage(Messages.PLAYERS_REMAINING(game.livingPlayers.size))
             }
             StatsUtility.addKillStatsToPlayer(killer)
         } else {
             game.livingPlayers.forEach {
-                it.sendMessage(Messages.instance.PLAYER_DIED(event.player.name))
-                it.sendMessage(Messages.instance.PLAYERS_REMAINING(game.livingPlayers.size))
+                it.sendMessage(Messages.PLAYER_DIED(event.player.name))
+                it.sendMessage(Messages.PLAYERS_REMAINING(game.livingPlayers.size))
             }
             game.spectators.forEach {
-                it.sendMessage(Messages.instance.PLAYER_DIED(event.player.name))
-                it.sendMessage(Messages.instance.PLAYERS_REMAINING(game.livingPlayers.size))
+                it.sendMessage(Messages.PLAYER_DIED(event.player.name))
+                it.sendMessage(Messages.PLAYERS_REMAINING(game.livingPlayers.size))
             }
 
         }

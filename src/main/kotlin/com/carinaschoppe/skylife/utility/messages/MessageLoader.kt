@@ -21,12 +21,14 @@ object MessageLoader {
             .registerTypeAdapter(Component::class.java, ComponentTypeAdapter(MiniMessage.miniMessage()))
             .create()
 
-        val json: String = gson.toJson(Messages.instance)
+        val json: String = gson.toJson(Messages)
         file.writeText(json)
-        Bukkit.getServer().sendMessage(Messages.instance.PREFIX.append(Component.text("Messages saved!", Messages.instance.MESSAGE_COLOR)))
+        Bukkit.getServer().sendMessage(Messages.PREFIX.append(Component.text("Messages saved!", Messages.MESSAGE_COLOR)))
 
     }
 
+
+    //TODO: Why not in use
     fun loadMessages() {
         val file = File(Bukkit.getServer().pluginsFolder, Skylife.folderLocation + "messages.json")
 
@@ -43,10 +45,8 @@ object MessageLoader {
         val json: String = file.readText()
         val messages: Messages = gson.fromJson(json, Messages::class.java)
 
-        Messages.instance = messages
 
-
-        Bukkit.getServer().sendMessage(Messages.instance.PREFIX.append(Component.text("Messages loaded!", Messages.instance.MESSAGE_COLOR)))
+        Bukkit.getServer().sendMessage(Messages.PREFIX.append(Component.text("Messages loaded!", Messages.MESSAGE_COLOR)))
     }
 
 }

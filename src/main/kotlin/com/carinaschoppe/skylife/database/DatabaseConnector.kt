@@ -23,11 +23,11 @@ object DatabaseConnector {
 
         val url = "jdbc:sqlite:${file.absolutePath}"
         database = Database.connect(url)
-        Bukkit.getServer().sendMessage(Messages.instance.DATABASE_CONNECTED)
+        Bukkit.getServer().sendMessage(Messages.DATABASE_CONNECTED)
         transaction {
             SchemaUtils.create(StatsPlayers)
         }
-        Bukkit.getServer().sendMessage(Messages.instance.DATABASE_TABLES_CREATED)
+        Bukkit.getServer().sendMessage(Messages.DATABASE_TABLES_CREATED)
 
     }
 

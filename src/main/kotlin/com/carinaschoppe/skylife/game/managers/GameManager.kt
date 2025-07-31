@@ -25,13 +25,13 @@ object GameManager {
     fun endingMatchMessage(game: Game) {
         game.livingPlayers.forEach {
             if (game.livingPlayers.size == 1)
-                it.sendMessage(Messages.Companion.instance.PLAYER_WON(game.livingPlayers[0].name))
-            it.sendMessage(Messages.Companion.instance.GAME_OVER())
+                it.sendMessage(Messages.PLAYER_WON(game.livingPlayers[0].name))
+            it.sendMessage(Messages.GAME_OVER())
         }
         game.spectators.forEach {
             if (game.livingPlayers.size == 1)
-                it.sendMessage(Messages.Companion.instance.PLAYER_WON(game.livingPlayers[0].name))
-            it.sendMessage(Messages.Companion.instance.GAME_OVER())
+                it.sendMessage(Messages.PLAYER_WON(game.livingPlayers[0].name))
+            it.sendMessage(Messages.GAME_OVER())
         }
 
 

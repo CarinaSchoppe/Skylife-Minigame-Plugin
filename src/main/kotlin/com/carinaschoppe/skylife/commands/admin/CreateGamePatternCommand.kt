@@ -13,20 +13,20 @@ class CreateGamePatternCommand : CommandExecutor {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (command.label != "game") return false
         if (sender !is Player) {
-            sender.sendMessage(Messages.instance.ERROR_NOTPLAYER)
+            sender.sendMessage(Messages.ERROR_NOTPLAYER)
             return false
         }
 
 
 
         if (args.isEmpty()) {
-            sender.sendMessage(Messages.instance.ERROR_ARGUMENT)
+            sender.sendMessage(Messages.ERROR_ARGUMENT)
             return false
         }
 
 
         if (args.size != 2) {
-            sender.sendMessage(Messages.instance.ERROR_ARGUMENT)
+            sender.sendMessage(Messages.ERROR_ARGUMENT)
             return false
         }
 
@@ -38,22 +38,22 @@ class CreateGamePatternCommand : CommandExecutor {
         when (type) {
             "create" -> {
                 if (!sender.hasPermission("skylife.create")) {
-                    sender.sendMessage(Messages.instance.ERROR_PERMISSION)
+                    sender.sendMessage(Messages.ERROR_PERMISSION)
                     return false
                 }
                 if (GameCluster.gamePatterns.any { it.mapName == name }) {
-                    sender.sendMessage(Messages.instance.ERROR_PATTERN)
+                    sender.sendMessage(Messages.ERROR_PATTERN)
                     return false
                 }
                 //create a new gamepattern
                 val pattern = GamePattern(name)
                 GameCluster.gamePatterns.add(pattern)
-                sender.sendMessage(Messages.instance.GAME_CREATED(name))
+                sender.sendMessage(Messages.GAME_CREATED(name))
             }
 
             "save" -> {
                 if (!sender.hasPermission("skylife.save")) {
-                    sender.sendMessage(Messages.instance.ERROR_PERMISSION)
+                    sender.sendMessage(Messages.ERROR_PERMISSION)
                     return false
                 }
                 //check if any pattern with that name exists
@@ -62,18 +62,18 @@ class CreateGamePatternCommand : CommandExecutor {
                     val game = GameCluster.gamePatterns.first { it.mapName == name }
 
                     if (!game.gameLocationManager.gamePatternComplete()) {
-                        sender.sendMessage(Messages.instance.GAME_PATTERN_NOT_FULLY_DONE(game.mapName))
+                        sender.sendMessage(Messages.GAME_PATTERN_NOT_FULLY_DONE(game.mapName))
                         return false
                     }
 
                     GameLoader.saveGameToFile(game)
-                    sender.sendMessage(Messages.instance.GAME_SAVED)
+                    sender.sendMessage(Messages.GAME_SAVED)
                 }
             }
 
             "delete" -> {
                 if (!sender.hasPermission("skylife.delete")) {
-                    sender.sendMessage(Messages.instance.ERROR_PERMISSION)
+                    sender.sendMessage(Messages.ERROR_PERMISSION)
                     return false
                 }
                 //check if any pattern with that name exists
@@ -82,7 +82,7 @@ class CreateGamePatternCommand : CommandExecutor {
                     val game = GameCluster.gamePatterns.first { it.mapName == name }
                     GameCluster.gamePatterns.remove(game)
                     GameLoader.deleteGameFile(game)
-                    sender.sendMessage(Messages.instance.GAME_DELETED)
+                    sender.sendMessage(Messages.GAME_DELETED)
                 }
             }
         }

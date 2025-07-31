@@ -27,9 +27,9 @@ object ConfigurationLoader {
 
         val gson: Gson = GsonBuilder().setPrettyPrinting().create()
 
-        val json: String = gson.toJson(Configurations.instance)
+        val json: String = gson.toJson(Timer.instance)
         file.writeText(json)
-        Bukkit.getServer().consoleSender.sendMessage(Messages.instance.PREFIX.append(Component.text("Configuration saved!", Messages.instance.MESSAGE_COLOR)))
+        Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text("Configuration saved!", Messages.MESSAGE_COLOR)))
 
     }
 
@@ -43,10 +43,10 @@ object ConfigurationLoader {
         val gson: Gson = GsonBuilder().setPrettyPrinting().create()
 
         val json: String = file.readText()
-        val config: Configurations = gson.fromJson(json, Configurations::class.java)
+        val config: Timer = gson.fromJson(json, Timer::class.java)
 
-        Configurations.instance = config
-        Bukkit.getServer().consoleSender.sendMessage(Messages.instance.PREFIX.append(Component.text("Configuration loaded!", Messages.instance.MESSAGE_COLOR)))
+        Timer.instance = config
+        Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text("Configuration loaded!", Messages.MESSAGE_COLOR)))
     }
 
 

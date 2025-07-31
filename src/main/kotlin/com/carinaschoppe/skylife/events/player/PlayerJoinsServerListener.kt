@@ -14,7 +14,7 @@ class PlayerJoinsServerListener : Listener {
         event.joinMessage(null)
         StatsUtility.addStatsPlayerWhenFirstJoin(event.player)
         event.player.gameMode = GameMode.ADVENTURE
-        event.player.sendMessage(Messages.instance.PLAYER_JOINS_SERVER(event.player.name))
+        event.player.sendMessage(Messages.PLAYER_JOINS_SERVER(event.player.name))
         if (StatsUtility.statsPlayers.find { it.uuid == event.player.uniqueId.toString() } == null) {
             StatsUtility.addStatsPlayerWhenFirstJoin(event.player)
         }

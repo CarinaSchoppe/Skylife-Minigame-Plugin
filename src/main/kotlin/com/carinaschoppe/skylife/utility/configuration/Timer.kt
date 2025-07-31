@@ -1,9 +1,9 @@
 package com.carinaschoppe.skylife.utility.configuration
 
-class Configurations {
+class Timer {
 
     companion object {
-        lateinit var instance: Configurations
+        lateinit var instance: Timer
 
     }
 

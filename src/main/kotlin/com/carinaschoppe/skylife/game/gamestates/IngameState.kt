@@ -37,20 +37,20 @@ class IngameState(game: Game) : GameState(game) {
 
         for (i in 0 until game.livingPlayers.size) {
             //Translate location
-            game.livingPlayers[i].sendMessage(Messages.instance.TELEPORT)
+            game.livingPlayers[i].sendMessage(Messages.TELEPORT)
             game.livingPlayers[i].teleport(MapManager.locationWorldConverter(GameLocationManager.skylifeLocationToLocationConverter(locations[i]), game))
             StatsUtility.addStatsToPlayerWhenJoiningGame(game.livingPlayers[i])
-            game.livingPlayers[i].sendMessage(Messages.instance.INGAME_START)
-            game.livingPlayers[i].sendMessage(Messages.instance.MAP_NAME(game.gamePattern.mapName))
-            game.livingPlayers[i].sendMessage(Messages.instance.TELEPORT)
+            game.livingPlayers[i].sendMessage(Messages.INGAME_START)
+            game.livingPlayers[i].sendMessage(Messages.MAP_NAME(game.gamePattern.mapName))
+            game.livingPlayers[i].sendMessage(Messages.TELEPORT)
 
             //TODO add Kit functionality
         }
 
         game.spectators.forEach {
-            it.sendMessage(Messages.instance.INGAME_START)
-            it.sendMessage(Messages.instance.TELEPORT)
-            it.sendMessage(Messages.instance.MAP_NAME(game.gamePattern.mapName))
+            it.sendMessage(Messages.INGAME_START)
+            it.sendMessage(Messages.TELEPORT)
+            it.sendMessage(Messages.MAP_NAME(game.gamePattern.mapName))
             it.teleport(MapManager.locationWorldConverter(GameLocationManager.skylifeLocationToLocationConverter(game.gamePattern.gameLocationManager.spectatorLocation), game))
         }
 

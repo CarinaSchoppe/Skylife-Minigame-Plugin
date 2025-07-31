@@ -26,12 +26,12 @@ class PlayerDamagesListener : Listener {
         if (event.damager is Player) {
             val game = GameCluster.lobbyGames.firstOrNull { it.livingPlayers.contains(event.damager) or it.spectators.contains(event.damager) } ?: GameCluster.activeGames.firstOrNull { it.livingPlayers.contains(event.damager) or it.spectators.contains(event.damager) } ?: run {
                 event.isCancelled = true
-                event.damager.sendMessage(Messages.instance.CANT_DAMAGE)
+                event.damager.sendMessage(Messages.CANT_DAMAGE)
                 return
             }
 
             if (game.currentState !is IngameState) {
-                event.damager.sendMessage(Messages.instance.CANT_DAMAGE)
+                event.damager.sendMessage(Messages.CANT_DAMAGE)
                 event.isCancelled = true
                 return
             }

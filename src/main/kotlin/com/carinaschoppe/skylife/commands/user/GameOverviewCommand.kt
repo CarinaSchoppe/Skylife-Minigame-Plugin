@@ -1,6 +1,6 @@
 package com.carinaschoppe.skylife.commands.user
 
-import com.carinaschoppe.skylife.utility.messages.Messages.Companion.instance
+import com.carinaschoppe.skylife.utility.messages.Messages
 import com.carinaschoppe.skylife.utility.ui.GUIs
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -12,12 +12,12 @@ class GameOverviewCommand : CommandExecutor {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (command.label != "overview") return false
         if (sender !is Player) {
-            sender.sendMessage(instance.ERROR_NOTPLAYER)
+            sender.sendMessage(Messages.ERROR_NOTPLAYER)
             return false
         }
 
         if (!sender.hasPermission("skylife.overview")) {
-            sender.sendMessage(instance.ERROR_PERMISSION)
+            sender.sendMessage(Messages.ERROR_PERMISSION)
             return false
         }
 

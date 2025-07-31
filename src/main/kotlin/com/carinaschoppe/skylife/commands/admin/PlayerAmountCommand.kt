@@ -11,18 +11,18 @@ class PlayerAmountCommand : CommandExecutor {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (command.label != "playeramount") return false
         if (sender !is Player) {
-            sender.sendMessage(Messages.instance.ERROR_NOTPLAYER)
+            sender.sendMessage(Messages.ERROR_NOTPLAYER)
             return false
         }
 
         if (args.isEmpty()) {
-            sender.sendMessage(Messages.instance.ERROR_ARGUMENT)
+            sender.sendMessage(Messages.ERROR_ARGUMENT)
             return false
         }
 
 
         if (args.size != 3) {
-            sender.sendMessage(Messages.instance.ERROR_ARGUMENT)
+            sender.sendMessage(Messages.ERROR_ARGUMENT)
             return false
         }
 
@@ -31,7 +31,7 @@ class PlayerAmountCommand : CommandExecutor {
             GameCluster.gamePatterns.first { it.mapName == args[0] }
         } catch (e: Exception) {
 
-            sender.sendMessage(Messages.instance.ERROR_COMMAND)
+            sender.sendMessage(Messages.ERROR_COMMAND)
             return false
         }
         val type = args[1]
@@ -40,19 +40,19 @@ class PlayerAmountCommand : CommandExecutor {
 
         if (type == "min") {
             if (!sender.hasPermission("skylife.playeramount.min")) {
-                sender.sendMessage(Messages.instance.ERROR_PERMISSION)
+                sender.sendMessage(Messages.ERROR_PERMISSION)
                 return false
             }
             game.minPlayers = amount
-            sender.sendMessage(Messages.instance.PLAYER_AMOUNT_SET)
+            sender.sendMessage(Messages.PLAYER_AMOUNT_SET)
         } else if (type == "max") {
 
             if (!sender.hasPermission("skylife.playeramount.min")) {
-                sender.sendMessage(Messages.instance.ERROR_PERMISSION)
+                sender.sendMessage(Messages.ERROR_PERMISSION)
                 return false
             }
             game.maxPlayers = amount
-            sender.sendMessage(Messages.instance.PLAYER_AMOUNT_SET)
+            sender.sendMessage(Messages.PLAYER_AMOUNT_SET)
         }
 
 

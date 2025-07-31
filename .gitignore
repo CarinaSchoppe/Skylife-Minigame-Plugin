@@ -15,7 +15,6 @@ atlassian-ide-plugin.xml
 
 # Compiled class file
 *.class
-
 # Log file
 *.log
 
@@ -920,4 +919,3 @@ MigrationBackup/
 # Editor-based Rest Client
 
 # Android studio 3.1+ serialized cache file
-

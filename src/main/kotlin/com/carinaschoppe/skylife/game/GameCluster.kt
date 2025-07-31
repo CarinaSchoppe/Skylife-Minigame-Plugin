@@ -6,7 +6,8 @@ import com.carinaschoppe.skylife.game.gamestates.GameStates
 import com.carinaschoppe.skylife.game.managers.GameLocationManager
 import com.carinaschoppe.skylife.game.managers.GameManager
 import com.carinaschoppe.skylife.game.managers.MapManager
-import com.carinaschoppe.skylife.utility.messages.Messages.Companion.instance
+import com.carinaschoppe.skylife.utility.messages.Messages
+
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.entity.Player
@@ -53,7 +54,7 @@ object GameCluster {
             game.currentState = game.gameStats[GameStates.LOBBY_STATE.id]
             game.currentState.start()
         }
-        player.sendMessage(instance.PLAYER_JOINS_GAME(game.gamePattern.mapName))
+        player.sendMessage(Messages.PLAYER_JOINS_GAME(game.gamePattern.mapName))
 
         Bukkit.getServer().consoleSender.sendMessage(MapManager.locationWorldConverter(GameLocationManager.Companion.skylifeLocationToLocationConverter(game.gamePattern.gameLocationManager.lobbyLocation), game).toString())
 
@@ -62,20 +63,20 @@ object GameCluster {
 
         game.livingPlayers.forEach {
             it.showPlayer(Skylife.instance, player)
-            it.sendMessage(instance.PLAYER_JOINED(player.name, game.livingPlayers.size, game.gamePattern.maxPlayers))
+            it.sendMessage(Messages.PLAYER_JOINED(player.name, game.livingPlayers.size, game.gamePattern.maxPlayers))
             if (!game.gameStateInitialized() && game.livingPlayers.size < game.gamePattern.minPlayers) {
                 //missing players
-                it.sendMessage(instance.PLAYER_MISSING(game.livingPlayers.size, game.gamePattern.minPlayers))
+                it.sendMessage(Messages.PLAYER_MISSING(game.livingPlayers.size, game.gamePattern.minPlayers))
             }
         }
 
         game.spectators.forEach {
-            it.sendMessage(instance.PLAYER_JOINED(player.name, game.livingPlayers.size, game.gamePattern.maxPlayers))
+            it.sendMessage(Messages.PLAYER_JOINED(player.name, game.livingPlayers.size, game.gamePattern.maxPlayers))
             it.showPlayer(Skylife.instance, player)
             player.hidePlayer(Skylife.instance, it)
             if (!game.gameStateInitialized() && game.livingPlayers.size < game.gamePattern.minPlayers) {
                 //missing players
-                it.sendMessage(instance.PLAYER_MISSING(game.livingPlayers.size, game.gamePattern.minPlayers))
+                it.sendMessage(Messages.PLAYER_MISSING(game.livingPlayers.size, game.gamePattern.minPlayers))
             }
         }
 
@@ -119,11 +120,11 @@ object GameCluster {
 
 
         game.livingPlayers.forEach {
-            it.sendMessage(instance.PLAYER_LEFT(player.name))
+            it.sendMessage(Messages.PLAYER_LEFT(player.name))
         }
 
         game.spectators.forEach {
-            it.sendMessage(instance.PLAYER_LEFT(player.name))
+            it.sendMessage(Messages.PLAYER_LEFT(player.name))
         }
 
     }

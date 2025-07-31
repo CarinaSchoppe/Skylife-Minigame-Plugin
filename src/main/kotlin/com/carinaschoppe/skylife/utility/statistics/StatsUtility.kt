@@ -15,7 +15,7 @@ object StatsUtility {
         transaction {
             statsPlayers.addAll(StatsPlayer.all())
         }
-        Bukkit.getServer().consoleSender.sendMessage(Messages.instance.PREFIX.append(Component.text("Stats loaded!", Messages.instance.MESSAGE_COLOR)))
+        Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text("Stats loaded!", Messages.MESSAGE_COLOR)))
     }
 
     fun loadStatsPlayerWhenFirstJoin(player: Player) {

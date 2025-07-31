@@ -14,7 +14,7 @@ class PlayerPlacesBlockListener : Listener {
     fun onBlockPlace(event: BlockPlaceEvent) {
         if (GameCluster.lobbyGames.any { game -> game.livingPlayers.contains(event.player) or game.spectators.contains(event.player) } or GameCluster.activeGames.any { game -> game.livingPlayers.contains(event.player) or game.spectators.contains(event.player) }) {
             event.isCancelled = true
-            event.player.sendMessage(Messages.instance.CANT_PLACE_BLOCK)
+            event.player.sendMessage(Messages.CANT_PLACE_BLOCK)
             return
         }
         val game = GameCluster.lobbyGames.firstOrNull { it.livingPlayers.contains(event.player) or it.spectators.contains(event.player) } ?: GameCluster.activeGames.firstOrNull { it.livingPlayers.contains(event.player) or it.spectators.contains(event.player) } ?: run {
@@ -22,7 +22,7 @@ class PlayerPlacesBlockListener : Listener {
         }
 
         if (game.currentState !is IngameState) {
-            event.player.sendMessage(Messages.instance.CANT_PLACE_BLOCK)
+            event.player.sendMessage(Messages.CANT_PLACE_BLOCK)
             event.isCancelled = true
             return
         }

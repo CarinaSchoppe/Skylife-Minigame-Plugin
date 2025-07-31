@@ -4,11 +4,9 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
 
-class Messages {
+object Messages {
 
-    companion object {
-        lateinit var instance: Messages
-    }
+
 
     val NAME_COLOR: NamedTextColor = NamedTextColor.GOLD
     val MESSAGE_COLOR: NamedTextColor = NamedTextColor.GREEN
@@ -209,4 +207,3 @@ class Messages {
         return PREFIX.append(Component.text("ERROR: the Game ", ERROR_COLOR, TextDecoration.BOLD).append(Component.text(gameName, NAME_COLOR, TextDecoration.BOLD)).append(Component.text(" is not fully instantiated", ERROR_COLOR, TextDecoration.BOLD)))
     }
 }
-

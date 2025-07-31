@@ -17,7 +17,7 @@ object GameLoader {
         val json = file.readText()
         val gamePattern = gson.fromJson(json, GamePattern::class.java)
         GameCluster.gamePatterns.add(gamePattern)
-        Bukkit.getServer().consoleSender.sendMessage(Messages.instance.PREFIX.append(Component.text("The Game: '", Messages.instance.MESSAGE_COLOR)).append(Component.text(gamePattern.mapName, Messages.instance.NAME_COLOR)).append(Component.text("' has been loaded!", Messages.instance.MESSAGE_COLOR)))
+        Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text("The Game: '", Messages.MESSAGE_COLOR)).append(Component.text(gamePattern.mapName, Messages.NAME_COLOR)).append(Component.text("' has been loaded!", Messages.MESSAGE_COLOR)))
     }
 
 
