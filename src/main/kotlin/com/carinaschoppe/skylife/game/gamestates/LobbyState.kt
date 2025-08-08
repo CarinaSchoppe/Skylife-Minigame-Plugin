@@ -54,6 +54,7 @@ class LobbyState(private val game: Game) : GameState {
         if (game.livingPlayers.size >= game.minPlayers && !countdown.isRunning) {
             countdown.start()
         }
+        //TODO: here
         // Notify all players about the new player joining with current player count
         val joinMessage = Messages.PLAYER_JOINED(
             playerName = player.name,

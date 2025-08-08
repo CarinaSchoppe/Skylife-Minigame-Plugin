@@ -10,8 +10,9 @@ import com.carinaschoppe.skylife.events.player.*
 import com.carinaschoppe.skylife.game.GameLoader
 import com.carinaschoppe.skylife.game.kit.KitManager
 import com.carinaschoppe.skylife.utility.configuration.ConfigurationLoader
-import com.carinaschoppe.skylife.utility.configuration.Timer
 import com.carinaschoppe.skylife.utility.messages.Messages
+import com.carinaschoppe.skylife.utility.statistics.StatsUtility
+import com.carinaschoppe.skylife.utility.timer.Timer
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.plugin.PluginManager
@@ -42,7 +43,10 @@ class Skylife : JavaPlugin() {
         // Plugin startup logic
         instance = this
         Timer.instance = Timer()
-     
+
+        // Load all player stats into cache
+        StatsUtility.loadAllPlayersIntoStatsPlayer()
+        
         initialize(Bukkit.getPluginManager())
         Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text("Skylife has been started!", Messages.MESSAGE_COLOR)))
     }
