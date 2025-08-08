@@ -2,6 +2,7 @@ package com.carinaschoppe.skylife.game
 
 import com.carinaschoppe.skylife.game.gamestates.GameState
 import com.carinaschoppe.skylife.game.gamestates.LobbyState
+import com.carinaschoppe.skylife.game.managers.MapManager
 import net.kyori.adventure.text.Component
 import org.bukkit.Location
 import org.bukkit.entity.Player
@@ -90,6 +91,8 @@ class Game(
      * current state implementation.
      */
     fun start() {
+        // Load the game world before starting the state
+        MapManager.loadGameWorld(this)
         currentState.start()
     }
 
@@ -101,7 +104,12 @@ class Game(
      * restarted by calling [start] again.
      */
     fun stop() {
-        currentState.stop()
+        try {
+            currentState.stop()
+        } finally {
+            // Always attempt to unload the world, even if stop() throws an exception
+            MapManager.unloadWorld(this)
+        }
     }
 
     /**

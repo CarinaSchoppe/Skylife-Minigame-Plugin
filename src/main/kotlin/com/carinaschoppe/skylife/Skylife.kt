@@ -10,9 +10,9 @@ import com.carinaschoppe.skylife.events.player.*
 import com.carinaschoppe.skylife.game.GameLoader
 import com.carinaschoppe.skylife.game.kit.KitManager
 import com.carinaschoppe.skylife.utility.configuration.ConfigurationLoader
+import com.carinaschoppe.skylife.utility.messages.MessageLoader
 import com.carinaschoppe.skylife.utility.messages.Messages
 import com.carinaschoppe.skylife.utility.statistics.StatsUtility
-import com.carinaschoppe.skylife.utility.timer.Timer
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.plugin.PluginManager
@@ -42,8 +42,10 @@ class Skylife : JavaPlugin() {
     override fun onEnable() {
         // Plugin startup logic
         instance = this
-        Timer.instance = Timer()
 
+        // Load custom messages
+        MessageLoader.loadMessages()
+        
         // Load all player stats into cache
         StatsUtility.loadAllPlayersIntoStatsPlayer()
         
