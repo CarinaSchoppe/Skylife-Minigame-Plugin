@@ -7,60 +7,72 @@ import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
+/**
+ * Handles the command for a player to join a game.
+ * Players can join a specific game by map name or a random available game.
+ *
+ * Command Usage:
+ * - `/join` - Joins a random game.
+ * - `/join random` - Joins a random game.
+ * - `/join <mapName>` - Joins a game with the specified map name.
+ */
 class JoinGameCommand : CommandExecutor {
+
+    /**
+     * Executes the join game command.
+     *
+     * @param sender The entity who sent the command.
+     * @param command The command that was executed.
+     * @param label The alias of the command used.
+     * @param args The arguments provided with the command.
+     * @return `true` if the command was handled successfully, `false` otherwise.
+     */
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
-        if (command.label != "join") return false
+        if (!command.label.equals("join", ignoreCase = true)) return false
+
         if (sender !is Player) {
             sender.sendMessage(Messages.ERROR_NOTPLAYER)
-            return false
+            return true
         }
 
-
-        //Check if player is allready in a game
-        if (GameCluster.lobbyGames.any { game -> game.livingPlayers.contains(sender) or game.spectators.contains(sender) } or GameCluster.activeGames.any { game -> game.livingPlayers.contains(sender) or game.spectators.contains(sender) }) {
+        if (GameCluster.getGame(sender) != null) {
             sender.sendMessage(Messages.ALLREADY_IN_GAME)
-            return false
+            return true
         }
-
 
         if (!sender.hasPermission("skylife.join")) {
             sender.sendMessage(Messages.ERROR_PERMISSION)
-            return false
+            return true
         }
-        if (args.isEmpty()) {
-            //Create args and add "random" to it
-            if (sender.hasPermission("skylife.join.random"))
-                GameCluster.addPlayerToRandomGame(sender)
-            return false
-        }
-        if (args.size != 1) {
+
+        if (args.size > 1) {
             sender.sendMessage(Messages.ERROR_ARGUMENT)
-            return false
+            return true
         }
-        if (args[0] == "random") {
-            if (sender.hasPermission("skylife.join.random"))
-                GameCluster.addPlayerToRandomGame(sender)
-            else {
-                sender.sendMessage(Messages.ERROR_PERMISSION)
 
+        // Determine if joining a random game or a specific one
+        val mapToJoin = args.firstOrNull()
+
+        if (mapToJoin == null || mapToJoin.equals("random", ignoreCase = true)) {
+            // Join a random game
+            if (!sender.hasPermission("skylife.join.random")) {
+                sender.sendMessage(Messages.ERROR_PERMISSION)
+                return true
             }
+            GameCluster.addPlayerToRandomGame(sender)
         } else {
-            if (sender.hasPermission("skylife.join.map")) {
-                val mapName = args[0]
-                if (GameCluster.gamePatterns.any { it.mapName == mapName }) {
-                    GameCluster.addPlayerToGame(sender, mapName)
-                } else {
-                    sender.sendMessage(Messages.GAME_NOT_EXISTS(mapName))
-                }
-            } else {
+            // Join a specific game by map name
+            if (!sender.hasPermission("skylife.join.map")) {
                 sender.sendMessage(Messages.ERROR_PERMISSION)
+                return true
+            }
+            if (GameCluster.gamePatterns.any { it.mapName.equals(mapToJoin, ignoreCase = true) }) {
+                GameCluster.addPlayerToGame(sender, mapToJoin)
+            } else {
+                sender.sendMessage(Messages.GAME_NOT_EXISTS(mapToJoin))
             }
         }
 
-        return false
+        return true
     }
-
-
-    //fun addStatsToPlayer
-
 }

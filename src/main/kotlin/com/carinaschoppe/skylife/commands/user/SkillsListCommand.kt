@@ -7,23 +7,38 @@ import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
+/**
+ * Handles the command to open the kit/skill selection GUI.
+ *
+ * Command Usage:
+ * - `/skills`
+ */
 class SkillsListCommand : CommandExecutor {
 
+    /**
+     * Executes the skills list command.
+     *
+     * @param sender The entity who sent the command.
+     * @param command The command that was executed.
+     * @param label The alias of the command used.
+     * @param args The arguments provided with the command.
+     * @return `true` if the command was handled successfully, `false` otherwise.
+     */
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
-        if (command.label != "skills") return false
+        if (!command.label.equals("skills", ignoreCase = true)) return false
+
         if (sender !is Player) {
             sender.sendMessage(Messages.ERROR_NOTPLAYER)
-            return false
+            return true
         }
+
         if (!sender.hasPermission("skylife.skills")) {
             sender.sendMessage(Messages.ERROR_PERMISSION)
-            return false
+            return true
         }
 
         sender.openInventory(GUIs.SKILL_SELECT_INVENTORY())
 
-        return false
+        return true
     }
-
-
 }

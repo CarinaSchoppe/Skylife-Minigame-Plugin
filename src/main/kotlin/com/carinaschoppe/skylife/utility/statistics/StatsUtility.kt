@@ -1,7 +1,7 @@
 package com.carinaschoppe.skylife.utility.statistics
 
 import com.carinaschoppe.skylife.game.GameCluster
-import com.carinaschoppe.skylife.game.gamestates.IngameState
+import com.carinaschoppe.skylife.game.gamestates.GameState
 import com.carinaschoppe.skylife.utility.messages.Messages
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
@@ -28,8 +28,11 @@ object StatsUtility {
         //get player from Database
         transaction {
             val statsPlayer = statsPlayers.first { it.uuid == player.uniqueId.toString() }
-            if (GameCluster.activeGames.any { it.livingPlayers.contains(player) && it.currentState is IngameState }) {
-                statsPlayer.deaths
+            val wasInActiveGame = GameCluster.activeGamesList.any { game ->
+                game.livingPlayers.contains(player) && game.state == GameState.States.INGAME
+            }
+            if (wasInActiveGame) {
+                statsPlayer.deaths++
             }
         }
     }
@@ -40,6 +43,7 @@ object StatsUtility {
             val statsPlayer = statsPlayers.first { it.uuid == player.uniqueId.toString() }
 
             statsPlayer.wins++
+            statsPlayer.points += 10
 
         }
     }
@@ -58,6 +62,7 @@ object StatsUtility {
             val statsPlayer = statsPlayers.first { it.uuid == player.uniqueId.toString() }
 
             statsPlayer.kills++
+            statsPlayer.points += 1
 
         }
     }
@@ -72,6 +77,7 @@ object StatsUtility {
                 deaths = 0
                 wins = 0
                 games = 0
+                points = 0
             }
 
             statsPlayers.add(statsPlayer)
@@ -85,6 +91,14 @@ object StatsUtility {
         transaction {
             statsPlayer.games++
         }
+    }
+
+    fun getPlayerRank(player: Player): Int {
+        val sortedStats = transaction {
+            StatsPlayer.all().sortedByDescending { it.points }
+        }
+        val rank = sortedStats.indexOfFirst { it.uuid == player.uniqueId.toString() } + 1
+        return if (rank > 0) rank else sortedStats.size + 1
     }
 
     val statsPlayers = mutableSetOf<StatsPlayer>()

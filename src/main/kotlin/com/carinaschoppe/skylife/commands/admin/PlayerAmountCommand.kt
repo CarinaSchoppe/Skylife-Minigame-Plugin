@@ -7,55 +7,75 @@ import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
+/**
+ * Handles the command to set the minimum and maximum player amounts for a game pattern.
+ *
+ * Command Usage:
+ * - `/playeramount <mapName> <min|max> <amount>`
+ */
 class PlayerAmountCommand : CommandExecutor {
+
+    /**
+     * Executes the player amount setting command.
+     *
+     * @param sender The entity who sent the command.
+     * @param command The command that was executed.
+     * @param label The alias of the command used.
+     * @param args The arguments provided with the command.
+     * @return `true` if the command was handled successfully, `false` otherwise.
+     */
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
-        if (command.label != "playeramount") return false
+        if (!command.label.equals("playeramount", ignoreCase = true)) return false
+
         if (sender !is Player) {
             sender.sendMessage(Messages.ERROR_NOTPLAYER)
-            return false
+            return true
         }
-
-        if (args.isEmpty()) {
-            sender.sendMessage(Messages.ERROR_ARGUMENT)
-            return false
-        }
-
 
         if (args.size != 3) {
             sender.sendMessage(Messages.ERROR_ARGUMENT)
-            return false
+            return true
         }
 
+        val mapName = args[0]
+        val type = args[1].lowercase()
+        val amount = args[2].toIntOrNull()
 
-        val game = try {
-            GameCluster.gamePatterns.first { it.mapName == args[0] }
-        } catch (e: Exception) {
-
-            sender.sendMessage(Messages.ERROR_COMMAND)
-            return false
+        if (amount == null || amount < 0) {
+            sender.sendMessage(Messages.ERROR_ARGUMENT) // Or a more specific "invalid number" message
+            return true
         }
-        val type = args[1]
-        val amount = args[2] as Int
 
+        val game = GameCluster.gamePatterns.firstOrNull { it.mapName.equals(mapName, ignoreCase = true) }
+        if (game == null) {
+            sender.sendMessage(Messages.GAME_DELETED) // Or GAME_NOT_FOUND
+            return true
+        }
 
-        if (type == "min") {
-            if (!sender.hasPermission("skylife.playeramount.min")) {
-                sender.sendMessage(Messages.ERROR_PERMISSION)
-                return false
+        when (type) {
+            "min" -> {
+                if (!sender.hasPermission("skylife.playeramount.min")) {
+                    sender.sendMessage(Messages.ERROR_PERMISSION)
+                    return true
+                }
+                game.minPlayers = amount
+                sender.sendMessage(Messages.PLAYER_AMOUNT_SET)
             }
-            game.minPlayers = amount
-            sender.sendMessage(Messages.PLAYER_AMOUNT_SET)
-        } else if (type == "max") {
 
-            if (!sender.hasPermission("skylife.playeramount.min")) {
-                sender.sendMessage(Messages.ERROR_PERMISSION)
-                return false
+            "max" -> {
+                if (!sender.hasPermission("skylife.playeramount.max")) {
+                    sender.sendMessage(Messages.ERROR_PERMISSION)
+                    return true
+                }
+                game.maxPlayers = amount
+                sender.sendMessage(Messages.PLAYER_AMOUNT_SET)
             }
-            game.maxPlayers = amount
-            sender.sendMessage(Messages.PLAYER_AMOUNT_SET)
+
+            else -> {
+                sender.sendMessage(Messages.ERROR_ARGUMENT)
+            }
         }
 
-
-        return false
+        return true
     }
 }

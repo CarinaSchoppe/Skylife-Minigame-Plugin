@@ -1,133 +1,181 @@
 package com.carinaschoppe.skylife.game
 
-import com.carinaschoppe.skylife.Skylife
-import com.carinaschoppe.skylife.game.gamestates.EndState
-import com.carinaschoppe.skylife.game.gamestates.GameStates
+import com.carinaschoppe.skylife.game.gamestates.GameState
+import com.carinaschoppe.skylife.game.gamestates.LobbyState
+import com.carinaschoppe.skylife.game.kit.KitManager
 import com.carinaschoppe.skylife.game.managers.GameLocationManager
-import com.carinaschoppe.skylife.game.managers.GameManager
-import com.carinaschoppe.skylife.game.managers.MapManager
-import com.carinaschoppe.skylife.utility.messages.Messages
-
-import org.bukkit.Bukkit
-import org.bukkit.GameMode
+import com.carinaschoppe.skylife.utility.scoreboard.ScoreboardManager
 import org.bukkit.entity.Player
 
+/**
+ * Manages the entire collection of games, handling player joining, leaving, and game state transitions.
+ */
 object GameCluster {
 
-    var gameID = 0
+    private val lobbyGames = mutableListOf<Game>()
+    private val activeGames = mutableListOf<Game>()
 
-    val gamePatterns = mutableSetOf<GamePattern>()
+    /**
+     * Get a read-only list of all currently active games.
+     */
+    val activeGamesList: List<Game>
+        get() = activeGames.toList()
 
-    val activeGames = mutableSetOf<Game>()
+    /**
+     * Collection of game patterns that serve as templates for creating new games.
+     */
+    val gamePatterns = mutableListOf<GamePattern>()
 
-    val lobbyGames = mutableListOf<Game>()
-
-
-    private fun createGame(mapName: String): Game {
-        val game = Game()
-        game.gamePattern = gamePatterns.first { it.mapName == mapName }
-        MapManager.loadGameWorld(game)
+    /**
+     * Creates a new game instance from a pattern.
+     *
+     * @param pattern The game pattern to use as a template.
+     * @return The created game instance.
+     */
+    fun createGameFromPattern(pattern: GamePattern): Game {
+        val game = Game(
+            name = pattern.mapName,
+            minPlayers = pattern.minPlayers,
+            maxPlayers = pattern.maxPlayers,
+            lobbyLocation = GameLocationManager.skylifeLocationToLocationConverter(pattern.gameLocationManager.lobbyLocation),
+            ingameLocation = GameLocationManager.skylifeLocationToLocationConverter(pattern.gameLocationManager.mainLocation),
+            mapName = pattern.mapName,
+            pattern = pattern
+        )
         lobbyGames.add(game)
-        Bukkit.getServer().consoleSender.sendMessage("Created Game: '${game.gamePattern.mapName}'")
         return game
     }
 
-    fun addPlayerToRandomGame(player: Player) {
-        val filteredGames = lobbyGames.filter { it.livingPlayers.size < it.gamePattern.maxPlayers }
-        if (filteredGames.isNotEmpty()) {
-            val game = filteredGames.minByOrNull { it.livingPlayers.size }!!
-            addPlayerToGame(player, game)
-        } else {
-            val gamePattern = gamePatterns.random()
-            val game = createGame(gamePattern.mapName)
-            addPlayerToGame(player, game)
-        }
+    /**
+     * Adds a new game to the cluster, placing it in the lobby state.
+     *
+     * @param game The game to add.
+     */
+    fun addGame(game: Game) {
+        lobbyGames.add(game)
     }
 
-    private fun addPlayerToGame(player: Player, game: Game) {
-        //TODO: mehr hier?
-        player.gameMode = GameMode.SURVIVAL
-        player.allowFlight = false
-        player.clearActivePotionEffects()
+    /**
+     * Adds a player to a specific game.
+     *
+     * @param player The player to add.
+     * @param game The game to join.
+     */
+    fun addPlayerToGame(player: Player, game: Game) {
         game.livingPlayers.add(player)
-        if (!game.gameStateInitialized() && game.livingPlayers.size >= game.gamePattern.minPlayers) {
-            game.currentState = game.gameStats[GameStates.LOBBY_STATE.id]
-            game.currentState.start()
-        }
-        player.sendMessage(Messages.PLAYER_JOINS_GAME(game.gamePattern.mapName))
-
-        Bukkit.getServer().consoleSender.sendMessage(MapManager.locationWorldConverter(GameLocationManager.Companion.skylifeLocationToLocationConverter(game.gamePattern.gameLocationManager.lobbyLocation), game).toString())
-
-        player.teleport(MapManager.locationWorldConverter(GameLocationManager.Companion.skylifeLocationToLocationConverter(game.gamePattern.gameLocationManager.lobbyLocation), game))
-        //message player joined
-
-        game.livingPlayers.forEach {
-            it.showPlayer(Skylife.instance, player)
-            it.sendMessage(Messages.PLAYER_JOINED(player.name, game.livingPlayers.size, game.gamePattern.maxPlayers))
-            if (!game.gameStateInitialized() && game.livingPlayers.size < game.gamePattern.minPlayers) {
-                //missing players
-                it.sendMessage(Messages.PLAYER_MISSING(game.livingPlayers.size, game.gamePattern.minPlayers))
-            }
-        }
-
-        game.spectators.forEach {
-            it.sendMessage(Messages.PLAYER_JOINED(player.name, game.livingPlayers.size, game.gamePattern.maxPlayers))
-            it.showPlayer(Skylife.instance, player)
-            player.hidePlayer(Skylife.instance, it)
-            if (!game.gameStateInitialized() && game.livingPlayers.size < game.gamePattern.minPlayers) {
-                //missing players
-                it.sendMessage(Messages.PLAYER_MISSING(game.livingPlayers.size, game.gamePattern.minPlayers))
-            }
-        }
-
-
+        player.teleport(game.lobbyLocation)
+        game.currentState.playerJoined(player)
+        ScoreboardManager.setScoreboard(player, game)
     }
 
-    fun addPlayerToGame(player: Player, mapName: String) {
-        val existingGame = lobbyGames.firstOrNull { it.gamePattern.mapName == mapName && it.livingPlayers.size < it.gamePattern.maxPlayers }
-        if (existingGame != null) {
-            Bukkit.getServer().consoleSender.sendMessage("Adding player to existing game")
-            addPlayerToGame(player, existingGame)
-        } else {
-            Bukkit.getServer().consoleSender.sendMessage("creating new game")
-
-            val game = createGame(mapName)
-            addPlayerToGame(player, game)
-        }
-    }
-
+    /**
+     * Removes a player from the game they are currently in.
+     *
+     * @param player The player to remove.
+     */
     fun removePlayerFromGame(player: Player) {
-        val game = lobbyGames.firstOrNull { it.livingPlayers.contains(player) } ?: activeGames.firstOrNull { it.livingPlayers.contains(player) } ?: return
-        game.spectators.remove(player)
+        val game = getGamePlayerIsIn(player) ?: return
+
         game.livingPlayers.remove(player)
-        player.allowFlight = false
-        player.clearActivePotionEffects()
-        player.gameMode = GameMode.ADVENTURE
-        player.teleport(GameLocationManager.Companion.skylifeLocationToLocationConverter(game.gamePattern.gameLocationManager.mainLocation))
-        Bukkit.getOnlinePlayers().forEach {
-            it.showPlayer(Skylife.instance, player)
-            player.showPlayer(Skylife.instance, it)
+        game.currentState.playerLeft(player)
+        ScoreboardManager.removeScoreboard(player)
+        KitManager.removePlayer(player)
+
+        if (game.state == GameState.States.INGAME && game.livingPlayers.size <= 1) {
+            game.stop()
         }
-        GameManager.checkGameOver(game)
-
-
-        //TODO: update scoreboard
-
-        if (game.currentState is EndState) {
-            return
-        }
-
-
-
-        game.livingPlayers.forEach {
-            it.sendMessage(Messages.PLAYER_LEFT(player.name))
-        }
-
-        game.spectators.forEach {
-            it.sendMessage(Messages.PLAYER_LEFT(player.name))
-        }
-
     }
 
+    /**
+     * Starts a game, moving it from the lobby list to the active list.
+     *
+     * @param game The game to start.
+     */
+    fun startGame(game: Game) {
+        game.state = GameState.States.INGAME
+        lobbyGames.remove(game)
+        activeGames.add(game)
+        game.start()
+    }
 
+    /**
+     * Stops a game, moving it back to the lobby list and resetting it.
+     *
+     * @param game The game to stop.
+     */
+    fun stopGame(game: Game) {
+        game.livingPlayers.forEach { player ->
+            ScoreboardManager.removeScoreboard(player)
+            KitManager.removePlayer(player)
+            // Potentially teleport them back to a server lobby
+        }
+        game.livingPlayers.clear()
+
+        game.state = GameState.States.LOBBY
+        activeGames.remove(game)
+        lobbyGames.add(game)
+        game.currentState = LobbyState(game) // Reset to a fresh lobby state
+    }
+
+    /**
+     * Finds a random, available game for a player to join.
+     *
+     * @return An available [Game], or null if none are found.
+     */
+    fun findRandomAvailableGame(): Game? {
+        return lobbyGames.firstOrNull { it.livingPlayers.size < it.maxPlayers }
+    }
+
+    /**
+     * Finds a game by its unique name.
+     *
+     * @param name The name of the game to find.
+     * @return The found [Game], or null if no game with that name exists.
+     */
+    fun getGameByName(name: String): Game? {
+        return lobbyGames.firstOrNull { it.name.equals(name, ignoreCase = true) } ?: activeGames.firstOrNull { it.name.equals(name, ignoreCase = true) }
+    }
+
+    /**
+     * Retrieves the game that a specific player is currently in.
+     *
+     * @param player The player to search for.
+     * @return The [Game] the player is in, or null if they are not in any game.
+     */
+    fun getGamePlayerIsIn(player: Player): Game? {
+        return lobbyGames.firstOrNull { it.livingPlayers.contains(player) } ?: activeGames.firstOrNull { it.livingPlayers.contains(player) }
+    }
+
+    /**
+     * Alias for getGamePlayerIsIn for backward compatibility.
+     *
+     * @param player The player to search for.
+     * @return The [Game] the player is in, or null if they are not in any game.
+     */
+    fun getGame(player: Player): Game? = getGamePlayerIsIn(player)
+
+    /**
+     * Adds a player to a random available game.
+     *
+     * @param player The player to add to a random game.
+     * @return true if the player was successfully added to a game, false otherwise.
+     */
+    fun addPlayerToRandomGame(player: Player): Boolean {
+        val game = findRandomAvailableGame() ?: return false
+        addPlayerToGame(player, game)
+        return true
+    }
+
+    /**
+     * Adds a player to a game by map name.
+     *
+     * @param player The player to add.
+     * @param mapName The name of the map to join.
+     * @return true if the player was successfully added to the game, false otherwise.
+     */
+    fun addPlayerToGame(player: Player, mapName: String): Boolean {
+        val game = getGameByName(mapName) ?: return false
+        addPlayerToGame(player, game)
+        return true
+    }
 }

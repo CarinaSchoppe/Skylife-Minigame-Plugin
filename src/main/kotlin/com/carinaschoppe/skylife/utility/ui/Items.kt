@@ -1,16 +1,37 @@
 package com.carinaschoppe.skylife.utility.ui
 
-import com.carinaschoppe.skylife.game.skills.SkillManager
-import com.carinaschoppe.skylife.game.skills.SlowFallBootsSkill
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 
+/**
+ * A collection of predefined [ItemStack]s used throughout the plugin.
+ *
+ * This object contains static references to commonly used items in the plugin,
+ * such as UI elements, skill items, and other game-related items.
+ * All items are created using the [ItemBuilder] for consistency.
+ */
 object Items {
 
-    val ANTI_FALL_BOOTS: ItemStack = ItemBuilder(Material.NETHERITE_BOOTS).addName(SkillManager.skills[SlowFallBootsSkill::class.java]!!.name).addLore("These Boots allow you to get no Fall-Damage").build()
+    /**
+     * A transparent panel item used as a filler in GUI menus.
+     *
+     * This item has an empty name and a hidden enchantment effect to make it
+     * visually distinct while maintaining a clean appearance.
+     */
+    val FILLER_PANEL: ItemStack = ItemBuilder(Material.GLASS_PANE)
+        .addName("")
+        .addEnchantment(Enchantment.LOYALTY, 1)  // Creates the visual enchantment effect
+        .build()
 
-    val FILLER_PANEL: ItemStack = ItemBuilder(Material.GLASS_PANE).addName("").addEnchantment(Enchantment.LOYALTY, 1).build()
-
-    val LEVEL_PADERBORN: ItemStack = ItemBuilder(Material.IRON_SHOVEL).addName("test").addLore("Minilevel fast Rounds").build()
+    /**
+     * A placeholder item representing the "Paderborn" level/map.
+     *
+     * Currently used as a test item in level selection menus.
+     * TODO: Replace with actual level representation with proper name and description
+     */
+    val LEVEL_PADERBORN: ItemStack = ItemBuilder(Material.IRON_SHOVEL)
+        .addName("Paderborn")
+        .addLore("Minigame: Fast Rounds")
+        .build()
 }

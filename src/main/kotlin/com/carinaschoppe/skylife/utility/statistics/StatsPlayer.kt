@@ -16,6 +16,7 @@ object StatsPlayers : IdTable<String>() {
     val wins = integer("wins")
     val games = integer("games")
     val name = varchar("name", 36)
+    val points = integer("points")
     override val id: Column<EntityID<String>> = uuid.entityId()
     override val primaryKey = PrimaryKey(uuid, name = "UserUID")
 }
@@ -29,5 +30,6 @@ class StatsPlayer(uuid: EntityID<String>) : Entity<String>(uuid) {
     var wins by StatsPlayers.wins
     var games by StatsPlayers.games
     var name by StatsPlayers.name
+    var points by StatsPlayers.points
 
 }

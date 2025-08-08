@@ -8,31 +8,49 @@ import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
+/**
+ * Handles the command for a player to leave their current game.
+ *
+ * Command Usage:
+ * - `/leave`
+ */
 class LeaveGameCommand : CommandExecutor {
 
+    /**
+     * Executes the leave game command.
+     *
+     * @param sender The entity who sent the command.
+     * @param command The command that was executed.
+     * @param label The alias of the command used.
+     * @param args The arguments provided with the command.
+     * @return `true` if the command was handled successfully, `false` otherwise.
+     */
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
-        if (command.label != "leave") return false
+        if (!command.label.equals("leave", ignoreCase = true)) return false
+
         if (sender !is Player) {
             sender.sendMessage(Messages.ERROR_NOTPLAYER)
-            return false
-        }
-
-        if (!(GameCluster.lobbyGames.any { game -> game.livingPlayers.contains(sender) or game.spectators.contains(sender) } or GameCluster.activeGames.any { game -> game.livingPlayers.contains(sender) or game.spectators.contains(sender) })) {
-            sender.sendMessage(Messages.NOT_INGAME)
-            return false
+            return true
         }
 
         if (!sender.hasPermission("skylife.leave")) {
             sender.sendMessage(Messages.ERROR_PERMISSION)
-            return false
+            return true
         }
 
+        if (GameCluster.getGame(sender) == null) {
+            sender.sendMessage(Messages.NOT_INGAME)
+            return true
+        }
+
+        // The GameCluster handles the core logic of removing a player.
         GameCluster.removePlayerFromGame(sender)
+
+        // Ideally, stat updates and messaging should also be handled within the GameCluster
+        // to keep the command layer clean and ensure consistent behavior.
         sender.sendMessage(Messages.OWN_PLAYER_LEFT)
         StatsUtility.addStatsToPlayerWhenLeave(sender)
 
-        return false
+        return true
     }
-
-
 }

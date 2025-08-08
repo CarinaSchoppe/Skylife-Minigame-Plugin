@@ -2,46 +2,50 @@ package com.carinaschoppe.skylife.game.countdown
 
 import com.carinaschoppe.skylife.Skylife
 import com.carinaschoppe.skylife.game.Game
-import com.carinaschoppe.skylife.game.gamestates.EndState
-import com.carinaschoppe.skylife.utility.configuration.Timer
+import com.carinaschoppe.skylife.game.GameCluster
 import com.carinaschoppe.skylife.utility.messages.Messages
-import org.bukkit.Bukkit
+import org.bukkit.scheduler.BukkitRunnable
 
-class IngameCountdown(game: Game) : Countdown(game, Timer.instance.INGAME_TIMER) {
+/**
+ * A countdown for the main gameplay phase.
+ * Manages the overall game timer.
+ *
+ * @property game The game instance this countdown belongs to.
+ */
+class IngameCountdown(private val game: Game) : Countdown() {
 
-    private fun message() {
-        game.livingPlayers.forEach { it.sendMessage(Messages.GAME_END_TIMER(duration)) }
-        game.spectators.forEach { it.sendMessage(Messages.GAME_END_TIMER(duration)) }
-    }
-
-    override fun start() {
-        countdown = Bukkit.getScheduler().runTaskTimer(Skylife.instance, Runnable {
-
-            if (game.currentState is EndState)
-                countdown.cancel()
-            duration--
-            when (duration) {
-
-                900 -> message()
-
-                600 -> message()
-
-                300 -> message()
-
-                in 240 downTo 60 step 60 -> {
-                    message()
-                }
-
-                0 -> stop()
-
+    private var seconds = 600 // 10 minutes
+    private val runnable = object : BukkitRunnable() {
+        override fun run() {
+            if (!isRunning) {
+                cancel()
+                return
             }
 
+            if (seconds <= 0) {
+                GameCluster.stopGame(game) // End game when time is up
+                stop()
+                return
+            }
 
-        }, 0, 20)
+            // Announce time remaining at one-minute intervals
+            if (seconds % 60 == 0) {
+                val minutes = seconds / 60
+                val message = Messages.legacy("§7Only §e$minutes minute${if (minutes != 1) "s" else ""}§7 remaining!")
+                game.livingPlayers.forEach { it.sendMessage(message) }
+            }
+
+            seconds--
+        }
     }
 
-    override fun stop() {
-        countdown.cancel()
-        game.currentState.stop()
+    /**
+     * Starts the ingame countdown if it's not already running.
+     */
+    override fun start() {
+        if (isRunning) return
+        isRunning = true
+        seconds = 600 // Reset to 10 minutes
+        task = runnable.runTaskTimer(Skylife.instance, 0, 20)
     }
 }

@@ -2,21 +2,21 @@ package com.carinaschoppe.skylife.game.countdown
 
 import com.carinaschoppe.skylife.Skylife
 import com.carinaschoppe.skylife.game.Game
-import com.carinaschoppe.skylife.utility.messages.Messages
+import com.carinaschoppe.skylife.game.GameCluster
 import org.bukkit.scheduler.BukkitRunnable
 
 /**
- * A countdown for the initial protection phase at the start of a game.
- * Prevents PvP for a short duration.
+ * A countdown for the game's ending phase.
+ * Manages the timer before the game fully resets and sends players back.
  *
  * @param game The game instance this countdown belongs to.
  */
-class ProtectionCountdown(private val game: Game) : Countdown() {
+class EndingCountdown(private val game: Game) : Countdown() {
 
-    private var seconds = 15
+    private var seconds = 10
 
     /**
-     * Starts the protection countdown if it's not already running.
+     * Starts the ending countdown if it's not already running.
      */
     override fun start() {
         if (isRunning) return
@@ -24,23 +24,18 @@ class ProtectionCountdown(private val game: Game) : Countdown() {
 
         task = object : BukkitRunnable() {
             override fun run() {
-                if (seconds == 0) {
-                    game.livingPlayers.forEach { it.sendMessage(Messages.PROTECTION_ENDED) }
+                if (seconds <= 0) {
+                    GameCluster.stopGame(game) // Fully stop and reset the game
                     stop()
                     return
                 }
-
-                if (seconds <= 5 || seconds % 5 == 0) {
-                    game.livingPlayers.forEach { it.sendMessage(Messages.PROTECTION_ENDING(seconds)) }
-                }
-
                 seconds--
             }
         }.runTaskTimer(Skylife.instance, 0, 20)
     }
 
     /**
-     * Stops the protection countdown.
+     * Stops the ending countdown.
      */
     override fun stop() {
         if (!isRunning) return

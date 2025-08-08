@@ -2,36 +2,79 @@ package com.carinaschoppe.skylife.game.countdown
 
 import com.carinaschoppe.skylife.Skylife
 import com.carinaschoppe.skylife.game.Game
-import com.carinaschoppe.skylife.utility.configuration.Timer
+import com.carinaschoppe.skylife.game.GameCluster
 import com.carinaschoppe.skylife.utility.messages.Messages
-import org.bukkit.Bukkit
+import org.bukkit.scheduler.BukkitRunnable
 
-class LobbyCountdown(game: Game) : Countdown(game, Timer.instance.LOBBY_TIMER) {
+/**
+ * A countdown specifically for the game lobby.
+ * Manages the timer that starts the game when enough players have joined.
+ *
+ * @property game The game instance this countdown belongs to.
+ */
+class LobbyCountdown(private val game: Game) : Countdown() {
 
-    var idle = false
-    private fun message() {
-        game.livingPlayers.forEach { it.sendMessage(Messages.LOBBY_TIMER(duration)) }
-        game.spectators.forEach { it.sendMessage(Messages.LOBBY_TIMER(duration)) }
+    var seconds = 15
+
+    private val runnable = object : BukkitRunnable() {
+        override fun run() {
+            if (!isRunning) {
+                cancel()
+                return
+            }
+
+            if (game.livingPlayers.size < game.minPlayers) {
+                // Reset countdown if players leave
+                stop()
+                game.livingPlayers.forEach { it.sendMessage(Messages.COUNTDOWN_STOPPED) }
+                return
+            }
+
+            if (seconds <= 0) {
+                GameCluster.startGame(game)
+                stop()
+                return
+            }
+
+            if (seconds <= 5 || seconds % 5 == 0) {
+                game.livingPlayers.forEach { player ->
+                    player.sendMessage(Messages.COUNTDOWN(seconds))
+                    player.level = seconds
+                }
+            }
+            seconds--
+        }
     }
 
+    /**
+     * Sets the countdown's remaining seconds to a new value.
+     * The time will only be changed if the new value is less than the current time,
+     * to prevent extending the countdown.
+     *
+     * @param newSeconds The new number of seconds for the countdown.
+     */
+    fun setSeconds(newSeconds: Int) {
+        if (isRunning && newSeconds < this.seconds) {
+            this.seconds = newSeconds
+        }
+    }
+
+    /**
+     * Starts the lobby countdown if it's not already running.
+     * The countdown will only proceed if the minimum number of players is met.
+     */
     override fun start() {
-        countdown = Bukkit.getScheduler().runTaskTimer(Skylife.instance, Runnable {
-            idle = game.livingPlayers.size < game.gamePattern.minPlayers
-            if (idle) {
-                duration = defaultDuration
-                return@Runnable
-            }
-            when (duration) {
-                60, 30, 15, 10 -> message()
-                in 1..9 -> message()
-                0 -> stop()
-            }
-            duration--
-        }, 0, 20)
+        if (isRunning) return
+        isRunning = true
+        seconds = 15 // Reset to default value
+        task = runnable.runTaskTimer(Skylife.instance, 0, 20)
     }
 
+    /**
+     * Stops the lobby countdown and resets its timer.
+     */
     override fun stop() {
-        countdown.cancel()
-        game.currentState.stop()
+        super.stop()
+        seconds = 15 // Reset timer
     }
 }

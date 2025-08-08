@@ -1,74 +1,62 @@
 package com.carinaschoppe.skylife.game.gamestates
 
-import com.carinaschoppe.skylife.Skylife
 import com.carinaschoppe.skylife.game.Game
 import com.carinaschoppe.skylife.game.GameCluster
-import com.carinaschoppe.skylife.game.countdown.Countdown
 import com.carinaschoppe.skylife.game.countdown.IngameCountdown
-import com.carinaschoppe.skylife.game.countdown.ProtectionCountdown
-import com.carinaschoppe.skylife.game.managers.GameLocationManager
-import com.carinaschoppe.skylife.game.managers.GameManager
-import com.carinaschoppe.skylife.game.managers.MapManager
-import com.carinaschoppe.skylife.utility.messages.Messages
-import com.carinaschoppe.skylife.utility.statistics.StatsUtility
+import com.carinaschoppe.skylife.game.kit.KitManager
+import org.bukkit.GameMode
+import org.bukkit.entity.Player
 
-class IngameState(game: Game) : GameState(game) {
-    override val gameStateID: Int = GameStates.INGAME_STATE.id
+/**
+ * Represents the active gameplay state of a game.
+ * Manages player spawning, kit distribution, and monitors win conditions.
+ *
+ * @param game The context of the game this state belongs to.
+ */
+class IngameState(private val game: Game) : GameState {
 
+    private val countdown = IngameCountdown(game)
 
-    override val countdown: Countdown = IngameCountdown(game)
-    private val protectionCountdown: Countdown = ProtectionCountdown(game)
-
+    /**
+     * Starts the ingame state. Teleports all players to the game arena,
+     * gives them their selected kits, and starts the ingame countdown.
+     */
     override fun start() {
-        game.currentState = this
-
-        GameCluster.lobbyGames.remove(game)
-        GameCluster.activeGames.add(game)
-
+        game.livingPlayers.forEach { player ->
+            player.teleport(game.ingameLocation)
+            player.inventory.clear()
+            KitManager.giveKitItems(player)
+        }
         countdown.start()
-        protectionCountdown.start()
-
-
-        //TODO: is something missing in this method?
-
-        hideSpectators()
-        //teleport all players
-        val locations = game.gamePattern.gameLocationManager.spawnLocations.toTypedArray()
-
-        for (i in 0 until game.livingPlayers.size) {
-            //Translate location
-            game.livingPlayers[i].sendMessage(Messages.TELEPORT)
-            game.livingPlayers[i].teleport(MapManager.locationWorldConverter(GameLocationManager.skylifeLocationToLocationConverter(locations[i]), game))
-            StatsUtility.addStatsToPlayerWhenJoiningGame(game.livingPlayers[i])
-            game.livingPlayers[i].sendMessage(Messages.INGAME_START)
-            game.livingPlayers[i].sendMessage(Messages.MAP_NAME(game.gamePattern.mapName))
-            game.livingPlayers[i].sendMessage(Messages.TELEPORT)
-
-            //TODO add Kit functionality
-        }
-
-        game.spectators.forEach {
-            it.sendMessage(Messages.INGAME_START)
-            it.sendMessage(Messages.TELEPORT)
-            it.sendMessage(Messages.MAP_NAME(game.gamePattern.mapName))
-            it.teleport(MapManager.locationWorldConverter(GameLocationManager.skylifeLocationToLocationConverter(game.gamePattern.gameLocationManager.spectatorLocation), game))
-        }
-
-        GameManager.checkGameOver(game)
     }
 
-
-    //hide specators
-
-    fun hideSpectators() {
-        game.livingPlayers.forEach { living ->
-            game.spectators.forEach { spectator ->
-                living.hidePlayer(Skylife.instance, spectator)
-            }
-        }
-    }
-
+    /**
+     * Stops the ingame countdown.
+     */
     override fun stop() {
-        game.gameStats[game.gameStats.indexOf(this) + 1].start()
+        countdown.stop()
+    }
+
+    /**
+     * Handles a player joining mid-game, setting them as a spectator.
+     *
+     * @param player The player who joined.
+     */
+    override fun playerJoined(player: Player) {
+        // Players joining mid-game are set to spectator
+        player.gameMode = GameMode.SPECTATOR
+        player.teleport(game.ingameLocation)
+    }
+
+    /**
+     * Handles a player leaving the game. Checks if the game should end
+     * due to a lack of players.
+     *
+     * @param player The player who left.
+     */
+    override fun playerLeft(player: Player) {
+        if (game.livingPlayers.size <= 1) {
+            GameCluster.stopGame(game)
+        }
     }
 }

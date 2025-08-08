@@ -3,17 +3,27 @@ package com.carinaschoppe.skylife.utility.messages
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 
 object Messages {
-
-
 
     val NAME_COLOR: NamedTextColor = NamedTextColor.GOLD
     val MESSAGE_COLOR: NamedTextColor = NamedTextColor.GREEN
     val ERROR_COLOR: NamedTextColor = NamedTextColor.RED
     val GRAY_COLOR: NamedTextColor = NamedTextColor.GRAY
+    val ACCENT_COLOR: NamedTextColor = NamedTextColor.AQUA
 
-     val PREFIX: Component = Component.text("[", GRAY_COLOR, TextDecoration.BOLD).append(Component.text("Skylife", NamedTextColor.AQUA, TextDecoration.BOLD)).append(Component.text("] ", GRAY_COLOR, TextDecoration.BOLD))
+    val PREFIX: Component = Component.text("[", GRAY_COLOR, TextDecoration.BOLD).append(Component.text("Skylife", ACCENT_COLOR, TextDecoration.BOLD)).append(Component.text("] ", GRAY_COLOR, TextDecoration.BOLD))
+
+    /**
+     * Converts a string with legacy color codes (e.g., '§c') into a modern Adventure Component.
+     *
+     * @param text The string to convert.
+     * @return The resulting Adventure Component.
+     */
+    fun legacy(text: String): Component {
+        return LegacyComponentSerializer.legacySection().deserialize(text)
+    }
 
     val PLAYER_AMOUNT_SET = fun(): Component {
         return PREFIX.append(Component.text("Player amount set", MESSAGE_COLOR, TextDecoration.BOLD))
@@ -23,15 +33,24 @@ object Messages {
 
     val DATABASE_TABLES_CREATED = PREFIX.append(Component.text("The Database tables where successfully created!", MESSAGE_COLOR, TextDecoration.BOLD))
 
-    val STATS = fun(own: Boolean, kills: Int, deaths: Int, wins: Int, games: Int, name: String?): Component {
-        return PREFIX.append(if (own) Component.text("Your stats: ", MESSAGE_COLOR, TextDecoration.BOLD) else Component.text("The stats of $name: ", MESSAGE_COLOR, TextDecoration.BOLD)).append(Component.text("Kills: ", MESSAGE_COLOR, TextDecoration.BOLD))
-        .append(Component.text(kills, NAME_COLOR, TextDecoration.BOLD))
-        .append(Component.text(" | Deaths: ", MESSAGE_COLOR, TextDecoration.BOLD))
-        .append(Component.text(deaths, NAME_COLOR, TextDecoration.BOLD))
-        .append(Component.text(" | Wins: ", MESSAGE_COLOR, TextDecoration.BOLD))
-        .append(Component.text(wins, NAME_COLOR, TextDecoration.BOLD))
-        .append(Component.text(" | Games: ", MESSAGE_COLOR, TextDecoration.BOLD))
-        .append(Component.text(games, NAME_COLOR, TextDecoration.BOLD))
+    fun STATS(own: Boolean, name: String, kills: Int, deaths: Int, wins: Int, games: Int, points: Int, rank: Int): Component {
+        return Component.text()
+            .append(Component.text("--- Stats of ", MESSAGE_COLOR))
+            .append(Component.text(if (own) "You" else name, ACCENT_COLOR, TextDecoration.BOLD))
+            .append(Component.text(" ---", MESSAGE_COLOR))
+            .append(Component.newline())
+            .append(Component.text("Rank: ", MESSAGE_COLOR).append(Component.text("#$rank", ACCENT_COLOR)))
+            .append(Component.newline())
+            .append(Component.text("Points: ", MESSAGE_COLOR).append(Component.text(points, ACCENT_COLOR)))
+            .append(Component.newline())
+            .append(Component.text("Kills: ", MESSAGE_COLOR).append(Component.text(kills, ACCENT_COLOR)))
+            .append(Component.newline())
+            .append(Component.text("Deaths: ", MESSAGE_COLOR).append(Component.text(deaths, ACCENT_COLOR)))
+            .append(Component.newline())
+            .append(Component.text("Wins: ", MESSAGE_COLOR).append(Component.text(wins, ACCENT_COLOR)))
+            .append(Component.newline())
+            .append(Component.text("Games: ", MESSAGE_COLOR).append(Component.text(games, ACCENT_COLOR)))
+            .build()
     }
 
     val INGAME_START = fun(): Component {
@@ -51,6 +70,26 @@ object Messages {
     }
     val GAME_OVER = fun(): Component {
         return PREFIX.append(Component.text("The game is over", MESSAGE_COLOR, TextDecoration.BOLD))
+    }
+
+    val COUNTDOWN_STOPPED = fun(): Component {
+        return PREFIX.append(Component.text("Countdown stopped", MESSAGE_COLOR, TextDecoration.BOLD))
+    }
+
+    val COUNTDOWN = fun(seconds: Int): Component {
+        return PREFIX.append(Component.text("Game starting in ", MESSAGE_COLOR))
+            .append(Component.text(seconds, NAME_COLOR, TextDecoration.BOLD))
+            .append(Component.text(" seconds", MESSAGE_COLOR))
+    }
+
+    val PROTECTION_ENDED = fun(): Component {
+        return PREFIX.append(Component.text("Protection has ended!", MESSAGE_COLOR, TextDecoration.BOLD))
+    }
+
+    val PROTECTION_ENDING = fun(seconds: Int): Component {
+        return PREFIX.append(Component.text("Protection ending in ", MESSAGE_COLOR))
+            .append(Component.text(seconds, NAME_COLOR, TextDecoration.BOLD))
+            .append(Component.text(" seconds!", MESSAGE_COLOR))
     }
     val GAME_END_TIMER = fun(timer: Int): Component {
         return PREFIX.append(Component.text("Game will end in ", MESSAGE_COLOR, TextDecoration.BOLD))
@@ -87,9 +126,13 @@ object Messages {
             .append(Component.text(" joined ", MESSAGE_COLOR))
             .append(Component.text("($playerCount/$maxPlayers)", NAME_COLOR, TextDecoration.BOLD, TextDecoration.UNDERLINED))
     }
-    val PLAYER_LEFT = fun(playerName: String): Component {
+    val PLAYER_LEFT_GAME = fun(playerName: String): Component {
         return PREFIX.append(Component.text(playerName, NAME_COLOR, TextDecoration.BOLD, TextDecoration.UNDERLINED))
             .append(Component.text(" left the game!", MESSAGE_COLOR))
+    }
+    val PLAYER_LEFT_GAME_BROADCAST = fun(playerName: String): Component {
+        return PREFIX.append(Component.text(playerName, NAME_COLOR, TextDecoration.BOLD))
+            .append(Component.text(" has left the game", MESSAGE_COLOR))
     }
 
     val OWN_PLAYER_LEFT = fun(): Component {
@@ -205,5 +248,11 @@ object Messages {
 
     val GAME_PATTERN_NOT_FULLY_DONE = fun(gameName: String): Component {
         return PREFIX.append(Component.text("ERROR: the Game ", ERROR_COLOR, TextDecoration.BOLD).append(Component.text(gameName, NAME_COLOR, TextDecoration.BOLD)).append(Component.text(" is not fully instantiated", ERROR_COLOR, TextDecoration.BOLD)))
+    }
+
+    fun KIT_SELECTED(kitName: String): Component {
+        return PREFIX.append(Component.text("You have selected the ", MESSAGE_COLOR))
+            .append(Component.text(kitName, ACCENT_COLOR, TextDecoration.BOLD))
+            .append(Component.text(" kit!", MESSAGE_COLOR))
     }
 }

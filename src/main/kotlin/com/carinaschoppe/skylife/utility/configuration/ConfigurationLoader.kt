@@ -10,6 +10,8 @@ import java.io.File
 
 object ConfigurationLoader {
 
+    var config: Config = Config()
+        private set
 
     fun saveConfiguration() {
 
@@ -27,7 +29,7 @@ object ConfigurationLoader {
 
         val gson: Gson = GsonBuilder().setPrettyPrinting().create()
 
-        val json: String = gson.toJson(Timer.instance)
+        val json: String = gson.toJson(config)
         file.writeText(json)
         Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text("Configuration saved!", Messages.MESSAGE_COLOR)))
 
@@ -43,11 +45,8 @@ object ConfigurationLoader {
         val gson: Gson = GsonBuilder().setPrettyPrinting().create()
 
         val json: String = file.readText()
-        val config: Timer = gson.fromJson(json, Timer::class.java)
+        config = gson.fromJson(json, Config::class.java)
 
-        Timer.instance = config
         Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text("Configuration loaded!", Messages.MESSAGE_COLOR)))
     }
-
-
 }

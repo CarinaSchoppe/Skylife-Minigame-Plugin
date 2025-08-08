@@ -5,9 +5,10 @@ import com.carinaschoppe.skylife.commands.admin.PlayerAmountCommand
 import com.carinaschoppe.skylife.commands.admin.SetIngameLocationCommand
 import com.carinaschoppe.skylife.commands.user.*
 import com.carinaschoppe.skylife.database.DatabaseConnector
+import com.carinaschoppe.skylife.events.kit.KitSelectorListener
 import com.carinaschoppe.skylife.events.player.*
-import com.carinaschoppe.skylife.events.skills.SlowFallBootsSkillListener
 import com.carinaschoppe.skylife.game.GameLoader
+import com.carinaschoppe.skylife.game.kit.KitManager
 import com.carinaschoppe.skylife.utility.configuration.ConfigurationLoader
 import com.carinaschoppe.skylife.utility.configuration.Timer
 import com.carinaschoppe.skylife.utility.messages.Messages
@@ -49,8 +50,8 @@ class Skylife : JavaPlugin() {
     private fun initialize(pluginManager: PluginManager) {
         ConfigurationLoader.saveConfiguration()
         ConfigurationLoader.loadConfiguration()
-
         DatabaseConnector.connectDatabase()
+        KitManager.initializeKits()
         GameLoader.findAllGames().forEach { GameLoader.loadGameFromFile(it) }
         getCommand("join")?.setExecutor(JoinGameCommand())
         getCommand("start")?.setExecutor(QuickstartGameCommand())
@@ -62,15 +63,17 @@ class Skylife : JavaPlugin() {
         getCommand("overview")?.setExecutor(GameOverviewCommand())
         getCommand("skills")?.setExecutor(SkillsListCommand())
 
-        pluginManager.registerEvents(PlayerJoinsServerListener(), this)
         pluginManager.registerEvents(PlayerLoosesSaturationListener(), this)
         pluginManager.registerEvents(PlayerDisconnectsServerListener(), this)
-        pluginManager.registerEvents(PlayerDeathListener(), this)
         pluginManager.registerEvents(PlayerChatsListener(), this)
         pluginManager.registerEvents(PlayerPlacesBlockListener(), this)
         pluginManager.registerEvents(PlayerBreaksBlockListener(), this)
         pluginManager.registerEvents(PlayerMovesIntoGameListener(), this)
         pluginManager.registerEvents(PlayerDamagesListener(), this)
+        pluginManager.registerEvents(PlayerDeathListener(), this)
+        pluginManager.registerEvents(PlayerJoinsServerListener(), this)
+        pluginManager.registerEvents(PlayerEntersPortalListener(), this)
+        pluginManager.registerEvents(KitSelectorListener(), this)
         pluginManager.registerEvents(PlayerSelectGameListener(), this)
 
         addSkillListeners(pluginManager)
@@ -85,7 +88,7 @@ class Skylife : JavaPlugin() {
     }
 
     private fun addSkillListeners(pluginManager: PluginManager) {
-        pluginManager.registerEvents(SlowFallBootsSkillListener(), this)
+        //TODO: here
     }
 
 
