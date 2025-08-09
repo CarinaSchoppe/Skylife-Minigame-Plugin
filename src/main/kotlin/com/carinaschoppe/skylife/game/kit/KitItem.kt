@@ -33,7 +33,8 @@ class KitItem(
 
         name?.let { itemMeta.displayName(Messages.legacy(it)) }
         if (lore.isNotEmpty()) {
-            itemMeta.lore(lore)
+            //TODO: here deprecated
+            itemMeta.loreComponents(lore)
         }
         if (enchantments.isNotEmpty()) {
             enchantments.forEach { (enchant, level) ->

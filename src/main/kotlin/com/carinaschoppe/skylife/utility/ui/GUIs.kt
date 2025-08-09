@@ -24,6 +24,7 @@ object GUIs {
      * Currently, it only shows the ANTI_FALL_BOOTS item as a placeholder.
      *
      * @return A new [Inventory] instance for skill selection
+     * @see Items.ANTI_FALL_BOOTS
      */
     val SKILL_SELECT_INVENTORY = fun(): Inventory {
         val itemMap = mutableMapOf<ItemStack, Int>()

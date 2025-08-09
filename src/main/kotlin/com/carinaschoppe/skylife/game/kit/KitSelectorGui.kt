@@ -74,7 +74,8 @@ object KitSelectorGui {
         lore.add(Component.text(" "))
         lore.add(Component.text("Click to select!", NamedTextColor.YELLOW, TextDecoration.BOLD))
 
-        meta.lore(lore)
+        //TODO: deprecated
+        meta.loreComponents(lore)
         iconStack.itemMeta = meta
         return iconStack
     }

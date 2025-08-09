@@ -27,8 +27,8 @@ class PlayerJoinsServerListener : Listener {
 
         val player = event.player
 
-        // Load the player's stats into cache, creating a new entry if it's their first join
-        StatsUtility.loadStatsPlayerWhenFirstJoin(player)
+        // Ensure the player has a statistics entry. This should handle first-time joins internally.
+        StatsUtility.addStatsPlayerWhenFirstJoin(player)
 
         // --- Reset Player State for Lobby ---
         player.gameMode = GameMode.ADVENTURE

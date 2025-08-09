@@ -5,8 +5,6 @@ import com.carinaschoppe.skylife.game.gamestates.LobbyState
 import com.carinaschoppe.skylife.game.kit.KitManager
 import com.carinaschoppe.skylife.game.managers.GameLocationManager
 import com.carinaschoppe.skylife.utility.scoreboard.ScoreboardManager
-import org.bukkit.Bukkit
-import org.bukkit.GameMode
 import org.bukkit.entity.Player
 
 /**
@@ -106,39 +104,17 @@ object GameCluster {
      * @param game The game to stop.
      */
     fun stopGame(game: Game) {
-        // Create a copy of the player lists to avoid concurrent modification
-        val playersToTeleport = game.livingPlayers.toList() + game.spectators.toList()
-
-        // Clear player lists before teleporting to avoid any state issues
-        game.livingPlayers.clear()
-        game.spectators.clear()
-
-        // Teleport all players to the default world spawn or a safe location
-        val defaultWorld = Bukkit.getWorlds().firstOrNull()?.spawnLocation ?: return
-
-        playersToTeleport.forEach { player ->
-            try {
-                ScoreboardManager.removeScoreboard(player)
-                KitManager.removePlayer(player)
-                player.teleport(defaultWorld)
-                player.gameMode = GameMode.SURVIVAL
-                player.inventory.clear()
-                player.health = 20.0
-                player.foodLevel = 20
-                player.fireTicks = 0
-            } catch (e: Exception) {
-                Bukkit.getLogger().warning("Failed to clean up player ${player.name} when stopping game: ${e.message}")
-            }
+        game.livingPlayers.forEach { player ->
+            ScoreboardManager.removeScoreboard(player)
+            KitManager.removePlayer(player)
+            // Potentially teleport them back to a server lobby
         }
+        game.livingPlayers.clear()
 
-        // Update game state and move it back to the lobby list
         game.state = GameState.States.LOBBY
         activeGames.remove(game)
         lobbyGames.add(game)
         game.currentState = LobbyState(game) // Reset to a fresh lobby state
-
-        // The game's stop() method will handle world unloading
-        game.stop()
     }
 
     /**

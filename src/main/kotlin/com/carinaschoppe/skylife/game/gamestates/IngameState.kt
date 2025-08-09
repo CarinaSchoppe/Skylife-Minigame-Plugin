@@ -3,7 +3,6 @@ package com.carinaschoppe.skylife.game.gamestates
 import com.carinaschoppe.skylife.game.Game
 import com.carinaschoppe.skylife.game.GameCluster
 import com.carinaschoppe.skylife.game.countdown.IngameCountdown
-import com.carinaschoppe.skylife.game.countdown.ProtectionCountdown
 import com.carinaschoppe.skylife.game.kit.KitManager
 import org.bukkit.GameMode
 import org.bukkit.entity.Player
@@ -17,7 +16,6 @@ import org.bukkit.entity.Player
 class IngameState(private val game: Game) : GameState {
 
     private val countdown = IngameCountdown(game)
-    private val protectionCountdown = ProtectionCountdown(game)
 
     /**
      * Starts the ingame state. Teleports all players to the game arena,
@@ -29,9 +27,6 @@ class IngameState(private val game: Game) : GameState {
             player.inventory.clear()
             KitManager.giveKitItems(player)
         }
-        // Start protection countdown first to give players time to prepare
-        protectionCountdown.start()
-        // Then start the main game countdown
         countdown.start()
     }
 
@@ -40,7 +35,6 @@ class IngameState(private val game: Game) : GameState {
      */
     override fun stop() {
         countdown.stop()
-        protectionCountdown.stop()
     }
 
     /**
