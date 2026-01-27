@@ -140,7 +140,7 @@ class SkillsGui(private val player: Player) : InventoryHolder {
         val result = SkillsManager.toggleSkill(player, skill)
 
         if (result.isSuccess) {
-            val selected = result.getOrNull()!!
+            val selected = result.getOrNull() ?: return
             if (selected) {
                 player.sendMessage(
                     Messages.PREFIX.append(

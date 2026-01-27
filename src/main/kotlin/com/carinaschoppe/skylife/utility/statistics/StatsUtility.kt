@@ -1,6 +1,5 @@
 package com.carinaschoppe.skylife.utility.statistics
 
-import com.carinaschoppe.skylife.game.GameCluster
 import com.carinaschoppe.skylife.game.gamestates.GameState
 import com.carinaschoppe.skylife.utility.messages.Messages
 import net.kyori.adventure.text.Component
@@ -24,14 +23,12 @@ object StatsUtility {
         }
     }
 
-    fun addStatsToPlayerWhenLeave(player: Player) {
+    fun addStatsToPlayerWhenLeave(player: Player, game: com.carinaschoppe.skylife.game.Game) {
         //get player from Database
         transaction {
-            val statsPlayer = statsPlayers.first { it.uuid == player.uniqueId.toString() }
-            val wasInActiveGame = GameCluster.activeGamesList.any { game ->
-                game.livingPlayers.contains(player) && game.state == GameState.States.INGAME
-            }
-            if (wasInActiveGame) {
+            val statsPlayer = statsPlayers.firstOrNull { it.uuid == player.uniqueId.toString() } ?: return@transaction
+            // Check if the game was in INGAME state when the player left
+            if (game.state == GameState.States.INGAME) {
                 statsPlayer.deaths++
             }
         }
@@ -40,7 +37,7 @@ object StatsUtility {
 
     fun addWinStatsToPlayer(player: Player) {
         transaction {
-            val statsPlayer = statsPlayers.first { it.uuid == player.uniqueId.toString() }
+            val statsPlayer = statsPlayers.firstOrNull { it.uuid == player.uniqueId.toString() } ?: return@transaction
 
             statsPlayer.wins++
             statsPlayer.points += 10
@@ -50,7 +47,7 @@ object StatsUtility {
 
     fun addDeathStatsToPlayer(player: Player) {
         transaction {
-            val statsPlayer = statsPlayers.first { it.uuid == player.uniqueId.toString() }
+            val statsPlayer = statsPlayers.firstOrNull { it.uuid == player.uniqueId.toString() } ?: return@transaction
 
             statsPlayer.deaths++
 
@@ -59,7 +56,7 @@ object StatsUtility {
 
     fun addKillStatsToPlayer(player: Player) {
         transaction {
-            val statsPlayer = statsPlayers.first { it.uuid == player.uniqueId.toString() }
+            val statsPlayer = statsPlayers.firstOrNull { it.uuid == player.uniqueId.toString() } ?: return@transaction
 
             statsPlayer.kills++
             statsPlayer.points += 1
@@ -87,7 +84,7 @@ object StatsUtility {
     }
 
     fun addStatsToPlayerWhenJoiningGame(player: Player) {
-        val statsPlayer = statsPlayers.first { it.uuid == player.uniqueId.toString() }
+        val statsPlayer = statsPlayers.firstOrNull { it.uuid == player.uniqueId.toString() } ?: return
         transaction {
             statsPlayer.games++
         }

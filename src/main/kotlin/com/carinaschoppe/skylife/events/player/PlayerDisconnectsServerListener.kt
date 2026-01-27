@@ -26,9 +26,6 @@ class PlayerDisconnectsServerListener : Listener {
         // Suppress the default quit message to replace it with a custom one.
         event.quitMessage(null)
 
-        // Broadcast player left message to all players
-        player.server.broadcast(Messages.PLAYER_LEFT_GAME_BROADCAST(player.name))
-
         // Only handle game-related cleanup if the player was in a managed game
         if (game != null) {
             // Remove player from the game
@@ -38,7 +35,7 @@ class PlayerDisconnectsServerListener : Listener {
             KitManager.removePlayer(player)
 
             // Update statistics
-            StatsUtility.addStatsToPlayerWhenLeave(player)
+            StatsUtility.addStatsToPlayerWhenLeave(player, game)
 
             // Notify the remaining players in the game.
             if (game.livingPlayers.isNotEmpty() || game.spectators.isNotEmpty()) {

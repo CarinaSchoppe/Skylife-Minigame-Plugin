@@ -24,7 +24,7 @@ class EndingCountdown(private val game: Game) : Countdown() {
 
         task = object : BukkitRunnable() {
             override fun run() {
-                if (seconds <= 0) {
+                if (!isRunning || seconds <= 0) {
                     GameCluster.stopGame(game) // Fully stop and reset the game
                     stop()
                     return

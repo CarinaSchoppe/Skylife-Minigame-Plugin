@@ -22,7 +22,7 @@ class ItemBuilder(private val itemMaterial: Material) {
     private var item: ItemStack = ItemStack(itemMaterial)
 
     /** The ItemMeta for the current item */
-    private var itemMeta: ItemMeta = item.itemMeta!!
+    private var itemMeta: ItemMeta = item.itemMeta ?: throw IllegalArgumentException("Material $itemMaterial does not support ItemMeta")
 
     /**
      * Sets the display name of the item using a Component.

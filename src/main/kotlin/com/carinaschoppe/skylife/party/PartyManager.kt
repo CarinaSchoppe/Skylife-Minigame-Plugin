@@ -138,6 +138,15 @@ object PartyManager {
         val party = playerPartyCache[uuid]
             ?: return Result.failure(Exception("You are not in a party"))
 
+        // Handle leadership transfer or party deletion BEFORE removing member
+        if (party.isLeader(uuid)) {
+            if (party.size() > 1) {
+                // Transfer leadership to next member (excluding the leaving player)
+                val newLeader = party.members.first { it != uuid }
+                party.leader = newLeader
+            }
+        }
+
         party.removeMember(uuid)
         playerPartyCache.remove(uuid)
 
@@ -147,21 +156,7 @@ object PartyManager {
             GameCluster.removePlayerFromGame(player)
         }
 
-        // Handle leadership transfer or party deletion
-        if (party.isLeader(uuid)) {
-            if (party.size() > 0) {
-                // Transfer leadership to next member
-                val newLeader = party.members.first()
-                party.leader = newLeader
-                return Result.success(Unit)
-            } else {
-                // Delete empty party
-                deleteParty(party.id)
-                return Result.success(Unit)
-            }
-        }
-
-        // Check if party is now empty
+        // Delete empty party after removing the member
         if (party.size() == 0) {
             deleteParty(party.id)
         }
