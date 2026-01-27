@@ -4,6 +4,7 @@ import com.carinaschoppe.skylife.Skylife
 import com.carinaschoppe.skylife.database.DatabaseConnector.connectDatabase
 import com.carinaschoppe.skylife.guild.GuildMembers
 import com.carinaschoppe.skylife.guild.Guilds
+import com.carinaschoppe.skylife.skills.PlayerSkills
 import com.carinaschoppe.skylife.utility.messages.Messages
 import com.carinaschoppe.skylife.utility.statistics.StatsPlayers
 import org.bukkit.Bukkit
@@ -44,7 +45,7 @@ object DatabaseConnector {
         database = Database.connect(url)
         Bukkit.getServer().consoleSender.sendMessage(Messages.DATABASE_CONNECTED)
         transaction {
-            SchemaUtils.create(StatsPlayers, Guilds, GuildMembers)
+            SchemaUtils.create(StatsPlayers, Guilds, GuildMembers, PlayerSkills)
         }
         Bukkit.getServer().consoleSender.sendMessage(Messages.DATABASE_TABLES_CREATED)
 

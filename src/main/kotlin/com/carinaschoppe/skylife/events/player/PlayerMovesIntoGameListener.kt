@@ -38,10 +38,8 @@ class PlayerMovesIntoGameListener : Listener {
         event.isCancelled = true
 
         // If the player is not already in a game, add them to a random lobby game.
-        if (GameCluster.getGame(event.player) == null) {
-            if (!GameCluster.addPlayerToRandomGame(event.player)) {
-                event.player.sendMessage(Messages.ERROR_NO_GAME)
-            }
+        if (GameCluster.getGame(event.player) == null && !GameCluster.addPlayerToRandomGame(event.player)) {
+            event.player.sendMessage(Messages.ERROR_NO_GAME)
         }
     }
 }

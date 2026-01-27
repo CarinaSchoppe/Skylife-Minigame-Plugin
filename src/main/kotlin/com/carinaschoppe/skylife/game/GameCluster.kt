@@ -4,6 +4,9 @@ import com.carinaschoppe.skylife.game.gamestates.GameState
 import com.carinaschoppe.skylife.game.gamestates.LobbyState
 import com.carinaschoppe.skylife.game.kit.KitManager
 import com.carinaschoppe.skylife.game.managers.GameLocationManager
+import com.carinaschoppe.skylife.hub.HubManager
+import com.carinaschoppe.skylife.skills.SkillEffectsManager
+import com.carinaschoppe.skylife.skills.SkillsManager
 import com.carinaschoppe.skylife.utility.scoreboard.ScoreboardManager
 import com.carinaschoppe.skylife.utility.ui.GameOverviewItems
 import org.bukkit.entity.Player
@@ -135,13 +138,19 @@ object GameCluster {
             ScoreboardManager.removeScoreboard(player)
             KitManager.removePlayer(player)
 
+            // Deactivate skills
+            SkillsManager.deactivateSkills(player)
+            SkillEffectsManager.removeSkillEffects(player)
+
             // Reset player for hub
             player.inventory.clear()
             player.inventory.armorContents = arrayOfNulls(4)
             if (player.hasPermission("skylife.overview")) {
                 player.inventory.setItem(0, GameOverviewItems.createMenuItem())
             }
-            player.teleport(player.world.spawnLocation)
+
+            // Teleport to hub
+            HubManager.teleportToHub(player)
         }
         game.livingPlayers.clear()
         game.spectators.clear()

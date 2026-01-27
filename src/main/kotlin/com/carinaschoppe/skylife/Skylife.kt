@@ -54,12 +54,19 @@ open class Skylife : JavaPlugin() {
         // Load guilds into cache
         com.carinaschoppe.skylife.guild.GuildManager.loadGuilds()
 
+        // Load skills into cache
+        com.carinaschoppe.skylife.skills.SkillsManager.loadSkills()
+
+        // Start passive skills task
+        com.carinaschoppe.skylife.skills.SkillPassiveItemsTask.start(this)
+
         Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text("Skylife has been started!", Messages.MESSAGE_COLOR)))
     }
 
     private fun initialize(pluginManager: PluginManager) {
         ConfigurationLoader.loadConfiguration()
         DatabaseConnector.connectDatabase()
+        com.carinaschoppe.skylife.hub.HubManager.loadHubSpawn()
         KitManager.initializeKits()
         GameLoader.findAllGames().forEach { GameLoader.loadGameFromFile(it) }
         getCommand("join")?.setExecutor(JoinGameCommand())
@@ -67,6 +74,7 @@ open class Skylife : JavaPlugin() {
         getCommand("game")?.setExecutor(CreateGamePatternCommand())
         getCommand("setlocation")?.setExecutor(SetIngameLocationCommand())
         getCommand("playeramount")?.setExecutor(PlayerAmountCommand())
+        getCommand("sethub")?.setExecutor(com.carinaschoppe.skylife.commands.admin.SetHubCommand())
         getCommand("leave")?.setExecutor(LeaveGameCommand())
         getCommand("stats")?.setExecutor(PlayersStatsCommand())
         getCommand("overview")?.setExecutor(GameOverviewCommand())
@@ -107,11 +115,19 @@ open class Skylife : JavaPlugin() {
     }
 
     private fun addSkillListeners(pluginManager: PluginManager) {
-        //TODO: here
+        pluginManager.registerEvents(com.carinaschoppe.skylife.skills.SkillsGuiListener(), this)
+        pluginManager.registerEvents(PlayerSkillsItemListener(), this)
+        pluginManager.registerEvents(com.carinaschoppe.skylife.skills.listeners.SkillJumboListener(), this)
+        pluginManager.registerEvents(com.carinaschoppe.skylife.skills.listeners.SkillFeatherfallListener(), this)
+        pluginManager.registerEvents(com.carinaschoppe.skylife.skills.listeners.SkillInvisibleStalkerListener(), this)
+        pluginManager.registerEvents(com.carinaschoppe.skylife.skills.listeners.SkillLuckyBirdListener(), this)
     }
 
 
     override fun onDisable() {
+        // Stop passive skills task
+        com.carinaschoppe.skylife.skills.SkillPassiveItemsTask.stop()
+
         // Plugin shutdown logic
         Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text("Skylife has been stopped!", Messages.ERROR_COLOR)))
     }

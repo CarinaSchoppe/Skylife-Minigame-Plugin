@@ -20,6 +20,9 @@ commands:
   setlocation:
     description: Capable of setting up the locations for a game
     aliases: [ sl ]
+  sethub:
+    description: Sets the hub spawn location to your current location
+    aliases: [ sh, setspawn ]
   game:
     description: Capable of creating a game
     aliases: [ ]

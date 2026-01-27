@@ -4,6 +4,7 @@ import com.carinaschoppe.skylife.events.kit.KitSelectorListener
 import com.carinaschoppe.skylife.game.Game
 import com.carinaschoppe.skylife.game.countdown.LobbyCountdown
 import com.carinaschoppe.skylife.game.kit.KitManager
+import com.carinaschoppe.skylife.skills.SkillsGui
 import com.carinaschoppe.skylife.utility.messages.Messages
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -45,11 +46,16 @@ class LobbyState(private val game: Game) : GameState {
      */
     override fun playerJoined(player: Player) {
         player.inventory.clear()
+
+        // Kit selector in middle
         val kitSelector = ItemStack(Material.CHEST)
         val meta = kitSelector.itemMeta
         meta.displayName(Messages.parse(KitSelectorListener.KIT_SELECTOR_ITEM_NAME))
         kitSelector.itemMeta = meta
         player.inventory.setItem(4, kitSelector) // Place in the middle of the hotbar
+
+        // Skills selector on the right
+        player.inventory.setItem(8, SkillsGui.createSkillsMenuItem())
 
         if (game.livingPlayers.size >= game.minPlayers && !countdown.isRunning) {
             countdown.start()

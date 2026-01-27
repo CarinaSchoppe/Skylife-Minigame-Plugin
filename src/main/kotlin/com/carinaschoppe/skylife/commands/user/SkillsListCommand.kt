@@ -1,14 +1,14 @@
 package com.carinaschoppe.skylife.commands.user
 
+import com.carinaschoppe.skylife.skills.SkillsGui
 import com.carinaschoppe.skylife.utility.messages.Messages
-import com.carinaschoppe.skylife.utility.ui.GUIs
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 /**
- * Handles the command to open the kit/skill selection GUI.
+ * Handles the command to open the skills selection GUI.
  *
  * Command Usage:
  * - `/skills`
@@ -37,7 +37,9 @@ class SkillsListCommand : CommandExecutor {
             return true
         }
 
-        sender.openInventory(GUIs.SKILL_SELECT_INVENTORY())
+        // Open skills GUI
+        val gui = SkillsGui(sender)
+        gui.open()
 
         return true
     }

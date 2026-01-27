@@ -4,6 +4,8 @@ import com.carinaschoppe.skylife.game.Game
 import com.carinaschoppe.skylife.game.GameCluster
 import com.carinaschoppe.skylife.game.countdown.IngameCountdown
 import com.carinaschoppe.skylife.game.kit.KitManager
+import com.carinaschoppe.skylife.skills.SkillEffectsManager
+import com.carinaschoppe.skylife.skills.SkillsManager
 import org.bukkit.GameMode
 import org.bukkit.entity.Player
 
@@ -19,12 +21,18 @@ class IngameState(private val game: Game) : GameState {
 
     /**
      * Starts the ingame state. Teleports all players to the game arena,
-     * gives them their selected kits, and starts the ingame countdown.
+     * gives them their selected kits, activates their skills, and starts the ingame countdown.
      */
     override fun start() {
         game.livingPlayers.forEach { player ->
             player.teleport(game.ingameLocation)
             player.inventory.clear()
+
+            // Activate skills
+            SkillsManager.activateSkills(player)
+            SkillEffectsManager.applySkillEffects(player)
+
+            // Give kit items
             KitManager.giveKitItems(player)
         }
         countdown.start()

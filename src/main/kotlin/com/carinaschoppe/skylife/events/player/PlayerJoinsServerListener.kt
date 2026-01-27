@@ -1,5 +1,7 @@
 package com.carinaschoppe.skylife.events.player
 
+import com.carinaschoppe.skylife.events.player.PlayerDisplayNameListener.Companion.updatePlayerDisplayName
+import com.carinaschoppe.skylife.hub.HubManager
 import com.carinaschoppe.skylife.utility.messages.Messages
 import com.carinaschoppe.skylife.utility.statistics.StatsUtility
 import com.carinaschoppe.skylife.utility.ui.GameOverviewItems
@@ -47,12 +49,15 @@ class PlayerJoinsServerListener : Listener {
         // Clear all active effects
         player.activePotionEffects.forEach { player.removePotionEffect(it.type) }
 
+        // Update player display name with guild tag if applicable
+        updatePlayerDisplayName(player)
+
+        // Teleport to hub spawn
+        HubManager.teleportToHub(player)
+
         // Broadcast join message with online player count and max players
         val server = player.server
         player.server.broadcast(Messages.PLAYER_JOINED(player.name, server.onlinePlayers.size, server.maxPlayers))
-
-        // TODO: Implement a HubManager to get the hub location from a config file.
-        // player.teleport(HubManager.getHubLocation())
 
         // Send a custom welcome message.
         player.sendMessage(Messages.PLAYER_JOINS_SERVER(player.name))
