@@ -29,7 +29,6 @@ open class Skylife : JavaPlugin() {
 
     //TODO: events
     //TODO: party (maybe)
-    //TODO: scoreboard
     //TODO: statistics (kill, death) (done maybe)
     //TODO: Skills
     //TODO: Items

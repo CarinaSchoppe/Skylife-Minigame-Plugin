@@ -124,6 +124,12 @@ object GameCluster {
         game.state = GameState.States.INGAME
         lobbyGames.remove(game)
         activeGames.add(game)
+
+        // Increment games counter for all players
+        game.livingPlayers.forEach { player ->
+            com.carinaschoppe.skylife.utility.statistics.StatsUtility.addStatsToPlayerWhenJoiningGame(player)
+        }
+
         game.start()
     }
 
