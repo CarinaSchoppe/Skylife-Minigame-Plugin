@@ -38,8 +38,8 @@ class LeaveGameCommand : CommandExecutor {
             sender.sendMessage(Messages.ERROR_PERMISSION)
             return true
         }
-
-        if (GameCluster.getGame(sender) == null) {
+        val game = GameCluster.getGame(sender)
+        if (game == null) {
             sender.sendMessage(Messages.NOT_INGAME)
             return true
         }
@@ -53,7 +53,7 @@ class LeaveGameCommand : CommandExecutor {
         // Ideally, stat updates and messaging should also be handled within the GameCluster
         // to keep the command layer clean and ensure consistent behavior.
         sender.sendMessage(Messages.OWN_PLAYER_LEFT)
-        StatsUtility.addStatsToPlayerWhenLeave(sender)
+        StatsUtility.addStatsToPlayerWhenLeave(sender, game)
 
         return true
     }
