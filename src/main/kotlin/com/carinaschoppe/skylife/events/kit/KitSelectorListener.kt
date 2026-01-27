@@ -34,7 +34,16 @@ class KitSelectorListener : Listener {
         if (event.action != Action.RIGHT_CLICK_AIR && event.action != Action.RIGHT_CLICK_BLOCK) return
 
         val item = event.item ?: return
-        if (item.type == Material.CHEST && item.itemMeta?.displayName() == Messages.parse(KIT_SELECTOR_ITEM_NAME)) {
+        if (item.type != Material.CHEST) return
+
+        val meta = item.itemMeta ?: return
+        val displayName = meta.displayName() ?: return
+
+        // Use PlainTextComponentSerializer for reliable comparison
+        val plainText = net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer.plainText()
+            .serialize(displayName)
+
+        if (plainText.contains("Kit Selector", ignoreCase = true)) {
             KitSelectorGui.open(event.player)
             event.isCancelled = true
         }
@@ -49,15 +58,27 @@ class KitSelectorListener : Listener {
      */
     @EventHandler
     fun onInventoryClick(event: InventoryClickEvent) {
-        if (event.view.title() != Messages.parse(KitSelectorGui.GUI_TITLE)) return
+        // Check if this is the kit selector GUI
+        val plainText = net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer.plainText()
+        val titleText = plainText.serialize(event.view.title())
+
+        if (!titleText.contains("Select your Kit", ignoreCase = true)) return
 
         event.isCancelled = true
 
         val clickedItem = event.currentItem ?: return
         val player = event.whoClicked as? Player ?: return
 
+        // Skip glass panes
+        if (clickedItem.type == Material.GRAY_STAINED_GLASS_PANE) return
+
+        // Find matching kit by comparing display names
+        val clickedDisplayName = clickedItem.itemMeta?.displayName()
+        if (clickedDisplayName == null) return
+
         val kit = KitManager.kits.find { kit ->
-            clickedItem.itemMeta?.displayName() == kit.icon.toItemStack().itemMeta.displayName()
+            val kitIconName = kit.icon.toItemStack().itemMeta?.displayName()
+            kitIconName == clickedDisplayName
         }
 
         if (kit != null) {

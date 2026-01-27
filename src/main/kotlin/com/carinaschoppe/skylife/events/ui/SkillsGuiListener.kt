@@ -1,5 +1,7 @@
-package com.carinaschoppe.skylife.skills
+package com.carinaschoppe.skylife.events.ui
 
+import com.carinaschoppe.skylife.skills.Skill
+import com.carinaschoppe.skylife.utility.ui.SkillsGui
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -20,7 +22,7 @@ class SkillsGuiListener : Listener {
         // Cancel all clicks to prevent item removal
         event.isCancelled = true
 
-        event.whoClicked as? Player ?: return
+        if (event.whoClicked !is Player) return
         val clickedItem = event.currentItem ?: return
 
         // Find which skill was clicked
@@ -43,6 +45,6 @@ class SkillsGuiListener : Listener {
      * Finds the skill enum corresponding to an ItemStack.
      */
     private fun findSkillByItem(item: ItemStack): Skill? {
-        return Skill.values().firstOrNull { it.material == item.type }
+        return Skill.entries.firstOrNull { it.material == item.type }
     }
 }

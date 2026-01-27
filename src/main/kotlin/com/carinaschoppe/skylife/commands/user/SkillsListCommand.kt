@@ -1,7 +1,7 @@
 package com.carinaschoppe.skylife.commands.user
 
-import com.carinaschoppe.skylife.skills.SkillsGui
 import com.carinaschoppe.skylife.utility.messages.Messages
+import com.carinaschoppe.skylife.utility.ui.SkillsGui
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender

@@ -1,5 +1,7 @@
-package com.carinaschoppe.skylife.skills
+package com.carinaschoppe.skylife.utility.ui
 
+import com.carinaschoppe.skylife.skills.Skill
+import com.carinaschoppe.skylife.skills.SkillsManager
 import com.carinaschoppe.skylife.utility.messages.Messages
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor

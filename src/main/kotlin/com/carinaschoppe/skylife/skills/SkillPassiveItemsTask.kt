@@ -72,10 +72,10 @@ object SkillPassiveItemsTask {
      */
     private fun createRandomPotion(): ItemStack {
         val potionTypes = listOf(
-            PotionType.SPEED,
+            PotionType.SWIFTNESS,
             PotionType.STRENGTH,
-            PotionType.INSTANT_HEAL,
-            PotionType.JUMP_BOOST,
+            PotionType.HEALING,
+            PotionType.LEAPING,
             PotionType.REGENERATION,
             PotionType.FIRE_RESISTANCE,
             PotionType.WATER_BREATHING,
@@ -84,7 +84,7 @@ object SkillPassiveItemsTask {
             PotionType.WEAKNESS,
             PotionType.POISON,
             PotionType.SLOWNESS,
-            PotionType.INSTANT_DAMAGE
+            PotionType.MUNDANE
         )
 
         val type = potionTypes.random()

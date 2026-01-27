@@ -1,8 +1,11 @@
-package com.carinaschoppe.skylife.skills.listeners
+package com.carinaschoppe.skylife.events.skills
 
 import com.carinaschoppe.skylife.skills.Skill
 import com.carinaschoppe.skylife.skills.SkillsManager
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
+import org.bukkit.Material
 import org.bukkit.entity.Egg
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.ProjectileLaunchEvent
@@ -27,19 +30,21 @@ class SkillLuckyBirdListener : Listener {
     @EventHandler
     fun onProjectileLaunch(event: ProjectileLaunchEvent) {
         val egg = event.entity as? Egg ?: return
-        val player = egg.shooter as? org.bukkit.entity.Player ?: return
+        val player = egg.shooter as? Player ?: return
 
         if (!SkillsManager.hasSkillActive(player, Skill.LUCKY_BIRD)) return
 
         // Check if it's the lucky egg by checking custom name
         val item = player.inventory.itemInMainHand
-        if (item.type != org.bukkit.Material.EGG) return
+        if (item.type != Material.EGG) return
 
         val meta = item.itemMeta ?: return
-        val name = net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer.plainText()
-            .serialize(meta.displayName())
+        val name = meta.displayName()?.let {
+            PlainTextComponentSerializer.plainText()
+                .serialize(it)
+        }
 
-        if (!name.contains("Lucky", ignoreCase = true)) return
+        name?.contains("Lucky", ignoreCase = true)?.let { if (!it) return }
 
         // Apply random effect
         val effect = randomEffects.random()

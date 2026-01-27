@@ -1,4 +1,4 @@
-package com.carinaschoppe.skylife.skills.listeners
+package com.carinaschoppe.skylife.events.skills
 
 import com.carinaschoppe.skylife.skills.Skill
 import com.carinaschoppe.skylife.skills.SkillsManager

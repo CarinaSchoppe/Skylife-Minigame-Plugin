@@ -4,8 +4,8 @@ import com.carinaschoppe.skylife.events.kit.KitSelectorListener
 import com.carinaschoppe.skylife.game.Game
 import com.carinaschoppe.skylife.game.countdown.LobbyCountdown
 import com.carinaschoppe.skylife.game.kit.KitManager
-import com.carinaschoppe.skylife.skills.SkillsGui
 import com.carinaschoppe.skylife.utility.messages.Messages
+import com.carinaschoppe.skylife.utility.ui.SkillsGui
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack

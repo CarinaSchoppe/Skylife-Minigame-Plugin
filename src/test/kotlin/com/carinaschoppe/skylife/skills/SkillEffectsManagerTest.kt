@@ -1,7 +1,5 @@
 package com.carinaschoppe.skylife.skills
 
-import be.seeseemelk.mockbukkit.MockBukkit
-import be.seeseemelk.mockbukkit.ServerMock
 import com.carinaschoppe.skylife.Skylife
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
@@ -11,6 +9,8 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockbukkit.mockbukkit.MockBukkit
+import org.mockbukkit.mockbukkit.ServerMock
 
 class SkillEffectsManagerTest {
 

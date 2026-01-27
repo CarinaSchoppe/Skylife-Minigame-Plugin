@@ -1,6 +1,6 @@
 package com.carinaschoppe.skylife.events.player
 
-import com.carinaschoppe.skylife.skills.SkillsGui
+import com.carinaschoppe.skylife.utility.ui.SkillsGui
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -24,7 +24,7 @@ class PlayerSkillsItemListener : Listener {
 
         // Check if it's the skills item by checking display name
         val meta = item.itemMeta ?: return
-        val displayName = meta.displayName()
+        val displayName = meta.displayName() ?: return
 
         // Check if display name contains "Skills"
         val plainText = net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer.plainText().serialize(displayName)

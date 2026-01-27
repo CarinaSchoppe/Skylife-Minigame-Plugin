@@ -7,6 +7,11 @@ import com.carinaschoppe.skylife.commands.user.*
 import com.carinaschoppe.skylife.database.DatabaseConnector
 import com.carinaschoppe.skylife.events.kit.KitSelectorListener
 import com.carinaschoppe.skylife.events.player.*
+import com.carinaschoppe.skylife.events.skills.SkillFeatherfallListener
+import com.carinaschoppe.skylife.events.skills.SkillInvisibleStalkerListener
+import com.carinaschoppe.skylife.events.skills.SkillJumboListener
+import com.carinaschoppe.skylife.events.skills.SkillLuckyBirdListener
+import com.carinaschoppe.skylife.events.ui.SkillsGuiListener
 import com.carinaschoppe.skylife.game.GameLoader
 import com.carinaschoppe.skylife.game.kit.KitManager
 import com.carinaschoppe.skylife.utility.configuration.ConfigurationLoader
@@ -115,12 +120,12 @@ open class Skylife : JavaPlugin() {
     }
 
     private fun addSkillListeners(pluginManager: PluginManager) {
-        pluginManager.registerEvents(com.carinaschoppe.skylife.skills.SkillsGuiListener(), this)
+        pluginManager.registerEvents(SkillsGuiListener(), this)
         pluginManager.registerEvents(PlayerSkillsItemListener(), this)
-        pluginManager.registerEvents(com.carinaschoppe.skylife.skills.listeners.SkillJumboListener(), this)
-        pluginManager.registerEvents(com.carinaschoppe.skylife.skills.listeners.SkillFeatherfallListener(), this)
-        pluginManager.registerEvents(com.carinaschoppe.skylife.skills.listeners.SkillInvisibleStalkerListener(), this)
-        pluginManager.registerEvents(com.carinaschoppe.skylife.skills.listeners.SkillLuckyBirdListener(), this)
+        pluginManager.registerEvents(SkillJumboListener(), this)
+        pluginManager.registerEvents(SkillFeatherfallListener(), this)
+        pluginManager.registerEvents(SkillInvisibleStalkerListener(), this)
+        pluginManager.registerEvents(SkillLuckyBirdListener(), this)
     }
 
 
