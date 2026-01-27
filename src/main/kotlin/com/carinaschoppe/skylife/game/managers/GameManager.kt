@@ -5,6 +5,7 @@ import com.carinaschoppe.skylife.game.gamestates.EndState
 import com.carinaschoppe.skylife.game.gamestates.GameState
 import com.carinaschoppe.skylife.game.gamestates.IngameState
 import com.carinaschoppe.skylife.utility.messages.Messages
+import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 
 /**
@@ -28,7 +29,9 @@ object GameManager {
             return false
         }
 
-        Bukkit.getServer().consoleSender.sendMessage("Game Over: '${game.gameID}' - ${game.livingPlayers.size} players remaining")
+        Bukkit.getServer().consoleSender.sendMessage(
+            Component.text("Game Over: '${game.gameID}' - ${game.livingPlayers.size} players remaining")
+        )
 
         // Transition to end state
         game.currentState.stop()

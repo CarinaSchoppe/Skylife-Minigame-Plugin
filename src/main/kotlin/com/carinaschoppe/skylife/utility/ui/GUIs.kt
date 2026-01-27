@@ -1,5 +1,7 @@
 package com.carinaschoppe.skylife.utility.ui
 
+import com.carinaschoppe.skylife.game.GameCluster
+import com.carinaschoppe.skylife.utility.ui.GameOverviewItems.NavAction
 import com.carinaschoppe.skylife.utility.ui.inventoryholders.GameOverviewHolderFactory
 import com.carinaschoppe.skylife.utility.ui.inventoryholders.SkillSelectorHolderFactory
 import org.bukkit.inventory.Inventory
@@ -44,30 +46,40 @@ object GUIs {
      * @return A new [Inventory] instance for level selection
      * @see Items.LEVEL_PADERBORN
      */
-    val LEVEL_SELECT_INVENTORY = fun(): Inventory {
-        val itemMap = mutableMapOf<ItemStack, Int>()
-        val rows = 9
-        val cols = 4
+    fun levelSelectInventory(page: Int = 0): Inventory {
+        val games = GameCluster.lobbyGamesList
 
-        // Sample list of items to place into the grid
-        val itemsToAdd = listOf(Items.LEVEL_PADERBORN)
-        var itemIndex = 0
+        val inventorySize = GameOverviewHolderFactory.INVENTORY_SIZE
+        val navigationSlots = setOf(45, 53)
+        val gameSlotsCount = inventorySize - 2
 
-        // Iterate over the entire grid, but place items only in the inner part
-        for (index in 0 until (rows * cols)) {
-            val row = index / cols
-            val col = index % cols
+        val totalPages = if (games.isEmpty()) 1 else ((games.size - 1) / gameSlotsCount) + 1
+        val safePage = page.coerceIn(0, totalPages - 1)
 
-            // Skip the first and last rows and columns to create a border
-            if (row in 1 until (rows - 1) && col in 1 until (cols - 1) && itemIndex < itemsToAdd.size) {
-                itemMap[itemsToAdd[itemIndex]] = index
-                itemIndex++
+        val holder = GameOverviewHolderFactory(safePage, totalPages).initInventory()
+        val builder = GUIBuilder(holder)
+
+        val pageGames = games.drop(safePage * gameSlotsCount).take(gameSlotsCount)
+
+        // Fill games from top-left to bottom-right, skipping navigation slots
+        var gameIdx = 0
+        for (slot in 0 until inventorySize) {
+            if (slot in navigationSlots) continue
+
+            val game = pageGames.getOrNull(gameIdx)
+            if (game != null) {
+                builder.setItem(slot, GameOverviewItems.createGameItem(game))
+                gameIdx++
             }
         }
 
-        return GUIBuilder(GameOverviewHolderFactory().initInventory())
-            .addItems(itemMap)
-            .fillerPanel()
-            .build()
+        if (safePage > 0) {
+            builder.setItem(45, GameOverviewItems.createNavItem(NavAction.PREVIOUS))
+        }
+        if (safePage < totalPages - 1) {
+            builder.setItem(53, GameOverviewItems.createNavItem(NavAction.NEXT))
+        }
+
+        return builder.fillerPanel().build()
     }
 }

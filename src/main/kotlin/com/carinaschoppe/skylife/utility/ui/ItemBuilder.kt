@@ -77,8 +77,13 @@ class ItemBuilder(private val itemMaterial: Material) {
      *
      * @return The constructed [ItemStack]
      */
-    fun build(): ItemStack = item.also {
-        it.setItemMeta(itemMeta)
+    fun build(): ItemStack {
+        item.itemMeta = itemMeta
+        return item
+    }
+
+    fun modifyMeta(action: (ItemMeta) -> Unit): ItemBuilder = apply {
+        action(itemMeta)
     }
 
     /**

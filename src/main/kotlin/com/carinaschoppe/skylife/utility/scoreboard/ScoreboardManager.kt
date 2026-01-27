@@ -1,4 +1,4 @@
-package com.carinaschoppe.skylife.utility.scoreboard
+﻿package com.carinaschoppe.skylife.utility.scoreboard
 
 import com.carinaschoppe.skylife.game.Game
 import com.carinaschoppe.skylife.game.kit.KitManager
@@ -12,14 +12,11 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.scoreboard.Criteria
 import org.bukkit.scoreboard.DisplaySlot
-import org.bukkit.scoreboard.Scoreboard
 
 /**
  * Manages the creation, updating, and removal of player scoreboards.
  */
 object ScoreboardManager {
-
-    private val playerScoreboards = mutableMapOf<Player, Scoreboard>()
 
     /**
      * Creates and assigns a new scoreboard to a player when they join a game.
@@ -32,16 +29,6 @@ object ScoreboardManager {
         val objective = scoreboard.registerNewObjective("skylife", Criteria.DUMMY, getAnimatedTitle())
         objective.displaySlot = DisplaySlot.SIDEBAR
 
-        // Set initial scores for the compact layout
-        objective.getScore("§7Map: §e${game.mapName}").score = 7
-        objective.getScore(" ").score = 6
-        objective.getScore("§7Players: §e${game.livingPlayers.size}/${game.maxPlayers}").score = 5
-        objective.getScore("§7Kills: §e0").score = 4
-        objective.getScore("§7Kit: §e-").score = 3
-        objective.getScore("  ").score = 2
-        objective.getScore("§7Rank: §e#-").score = 1
-
-        playerScoreboards[player] = scoreboard
         player.scoreboard = scoreboard
         updateScoreboard(player, game)
     }
@@ -56,21 +43,15 @@ object ScoreboardManager {
         val scoreboard = player.scoreboard
         val objective = scoreboard.getObjective("skylife") ?: return
 
-        // Clear old dynamic entries to prevent clutter
-        scoreboard.entries.forEach { entry ->
-            if (entry.startsWith("§7Players:") || entry.startsWith("§7Kills:") || entry.startsWith("§7Kit:") || entry.startsWith("§7Rank:")) {
-                scoreboard.resetScores(entry)
-            }
+        // Clear existing entries to keep the layout clean and avoid duplicates.
+        scoreboard.entries.forEach { entry -> scoreboard.resetScores(entry) }
+
+        val lines = buildScoreboardLines(player, game)
+        val maxScore = lines.size
+
+        lines.forEachIndexed { index, line ->
+            objective.getScore(line).score = maxScore - index
         }
-
-        val rank = StatsUtility.getPlayerRank(player)
-        val kit = KitManager.getSelectedKit(player)?.name ?: "None"
-
-        // Update dynamic lines
-        objective.getScore("§7Players: §e${game.livingPlayers.size}/${game.maxPlayers}").score = 5
-        objective.getScore("§7Kills: §e${game.gameKills.getOrDefault(player.uniqueId, 0)}").score = 4
-        objective.getScore("§7Kit: §e$kit").score = 3
-        objective.getScore("§7Rank: §e#$rank").score = 1
 
         // Update title animation
         objective.displayName(getAnimatedTitle())
@@ -82,7 +63,6 @@ object ScoreboardManager {
      * @param player The player whose scoreboard should be removed.
      */
     fun removeScoreboard(player: Player) {
-        playerScoreboards.remove(player)
         player.scoreboard = Bukkit.getScoreboardManager().mainScoreboard
     }
 
@@ -93,11 +73,60 @@ object ScoreboardManager {
      * @return A [Component] representing the animated title.
      */
     private fun getAnimatedTitle(): Component {
-        val title = ConfigurationLoader.config.scoreboardTitle
-        val colors = listOf(NamedTextColor.AQUA, NamedTextColor.BLUE, NamedTextColor.DARK_AQUA)
-        val time = (System.currentTimeMillis() / 1000) % colors.size
-        val color = colors[time.toInt()]
-        // Use the Messages legacy serializer to handle '&' color codes from the config
-        return Messages.legacy(title).color(color).decorate(TextDecoration.BOLD)
+        val scoreboardConfig = ConfigurationLoader.config.scoreboard
+        val title = scoreboardConfig.title.takeIf { it.isNotBlank() } ?: ConfigurationLoader.config.scoreboardTitle
+        val replacedTitle = ScoreboardTextRenderer.applyPlaceholders(title, mapOf("{server}" to scoreboardConfig.serverName))
+        val hasMiniMessageTags = replacedTitle.contains('<') && replacedTitle.contains('>')
+        val baseComponent = if (hasMiniMessageTags) {
+            Messages.parse(replacedTitle)
+        } else {
+            Messages.parse(replacedTitle).decorate(TextDecoration.BOLD)
+        }
+
+        if (!scoreboardConfig.animateTitle) {
+            return baseComponent
+        }
+
+        if (hasMiniMessageTags) {
+            return baseComponent
+        }
+
+        val time = (System.currentTimeMillis() / 1000) % titleColors.size
+        return baseComponent.color(titleColors[time.toInt()])
     }
+
+    private fun buildScoreboardLines(player: Player, game: Game): List<String> {
+        val scoreboardConfig = ConfigurationLoader.config.scoreboard
+        val rank = StatsUtility.getPlayerRank(player)
+        val kit = KitManager.getSelectedKit(player)?.name ?: "None"
+
+        val placeholders = mapOf(
+            "{server}" to scoreboardConfig.serverName,
+            "{map}" to game.mapName,
+            "{alive}" to game.livingPlayers.size.toString(),
+            "{max}" to game.maxPlayers.toString(),
+            "{kills}" to game.gameKills.getOrDefault(player.uniqueId, 0).toString(),
+            "{kills_total}" to game.gameKills.values.sum().toString(),
+            "{kit}" to kit,
+            "{rank}" to rank.toString(),
+            "{player}" to player.name,
+            "{state}" to game.state.name
+        )
+
+        val templateLines = scoreboardConfig.lines.ifEmpty { defaultLines }
+        return ScoreboardTextRenderer.renderLines(templateLines, placeholders, MAX_LINES)
+    }
+
+    private val titleColors = listOf(NamedTextColor.AQUA, NamedTextColor.BLUE, NamedTextColor.DARK_AQUA)
+    private val defaultLines = listOf(
+        "<dark_gray><strikethrough>----------------</strikethrough></dark_gray>",
+        "<aqua>Server</aqua><gray>: </gray><white>{server}</white>",
+        "<aqua>Map</aqua><gray>: </gray><white>{map}</white>",
+        "<aqua>Alive</aqua><gray>: </gray><green>{alive}</green><gray>/</gray><green>{max}</green>",
+        "<aqua>Kills</aqua><gray>: </gray><red>{kills}</red>",
+        "<aqua>Kit</aqua><gray>: </gray><yellow>{kit}</yellow>",
+        "<aqua>Rank</aqua><gray>: </gray><gold>#{rank}</gold>",
+        "<dark_gray><strikethrough>----------------</strikethrough></dark_gray>"
+    )
+    private const val MAX_LINES = 15
 }

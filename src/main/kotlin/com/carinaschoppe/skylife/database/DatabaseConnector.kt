@@ -2,6 +2,8 @@ package com.carinaschoppe.skylife.database
 
 import com.carinaschoppe.skylife.Skylife
 import com.carinaschoppe.skylife.database.DatabaseConnector.connectDatabase
+import com.carinaschoppe.skylife.guild.GuildMembers
+import com.carinaschoppe.skylife.guild.Guilds
 import com.carinaschoppe.skylife.utility.messages.Messages
 import com.carinaschoppe.skylife.utility.statistics.StatsPlayers
 import org.bukkit.Bukkit
@@ -40,11 +42,11 @@ object DatabaseConnector {
 
         val url = "jdbc:sqlite:${file.absolutePath}"
         database = Database.connect(url)
-        Bukkit.getServer().sendMessage(Messages.DATABASE_CONNECTED)
+        Bukkit.getServer().consoleSender.sendMessage(Messages.DATABASE_CONNECTED)
         transaction {
-            SchemaUtils.create(StatsPlayers)
+            SchemaUtils.create(StatsPlayers, Guilds, GuildMembers)
         }
-        Bukkit.getServer().sendMessage(Messages.DATABASE_TABLES_CREATED)
+        Bukkit.getServer().consoleSender.sendMessage(Messages.DATABASE_TABLES_CREATED)
 
     }
 

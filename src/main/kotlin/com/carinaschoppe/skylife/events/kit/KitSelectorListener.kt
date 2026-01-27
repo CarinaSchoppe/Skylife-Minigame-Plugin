@@ -1,4 +1,4 @@
-package com.carinaschoppe.skylife.events.kit
+﻿package com.carinaschoppe.skylife.events.kit
 
 import com.carinaschoppe.skylife.game.GameCluster
 import com.carinaschoppe.skylife.game.kit.KitManager
@@ -21,7 +21,7 @@ class KitSelectorListener : Listener {
 
     companion object {
         /** The display name for the item that opens the kit selector GUI. */
-        val KIT_SELECTOR_ITEM_NAME = "§a§lKit Selector"
+        val KIT_SELECTOR_ITEM_NAME = "<green><bold>Kit Selector</bold></green>"
     }
 
     /**
@@ -34,7 +34,7 @@ class KitSelectorListener : Listener {
         if (event.action != Action.RIGHT_CLICK_AIR && event.action != Action.RIGHT_CLICK_BLOCK) return
 
         val item = event.item ?: return
-        if (item.type == Material.CHEST && item.itemMeta?.displayName() == Messages.legacy(KIT_SELECTOR_ITEM_NAME)) {
+        if (item.type == Material.CHEST && item.itemMeta?.displayName() == Messages.parse(KIT_SELECTOR_ITEM_NAME)) {
             KitSelectorGui.open(event.player)
             event.isCancelled = true
         }
@@ -49,7 +49,7 @@ class KitSelectorListener : Listener {
      */
     @EventHandler
     fun onInventoryClick(event: InventoryClickEvent) {
-        if (event.view.title() != Messages.legacy(KitSelectorGui.GUI_TITLE)) return
+        if (event.view.title() != Messages.parse(KitSelectorGui.GUI_TITLE)) return
 
         event.isCancelled = true
 
@@ -74,3 +74,4 @@ class KitSelectorListener : Listener {
         }
     }
 }
+

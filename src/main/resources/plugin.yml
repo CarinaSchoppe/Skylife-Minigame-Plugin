@@ -32,3 +32,9 @@ commands:
   skills:
     description: Shows an inventory with a list of the possible skills in form of clickable items
     aliases: [ s, skill ]
+  guild:
+    description: Manage your guild (create, invite, kick, promote, leave, toggleff, info)
+    aliases: [ g, clan, team ]
+  msg:
+    description: Send a direct message to another player
+    aliases: [ message, whisper, w, tell, pm ]

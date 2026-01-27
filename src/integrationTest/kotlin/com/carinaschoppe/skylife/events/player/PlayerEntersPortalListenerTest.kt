@@ -57,4 +57,34 @@ class PlayerEntersPortalListenerTest {
 
         kotlin.test.assertTrue(game.livingPlayers.contains(player))
     }
+
+    @Test
+    fun `player stepping on end portal frame joins random game`() {
+        val server = MockBukkit.getMock()!!
+        val world = server.addSimpleWorld("world")
+        val location = Location(world, 0.0, 64.0, 0.0)
+
+        val pattern = GamePattern("MapFrame")
+        val game = Game(
+            name = "TestFrame",
+            minPlayers = 2,
+            maxPlayers = 4,
+            lobbyLocation = location,
+            ingameLocation = location,
+            mapName = "MapFrame",
+            pattern = pattern
+        )
+        GameCluster.addGame(game)
+
+        val player = server.addPlayer()
+
+        val from = Location(world, 0.0, 64.0, 0.0)
+        val to = Location(world, 1.0, 64.0, 0.0)
+        to.block.type = Material.END_PORTAL_FRAME
+
+        val event = PlayerMoveEvent(player, from, to)
+        PlayerEntersPortalListener().onPlayerMove(event)
+
+        kotlin.test.assertTrue(game.livingPlayers.contains(player))
+    }
 }

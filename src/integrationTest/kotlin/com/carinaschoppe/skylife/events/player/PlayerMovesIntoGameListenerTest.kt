@@ -31,7 +31,7 @@ class PlayerMovesIntoGameListenerTest {
 
     @Test
     fun `portal event is cancelled`() {
-        val server = MockBukkit.getMock()
+        val server = MockBukkit.getMock()!!
         val world = server.addSimpleWorld("world")
         val location = Location(world, 0.0, 64.0, 0.0)
 

@@ -59,17 +59,21 @@ class JoinGameCommand : CommandExecutor {
                 sender.sendMessage(Messages.ERROR_PERMISSION)
                 return true
             }
-            GameCluster.addPlayerToRandomGame(sender)
+            if (!GameCluster.addPlayerToRandomGame(sender)) {
+                sender.sendMessage(Messages.ERROR_NO_GAME)
+            }
         } else {
             // Join a specific game by map name
             if (!sender.hasPermission("skylife.join.map")) {
                 sender.sendMessage(Messages.ERROR_PERMISSION)
                 return true
             }
-            if (GameCluster.gamePatterns.any { it.mapName.equals(mapToJoin, ignoreCase = true) }) {
-                GameCluster.addPlayerToGame(sender, mapToJoin)
-            } else {
-                sender.sendMessage(Messages.GAME_NOT_EXISTS(mapToJoin))
+            if (!GameCluster.addPlayerToGame(sender, mapToJoin)) {
+                if (GameCluster.getGameByName(mapToJoin) == null) {
+                    sender.sendMessage(Messages.GAME_NOT_EXISTS(mapToJoin))
+                } else {
+                    sender.sendMessage(Messages.ERROR_GAME_FULL_OR_STARTED())
+                }
             }
         }
 

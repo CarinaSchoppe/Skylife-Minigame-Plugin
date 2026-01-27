@@ -1,4 +1,4 @@
-package com.carinaschoppe.skylife.game.kit
+﻿package com.carinaschoppe.skylife.game.kit
 
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
@@ -23,7 +23,7 @@ object KitManager {
         kits.clear()
 
         val soldierKit = KitBuilder("Soldier")
-            .icon(KitItem(Material.DIAMOND_SWORD, name = "§cSoldier Kit"))
+            .icon(KitItem(Material.DIAMOND_SWORD, name = "<red>Soldier Kit</red>"))
             .item(KitItem(Material.DIAMOND_SWORD, enchantments = mapOf(Enchantment.SHARPNESS to 1)))
             .item(KitItem(Material.IRON_HELMET))
             .item(KitItem(Material.IRON_CHESTPLATE))
@@ -32,7 +32,7 @@ object KitManager {
             .build()
 
         val archerKit = KitBuilder("Archer")
-            .icon(KitItem(Material.BOW, name = "§aArcher Kit"))
+            .icon(KitItem(Material.BOW, name = "<green>Archer Kit</green>"))
             .item(KitItem(Material.BOW, enchantments = mapOf(Enchantment.POWER to 1)))
             .item(KitItem(Material.ARROW, 32))
             .item(KitItem(Material.LEATHER_HELMET))
@@ -53,7 +53,7 @@ object KitManager {
      */
     fun selectKit(player: Player, kit: Kit) {
         playerKits[player] = kit
-        // Nachricht an Spieler & Scoreboard Update kommt später
+        // Nachricht an Spieler & Scoreboard Update kommt spÃ¤ter
     }
 
     /**

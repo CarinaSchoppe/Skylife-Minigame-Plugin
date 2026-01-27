@@ -5,6 +5,7 @@ import com.carinaschoppe.skylife.game.gamestates.LobbyState
 import com.carinaschoppe.skylife.game.kit.KitManager
 import com.carinaschoppe.skylife.game.managers.GameLocationManager
 import com.carinaschoppe.skylife.utility.scoreboard.ScoreboardManager
+import com.carinaschoppe.skylife.utility.ui.GameOverviewItems
 import org.bukkit.entity.Player
 
 /**
@@ -20,6 +21,16 @@ object GameCluster {
      */
     val activeGamesList: List<Game>
         get() = activeGames.toList()
+
+    /**
+     * Get a read-only list of all lobby games.
+     * Ensures at least one lobby game exists when possible.
+     */
+    val lobbyGamesList: List<Game>
+        get() {
+            ensureLobbyGameExists()
+            return lobbyGames.toList()
+        }
 
     /**
      * Collection of game patterns that serve as templates for creating new games.
@@ -62,14 +73,17 @@ object GameCluster {
      * @param game The game to join.
      */
     fun addPlayerToGame(player: Player, game: Game) {
+        player.inventory.clear()
+        player.inventory.armorContents = arrayOfNulls(4)
         game.livingPlayers.add(player)
         player.teleport(game.lobbyLocation)
         game.currentState.playerJoined(player)
         ScoreboardManager.setScoreboard(player, game)
+        game.getAllPlayers().forEach { ScoreboardManager.updateScoreboard(it, game) }
     }
 
     /**
-     * Removes a player from the game they are currently in.
+     * Removes a player from the game they are currently in and teleports them back to the hub.
      *
      * @param player The player to remove.
      */
@@ -77,9 +91,21 @@ object GameCluster {
         val game = getGamePlayerIsIn(player) ?: return
 
         game.livingPlayers.remove(player)
+        game.spectators.remove(player)
         game.currentState.playerLeft(player)
         ScoreboardManager.removeScoreboard(player)
         KitManager.removePlayer(player)
+        game.getAllPlayers().forEach { ScoreboardManager.updateScoreboard(it, game) }
+
+        // Reset player for hub
+        player.inventory.clear()
+        player.inventory.armorContents = arrayOfNulls(4)
+        if (player.hasPermission("skylife.overview")) {
+            player.inventory.setItem(0, GameOverviewItems.createMenuItem())
+        }
+
+        // Teleport to spawn/hub (using world spawn as fallback until HubManager exists)
+        player.teleport(player.world.spawnLocation)
 
         if (game.state == GameState.States.INGAME && game.livingPlayers.size <= 1) {
             game.stop()
@@ -100,16 +126,25 @@ object GameCluster {
 
     /**
      * Stops a game, moving it back to the lobby list and resetting it.
+     * Teleports all players back to the hub and resets their state.
      *
      * @param game The game to stop.
      */
     fun stopGame(game: Game) {
-        game.livingPlayers.forEach { player ->
+        game.getAllPlayers().forEach { player ->
             ScoreboardManager.removeScoreboard(player)
             KitManager.removePlayer(player)
-            // Potentially teleport them back to a server lobby
+
+            // Reset player for hub
+            player.inventory.clear()
+            player.inventory.armorContents = arrayOfNulls(4)
+            if (player.hasPermission("skylife.overview")) {
+                player.inventory.setItem(0, GameOverviewItems.createMenuItem())
+            }
+            player.teleport(player.world.spawnLocation)
         }
         game.livingPlayers.clear()
+        game.spectators.clear()
 
         game.state = GameState.States.LOBBY
         activeGames.remove(game)
@@ -123,7 +158,32 @@ object GameCluster {
      * @return An available [Game], or null if none are found.
      */
     fun findRandomAvailableGame(): Game? {
-        return lobbyGames.firstOrNull { it.livingPlayers.size < it.maxPlayers }
+        val availableGames = ensureLobbyGameAvailable()
+        return if (availableGames.isEmpty()) null else availableGames.random()
+    }
+
+    private fun ensureLobbyGameExists(): Boolean {
+        if (lobbyGames.isNotEmpty()) {
+            return true
+        }
+        val pattern = randomCompletePattern() ?: return false
+        createGameFromPattern(pattern)
+        return true
+    }
+
+    private fun ensureLobbyGameAvailable(): List<Game> {
+        val availableGames = lobbyGames.filter { it.livingPlayers.size < it.maxPlayers }
+        if (availableGames.isNotEmpty()) {
+            return availableGames
+        }
+        val pattern = randomCompletePattern() ?: return emptyList()
+        val game = createGameFromPattern(pattern)
+        return listOf(game)
+    }
+
+    private fun randomCompletePattern(): GamePattern? {
+        val patterns = gamePatterns.filter { it.isComplete() }
+        return if (patterns.isEmpty()) null else patterns.random()
     }
 
     /**
@@ -168,6 +228,7 @@ object GameCluster {
 
     /**
      * Adds a player to a game by map name.
+     * Only allows joining games in the lobby state.
      *
      * @param player The player to add.
      * @param mapName The name of the map to join.
@@ -175,6 +236,8 @@ object GameCluster {
      */
     fun addPlayerToGame(player: Player, mapName: String): Boolean {
         val game = getGameByName(mapName) ?: return false
+        if (game.state != GameState.States.LOBBY) return false
+        
         addPlayerToGame(player, game)
         return true
     }

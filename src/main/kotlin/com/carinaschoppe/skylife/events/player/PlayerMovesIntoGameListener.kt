@@ -1,8 +1,11 @@
 package com.carinaschoppe.skylife.events.player
 
+import com.carinaschoppe.skylife.game.GameCluster
+import com.carinaschoppe.skylife.utility.messages.Messages
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerPortalEvent
+import org.bukkit.event.player.PlayerTeleportEvent
 
 /**
  * Listens for players entering portal blocks and handles their transition into games.
@@ -27,10 +30,18 @@ class PlayerMovesIntoGameListener : Listener {
      */
     @EventHandler(ignoreCancelled = true)
     fun onPlayerPortal(event: PlayerPortalEvent) {
-        // Cancel the default portal teleportation
+        if (event.cause != PlayerTeleportEvent.TeleportCause.END_PORTAL) {
+            return
+        }
+
+        // Cancel the default end portal teleportation
         event.isCancelled = true
 
-        // Execute command to join a random game
-        event.player.performCommand("join random")
+        // If the player is not already in a game, add them to a random lobby game.
+        if (GameCluster.getGame(event.player) == null) {
+            if (!GameCluster.addPlayerToRandomGame(event.player)) {
+                event.player.sendMessage(Messages.ERROR_NO_GAME)
+            }
+        }
     }
 }

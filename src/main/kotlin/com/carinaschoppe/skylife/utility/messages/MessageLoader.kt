@@ -33,6 +33,10 @@ object MessageLoader {
     fun saveMessages() {
         val file = File(Bukkit.getServer().pluginsFolder, Skylife.folderLocation + "messages.json")
 
+        if (!file.parentFile.exists()) {
+            file.parentFile.mkdirs()
+        }
+
         if (!file.exists()) {
             file.createNewFile()
         }
@@ -43,7 +47,7 @@ object MessageLoader {
 
         val json: String = gson.toJson(Messages)
         file.writeText(json)
-        Bukkit.getServer().sendMessage(Messages.PREFIX.append(Component.text("Messages saved!", Messages.MESSAGE_COLOR)))
+        Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text("Messages saved!", Messages.MESSAGE_COLOR)))
 
     }
 
@@ -69,6 +73,7 @@ object MessageLoader {
 
         if (!file.exists()) {
             saveMessages()
+            return
         }
 
 
@@ -80,7 +85,7 @@ object MessageLoader {
         gson.fromJson(json, Messages::class.java)
 
 
-        Bukkit.getServer().sendMessage(Messages.PREFIX.append(Component.text("Messages loaded!", Messages.MESSAGE_COLOR)))
+        Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text("Messages loaded!", Messages.MESSAGE_COLOR)))
     }
 
 }

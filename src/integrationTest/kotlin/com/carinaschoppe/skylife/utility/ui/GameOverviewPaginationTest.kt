@@ -22,6 +22,7 @@ class GameOverviewPaginationTest {
     @BeforeEach
     fun setup() {
         MockBukkit.mock()
+        MockBukkit.load(com.carinaschoppe.skylife.Skylife::class.java)
         GameClusterTestHelper.reset()
     }
 

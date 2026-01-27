@@ -1,6 +1,7 @@
 package com.carinaschoppe.skylife.game.managers
 
 import com.carinaschoppe.skylife.game.Game
+import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.WorldCreator
@@ -48,7 +49,9 @@ object MapManager {
         val worldCreator = WorldCreator(worldName)
         Bukkit.createWorld(worldCreator)
 
-        Bukkit.getServer().consoleSender.sendMessage("Loaded map '${game.pattern.mapName}' as world '$worldName'")
+        Bukkit.getServer().consoleSender.sendMessage(
+            Component.text("Loaded map '${game.pattern.mapName}' as world '$worldName'")
+        )
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.carinaschoppe.skylife.game.countdown
+﻿package com.carinaschoppe.skylife.game.countdown
 
 import com.carinaschoppe.skylife.Skylife
 import com.carinaschoppe.skylife.game.Game
@@ -31,7 +31,7 @@ class IngameCountdown(private val game: Game) : Countdown() {
             // Announce time remaining at one-minute intervals
             if (seconds % 60 == 0) {
                 val minutes = seconds / 60
-                val message = Messages.legacy("§7Only §e$minutes minute${if (minutes != 1) "s" else ""}§7 remaining!")
+                val message = Messages.parse("<gray>Only <yellow>$minutes minute${if (minutes != 1) "s" else ""}</yellow><gray> remaining!</gray>")
                 game.livingPlayers.forEach { it.sendMessage(message) }
             }
 
@@ -49,3 +49,4 @@ class IngameCountdown(private val game: Game) : Countdown() {
         task = runnable.runTaskTimer(Skylife.instance, 0, 20)
     }
 }
+

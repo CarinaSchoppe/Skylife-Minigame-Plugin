@@ -34,7 +34,7 @@ abstract class InventoryHolderFactory(val inventoryName: String, val size: Int) 
      *
      * @return This [InventoryHolderFactory] instance for method chaining
      */
-    fun initInventory(): InventoryHolderFactory {
+    open fun initInventory(): InventoryHolderFactory {
         internalInventory = Skylife.instance.server.createInventory(this, size, Component.text(inventoryName))
         return this
     }

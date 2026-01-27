@@ -2,6 +2,7 @@ package com.carinaschoppe.skylife.game
 
 import com.carinaschoppe.skylife.game.gamestates.GameState
 import com.carinaschoppe.skylife.game.gamestates.LobbyState
+import com.carinaschoppe.skylife.utility.messages.Messages
 import net.kyori.adventure.text.Component
 import org.bukkit.Location
 import org.bukkit.entity.Player
@@ -126,7 +127,7 @@ class Game(
      * @param message The message to broadcast.
      */
     fun broadcast(message: String) {
-        broadcast(Component.text(message))
+        broadcast(Messages.parse(message))
     }
     /* <<<<<<<<<<  28f68cf2-e4d0-43ff-b4e8-90799a5c3286  >>>>>>>>>>> */
     /**

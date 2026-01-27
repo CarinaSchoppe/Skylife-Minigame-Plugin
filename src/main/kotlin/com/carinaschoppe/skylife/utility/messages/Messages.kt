@@ -1,9 +1,9 @@
-package com.carinaschoppe.skylife.utility.messages
+﻿package com.carinaschoppe.skylife.utility.messages
 
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
+import net.kyori.adventure.text.minimessage.MiniMessage
 
 object Messages {
 
@@ -16,14 +16,13 @@ object Messages {
     val PREFIX: Component = Component.text("[", GRAY_COLOR, TextDecoration.BOLD).append(Component.text("Skylife", ACCENT_COLOR, TextDecoration.BOLD)).append(Component.text("] ", GRAY_COLOR, TextDecoration.BOLD))
 
     /**
-     * Converts a string with legacy color codes (e.g., '§c') into a modern Adventure Component.
-     *
-     * @param text The string to convert.
-     * @return The resulting Adventure Component.
+     * Parses MiniMessage into an Adventure Component.
      */
-    fun legacy(text: String): Component {
-        return LegacyComponentSerializer.legacySection().deserialize(text)
+    fun parse(text: String): Component {
+        return MINI_MESSAGE.deserialize(text)
     }
+
+    private val MINI_MESSAGE = MiniMessage.miniMessage()
 
     val PLAYER_AMOUNT_SET = fun(): Component {
         return PREFIX.append(Component.text("Player amount set", MESSAGE_COLOR, TextDecoration.BOLD))
@@ -214,7 +213,7 @@ object Messages {
     }
 
     val ROUND_SPEED_LOW = fun(): Component {
-        return PREFIX.append(Component.text("You can´t speed up the round cause its allready speeded up", MESSAGE_COLOR, TextDecoration.BOLD))
+        return PREFIX.append(Component.text("You canÂ´t speed up the round cause its allready speeded up", MESSAGE_COLOR, TextDecoration.BOLD))
     }
 
     val PROTECTION_ENDS = fun(): Component {
@@ -246,6 +245,10 @@ object Messages {
         return PREFIX.append(Component.text("ERROR: Command failed", ERROR_COLOR, TextDecoration.BOLD))
     }
 
+    val ERROR_GAME_FULL_OR_STARTED = fun(): Component {
+        return PREFIX.append(Component.text("Spiel nicht gefunden, voll oder bereits gestartet!", ERROR_COLOR, TextDecoration.BOLD))
+    }
+
     val GAME_PATTERN_NOT_FULLY_DONE = fun(gameName: String): Component {
         return PREFIX.append(Component.text("ERROR: the Game ", ERROR_COLOR, TextDecoration.BOLD).append(Component.text(gameName, NAME_COLOR, TextDecoration.BOLD)).append(Component.text(" is not fully instantiated", ERROR_COLOR, TextDecoration.BOLD)))
     }
@@ -256,3 +259,7 @@ object Messages {
             .append(Component.text(" kit!", MESSAGE_COLOR))
     }
 }
+
+
+
+

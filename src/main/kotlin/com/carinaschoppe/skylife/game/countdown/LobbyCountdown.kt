@@ -53,7 +53,7 @@ class LobbyCountdown(private val game: Game) : Countdown() {
      *
      * @param newSeconds The new number of seconds for the countdown.
      */
-    fun setSeconds(newSeconds: Int) {
+    fun reduceTo(newSeconds: Int) {
         if (isRunning && newSeconds < this.seconds) {
             this.seconds = newSeconds
         }

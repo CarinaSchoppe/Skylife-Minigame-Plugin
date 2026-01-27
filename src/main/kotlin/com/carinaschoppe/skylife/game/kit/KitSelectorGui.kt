@@ -1,4 +1,4 @@
-package com.carinaschoppe.skylife.game.kit
+﻿package com.carinaschoppe.skylife.game.kit
 
 import com.carinaschoppe.skylife.utility.messages.Messages
 import net.kyori.adventure.text.Component
@@ -16,7 +16,7 @@ import org.bukkit.inventory.ItemStack
 object KitSelectorGui {
 
     /** The title displayed at the top of the kit selector GUI. */
-    const val GUI_TITLE = "§8Select your Kit"
+    const val GUI_TITLE = "<dark_gray>Select your Kit</dark_gray>"
 
     private val PLACEHOLDER_ITEM: ItemStack = ItemStack(Material.GRAY_STAINED_GLASS_PANE).apply {
         val meta = itemMeta
@@ -31,7 +31,7 @@ object KitSelectorGui {
      */
     fun open(player: Player) {
         val inventorySize = 27 // 3 rows, can be adjusted
-        val inventory = Bukkit.createInventory(null, inventorySize, Messages.legacy(GUI_TITLE))
+        val inventory = Bukkit.createInventory(null, inventorySize, Messages.parse(GUI_TITLE))
 
         addKitIcons(inventory)
         fillPlaceholder(inventory)
@@ -74,8 +74,7 @@ object KitSelectorGui {
         lore.add(Component.text(" "))
         lore.add(Component.text("Click to select!", NamedTextColor.YELLOW, TextDecoration.BOLD))
 
-        //TODO: deprecated
-        meta.loreComponents(lore)
+        meta.lore(lore)
         iconStack.itemMeta = meta
         return iconStack
     }
@@ -93,3 +92,4 @@ object KitSelectorGui {
         }
     }
 }
+

@@ -1,6 +1,7 @@
 package com.carinaschoppe.skylife.events.player
 
 import com.carinaschoppe.skylife.game.GameCluster
+import com.carinaschoppe.skylife.game.kit.KitManager
 import com.carinaschoppe.skylife.utility.messages.Messages
 import com.carinaschoppe.skylife.utility.scoreboard.ScoreboardManager
 import com.carinaschoppe.skylife.utility.statistics.StatsUtility
@@ -33,6 +34,8 @@ class PlayerDisconnectsServerListener : Listener {
             // Remove player from the game
             game.livingPlayers.remove(player)
             game.spectators.remove(player)
+            ScoreboardManager.removeScoreboard(player)
+            KitManager.removePlayer(player)
 
             // Update statistics
             StatsUtility.addStatsToPlayerWhenLeave(player)

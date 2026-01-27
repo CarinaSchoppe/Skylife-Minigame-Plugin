@@ -19,7 +19,7 @@ import org.bukkit.plugin.PluginManager
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 
-class Skylife : JavaPlugin() {
+open class Skylife : JavaPlugin() {
 
 
     //TODO: events
@@ -35,7 +35,7 @@ class Skylife : JavaPlugin() {
 
     companion object {
         lateinit var instance: Skylife
-        val folderLocation = "/Skylife/"
+        val folderLocation = "Skylife/"
     }
 
 
@@ -45,16 +45,19 @@ class Skylife : JavaPlugin() {
 
         // Load custom messages
         MessageLoader.loadMessages()
-        
-        // Load all player stats into cache
-        StatsUtility.loadAllPlayersIntoStatsPlayer()
-        
+
         initialize(Bukkit.getPluginManager())
+
+        // Load all player stats into cache after database is connected
+        StatsUtility.loadAllPlayersIntoStatsPlayer()
+
+        // Load guilds into cache
+        com.carinaschoppe.skylife.guild.GuildManager.loadGuilds()
+
         Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text("Skylife has been started!", Messages.MESSAGE_COLOR)))
     }
 
     private fun initialize(pluginManager: PluginManager) {
-        ConfigurationLoader.saveConfiguration()
         ConfigurationLoader.loadConfiguration()
         DatabaseConnector.connectDatabase()
         KitManager.initializeKits()
@@ -68,6 +71,12 @@ class Skylife : JavaPlugin() {
         getCommand("stats")?.setExecutor(PlayersStatsCommand())
         getCommand("overview")?.setExecutor(GameOverviewCommand())
         getCommand("skills")?.setExecutor(SkillsListCommand())
+        val guildCommand = GuildCommand()
+        getCommand("guild")?.setExecutor(guildCommand)
+        getCommand("guild")?.tabCompleter = guildCommand
+        val messageCommand = MessageCommand()
+        getCommand("msg")?.setExecutor(messageCommand)
+        getCommand("msg")?.tabCompleter = messageCommand
 
         pluginManager.registerEvents(PlayerLoosesSaturationListener(), this)
         pluginManager.registerEvents(PlayerDisconnectsServerListener(), this)
@@ -79,13 +88,17 @@ class Skylife : JavaPlugin() {
         pluginManager.registerEvents(PlayerDeathListener(), this)
         pluginManager.registerEvents(PlayerJoinsServerListener(), this)
         pluginManager.registerEvents(PlayerEntersPortalListener(), this)
+        pluginManager.registerEvents(PlayerGameOverviewItemListener(), this)
         pluginManager.registerEvents(KitSelectorListener(), this)
         pluginManager.registerEvents(PlayerSelectGameListener(), this)
+        pluginManager.registerEvents(PlayerDisplayNameListener(), this)
 
         addSkillListeners(pluginManager)
 
-        //Create game_maps folder if
-        val folder = File(Bukkit.getServer().worldContainer, "game_maps")
+        //Create game_maps folder if (MockBukkit doesn't implement worldContainer)
+        val worldContainer = runCatching { Bukkit.getServer().worldContainer }
+            .getOrElse { Bukkit.getServer().pluginsFolder }
+        val folder = File(worldContainer, "game_maps")
 
         if (!folder.exists()) {
             folder.mkdir()

@@ -1,4 +1,4 @@
-package com.carinaschoppe.skylife.game.gamestates
+﻿package com.carinaschoppe.skylife.game.gamestates
 
 import com.carinaschoppe.skylife.events.kit.KitSelectorListener
 import com.carinaschoppe.skylife.game.Game
@@ -47,7 +47,7 @@ class LobbyState(private val game: Game) : GameState {
         player.inventory.clear()
         val kitSelector = ItemStack(Material.CHEST)
         val meta = kitSelector.itemMeta
-        meta.displayName(Messages.legacy(KitSelectorListener.KIT_SELECTOR_ITEM_NAME))
+        meta.displayName(Messages.parse(KitSelectorListener.KIT_SELECTOR_ITEM_NAME))
         kitSelector.itemMeta = meta
         player.inventory.setItem(4, kitSelector) // Place in the middle of the hotbar
 
@@ -56,9 +56,9 @@ class LobbyState(private val game: Game) : GameState {
         }
         // Notify all players about the new player joining with current player count
         val joinMessage = Messages.PLAYER_JOINED(
-            playerName = player.name,
-            playerCount = game.livingPlayers.size,
-            maxPlayers = game.maxPlayers
+            player.name,
+            game.livingPlayers.size,
+            game.maxPlayers
         )
         game.broadcast(joinMessage)
     }
@@ -78,6 +78,6 @@ class LobbyState(private val game: Game) : GameState {
             }
         }
         // Notify all players about the player leaving
-        game.broadcast(Messages.PLAYER_LEFT(player.name))
+        game.broadcast(Messages.PLAYER_LEFT_GAME_BROADCAST(player.name))
     }
 }

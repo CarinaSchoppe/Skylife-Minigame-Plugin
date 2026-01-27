@@ -2,6 +2,7 @@ package com.carinaschoppe.skylife.events.player
 
 import com.carinaschoppe.skylife.game.GameCluster
 import com.carinaschoppe.skylife.game.gamestates.IngameState
+import com.carinaschoppe.skylife.guild.GuildManager
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -16,6 +17,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent
  * - Spectators are immune to damage and cannot deal damage.
  * - Damage between players in different games is prevented.
  * - Damage involving players not in a game (e.g., in the hub) is also cancelled to prevent spawn-killing.
+ * - Guild members cannot damage each other unless friendly fire is enabled or they're the last team standing.
  */
 class PlayerDamagesListener : Listener {
 
@@ -42,6 +44,27 @@ class PlayerDamagesListener : Listener {
             // cancel the event.
             if (victimGame != damagerGame) {
                 event.isCancelled = true
+                return
+            }
+
+            // Check guild friendly fire
+            if (victimGame != null && damagerGame != null) {
+                // Check if they're in the same guild
+                if (GuildManager.areInSameGuild(damager.uniqueId, victim.uniqueId)) {
+                    val guildId = GuildManager.getPlayerGuildId(damager.uniqueId)!!
+
+                    // Check if friendly fire is enabled for the guild
+                    val guild = GuildManager.getGuild(guildId)
+                    if (guild != null && !guild.friendlyFireEnabled) {
+                        // Check if guild is last team standing (only guild members alive)
+                        val isLastTeam = GuildManager.isLastTeamStanding(guildId, victimGame.livingPlayers)
+                        if (!isLastTeam) {
+                            // Cancel damage - friendly fire is disabled and guild is not last team
+                            event.isCancelled = true
+                            return
+                        }
+                    }
+                }
             }
         }
     }

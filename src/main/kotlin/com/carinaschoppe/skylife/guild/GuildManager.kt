@@ -1,6 +1,8 @@
 package com.carinaschoppe.skylife.guild
 
 import org.bukkit.entity.Player
+import org.jetbrains.exposed.v1.core.and
+import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap

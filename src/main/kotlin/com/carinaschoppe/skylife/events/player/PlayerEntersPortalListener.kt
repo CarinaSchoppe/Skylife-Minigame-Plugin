@@ -1,6 +1,7 @@
 package com.carinaschoppe.skylife.events.player
 
 import com.carinaschoppe.skylife.game.GameCluster
+import com.carinaschoppe.skylife.utility.messages.Messages
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -23,13 +24,15 @@ class PlayerEntersPortalListener : Listener {
         }
 
         // Check if the destination block is the trigger for joining a game.
-        if (event.to.block.type == Material.END_PORTAL) {
+        if (event.to.block.type == Material.END_PORTAL || event.to.block.type == Material.END_PORTAL_FRAME) {
             val player = event.player
 
             // If the player is not already in a game, add them to a random one.
             // This prevents players who are already in a lobby or match from being moved.
             if (GameCluster.getGame(player) == null) {
-                GameCluster.addPlayerToRandomGame(player)
+                if (!GameCluster.addPlayerToRandomGame(player)) {
+                    player.sendMessage(Messages.ERROR_NO_GAME)
+                }
             }
         }
     }
