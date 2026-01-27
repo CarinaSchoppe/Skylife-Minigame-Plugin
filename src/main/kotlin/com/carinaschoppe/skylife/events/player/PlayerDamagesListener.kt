@@ -18,6 +18,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent
  * - Damage between players in different games is prevented.
  * - Damage involving players not in a game (e.g., in the hub) is also cancelled to prevent spawn-killing.
  * - Guild members cannot damage each other unless friendly fire is enabled or they're the last team standing.
+ * - Party members can always damage each other (friendly fire is always enabled for parties).
  */
 class PlayerDamagesListener : Listener {
 
@@ -47,7 +48,7 @@ class PlayerDamagesListener : Listener {
                 return
             }
 
-            // Check guild friendly fire
+            // Check guild friendly fire (parties can always damage each other)
             if (victimGame != null && damagerGame != null) {
                 // Check if they're in the same guild
                 if (GuildManager.areInSameGuild(damager.uniqueId, victim.uniqueId)) {

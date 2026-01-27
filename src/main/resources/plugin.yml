@@ -41,3 +41,6 @@ commands:
   msg:
     description: Send a direct message to another player
     aliases: [ message, whisper, w, tell, pm ]
+  party:
+    description: Manage your party (create, invite, accept, leave, kick, promote, list, invites)
+    aliases: [ p ]

@@ -1,6 +1,7 @@
 package com.carinaschoppe.skylife.commands.user
 
 import com.carinaschoppe.skylife.game.GameCluster
+import com.carinaschoppe.skylife.party.PartyManager
 import com.carinaschoppe.skylife.utility.messages.Messages
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -54,14 +55,40 @@ class JoinGameCommand : CommandExecutor, TabCompleter {
         // Determine if joining a random game or a specific one
         val mapToJoin = args.firstOrNull()
 
+        // Check if player is in a party
+        val party = PartyManager.getPlayerParty(sender.uniqueId)
+        val isPartyLeader = party != null && party.isLeader(sender.uniqueId)
+
+        // Non-leaders in a party cannot join games manually
+        if (party != null && !isPartyLeader) {
+            sender.sendMessage(Messages.PARTY_ONLY_LEADER_CAN_JOIN)
+            return true
+        }
+
         if (mapToJoin == null || mapToJoin.equals("random", ignoreCase = true)) {
             // Join a random game
             if (!sender.hasPermission("skylife.join.random")) {
                 sender.sendMessage(Messages.ERROR_PERMISSION)
                 return true
             }
-            if (!GameCluster.addPlayerToRandomGame(sender)) {
-                sender.sendMessage(Messages.ERROR_NO_GAME)
+
+            // If party leader, handle party join
+            if (isPartyLeader && party != null) {
+                val game = GameCluster.findRandomAvailableGame()
+                if (game == null) {
+                    sender.sendMessage(Messages.ERROR_NO_GAME)
+                    return true
+                }
+
+                val partyJoinResult = PartyManager.handlePartyGameJoin(sender, game, null)
+                partyJoinResult.onFailure { error ->
+                    sender.sendMessage(Messages.parse("<red>${error.message}</red>"))
+                }
+            } else {
+                // Normal single player join
+                if (!GameCluster.addPlayerToRandomGame(sender)) {
+                    sender.sendMessage(Messages.ERROR_NO_GAME)
+                }
             }
         } else {
             // Join a specific game by map name
@@ -69,10 +96,22 @@ class JoinGameCommand : CommandExecutor, TabCompleter {
                 sender.sendMessage(Messages.ERROR_PERMISSION)
                 return true
             }
-            if (!GameCluster.addPlayerToGame(sender, mapToJoin)) {
-                if (GameCluster.getGameByName(mapToJoin) == null) {
-                    sender.sendMessage(Messages.GAME_NOT_EXISTS(mapToJoin))
-                } else {
+
+            val game = GameCluster.getGameByName(mapToJoin)
+            if (game == null) {
+                sender.sendMessage(Messages.GAME_NOT_EXISTS(mapToJoin))
+                return true
+            }
+
+            // If party leader, handle party join
+            if (isPartyLeader && party != null) {
+                val partyJoinResult = PartyManager.handlePartyGameJoin(sender, game, mapToJoin)
+                partyJoinResult.onFailure { error ->
+                    sender.sendMessage(Messages.parse("<red>${error.message}</red>"))
+                }
+            } else {
+                // Normal single player join
+                if (!GameCluster.addPlayerToGame(sender, mapToJoin)) {
                     sender.sendMessage(Messages.ERROR_GAME_FULL_OR_STARTED())
                 }
             }

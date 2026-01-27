@@ -29,11 +29,6 @@ open class Skylife : JavaPlugin() {
 
     //TODO: events
     //TODO: party (maybe)
-    //TODO: statistics (kill, death) (done maybe)
-    //TODO: Skills
-    //TODO: Items
-    //TODO: testing (later)
-    //TODO: GUIs
     //TODO: Config files with postgreSQL
 
 
@@ -89,6 +84,9 @@ open class Skylife : JavaPlugin() {
         val messageCommand = MessageCommand()
         getCommand("msg")?.setExecutor(messageCommand)
         getCommand("msg")?.tabCompleter = messageCommand
+        val partyCommand = PartyCommand()
+        getCommand("party")?.setExecutor(partyCommand)
+        getCommand("party")?.tabCompleter = partyCommand
 
         pluginManager.registerEvents(PlayerLoosesSaturationListener(), this)
         pluginManager.registerEvents(PlayerDisconnectsServerListener(), this)
@@ -104,6 +102,7 @@ open class Skylife : JavaPlugin() {
         pluginManager.registerEvents(KitSelectorListener(), this)
         pluginManager.registerEvents(PlayerSelectGameListener(), this)
         pluginManager.registerEvents(PlayerDisplayNameListener(), this)
+        pluginManager.registerEvents(PlayerDisconnectsPartyListener(), this)
 
         addSkillListeners(pluginManager)
 
