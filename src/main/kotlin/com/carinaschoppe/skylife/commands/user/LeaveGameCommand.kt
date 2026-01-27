@@ -1,7 +1,6 @@
 package com.carinaschoppe.skylife.commands.user
 
 import com.carinaschoppe.skylife.game.GameCluster
-import com.carinaschoppe.skylife.hub.HubManager
 import com.carinaschoppe.skylife.utility.messages.Messages
 import com.carinaschoppe.skylife.utility.statistics.StatsUtility
 import org.bukkit.command.Command
@@ -44,14 +43,10 @@ class LeaveGameCommand : CommandExecutor {
             return true
         }
 
-        // The GameCluster handles the core logic of removing a player.
+        // The GameCluster handles the core logic of removing a player and teleporting to hub
         GameCluster.removePlayerFromGame(sender)
 
-        // Teleport player to hub
-        HubManager.teleportToHub(sender)
-
-        // Ideally, stat updates and messaging should also be handled within the GameCluster
-        // to keep the command layer clean and ensure consistent behavior.
+        // Update stats and notify player
         sender.sendMessage(Messages.OWN_PLAYER_LEFT)
         StatsUtility.addStatsToPlayerWhenLeave(sender, game)
 

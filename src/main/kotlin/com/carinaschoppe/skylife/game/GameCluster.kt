@@ -107,8 +107,8 @@ object GameCluster {
             player.inventory.setItem(0, GameOverviewItems.createMenuItem())
         }
 
-        // Teleport to spawn/hub (using world spawn as fallback until HubManager exists)
-        player.teleport(player.world.spawnLocation)
+        // Teleport to hub
+        HubManager.teleportToHub(player)
 
         if (game.state == GameState.States.INGAME && game.livingPlayers.size <= 1) {
             game.stop()
