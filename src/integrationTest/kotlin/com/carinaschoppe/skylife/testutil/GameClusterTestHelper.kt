@@ -1,4 +1,4 @@
-﻿package com.carinaschoppe.skylife.testutil
+package com.carinaschoppe.skylife.testutil
 
 import com.carinaschoppe.skylife.game.GameCluster
 

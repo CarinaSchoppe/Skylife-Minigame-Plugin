@@ -5,6 +5,7 @@ import com.carinaschoppe.skylife.utility.messages.Messages
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
+import org.bukkit.command.TabCompleter
 import org.bukkit.entity.Player
 
 /**
@@ -16,7 +17,7 @@ import org.bukkit.entity.Player
  * - `/join random` - Joins a random game.
  * - `/join <mapName>` - Joins a game with the specified map name.
  */
-class JoinGameCommand : CommandExecutor {
+class JoinGameCommand : CommandExecutor, TabCompleter {
 
     /**
      * Executes the join game command.
@@ -78,5 +79,14 @@ class JoinGameCommand : CommandExecutor {
         }
 
         return true
+    }
+
+    override fun onTabComplete(sender: CommandSender, command: Command, alias: String, args: Array<out String>): List<String> {
+        if (args.size == 1) {
+            val mapNames = GameCluster.gamePatterns.map { it.mapName }
+            return (listOf("random") + mapNames)
+                .filter { it.lowercase().startsWith(args[0].lowercase()) }
+        }
+        return emptyList()
     }
 }

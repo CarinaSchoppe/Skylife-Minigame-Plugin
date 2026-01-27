@@ -1,4 +1,4 @@
-﻿package com.carinaschoppe.skylife.utility.statistics
+package com.carinaschoppe.skylife.utility.statistics
 
 import com.carinaschoppe.skylife.database.DatabaseConnector
 import org.jetbrains.exposed.v1.core.eq

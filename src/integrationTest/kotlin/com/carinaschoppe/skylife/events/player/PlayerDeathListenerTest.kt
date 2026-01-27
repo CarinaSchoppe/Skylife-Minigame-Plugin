@@ -1,4 +1,4 @@
-﻿package com.carinaschoppe.skylife.events.player
+package com.carinaschoppe.skylife.events.player
 
 import com.carinaschoppe.skylife.Skylife
 import com.carinaschoppe.skylife.game.Game

@@ -1,4 +1,4 @@
-﻿package com.carinaschoppe.skylife.game
+package com.carinaschoppe.skylife.game
 
 import com.carinaschoppe.skylife.database.DatabaseConnector
 import com.carinaschoppe.skylife.testutil.GameClusterTestHelper

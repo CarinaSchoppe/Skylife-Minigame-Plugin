@@ -77,7 +77,11 @@ object ChatManager {
             return
         }
 
-        val guild = GuildManager.getGuild(guildId)!!
+        val guild = GuildManager.getGuild(guildId)
+        if (guild == null) {
+            sender.sendMessage(Messages.PREFIX.append(Component.text("Guild not found", Messages.ERROR_COLOR)))
+            return
+        }
         val guildTag = "[${guild.tag}]"
 
         val formattedMessage = Component.text("[GUILD] ", NamedTextColor.GREEN)

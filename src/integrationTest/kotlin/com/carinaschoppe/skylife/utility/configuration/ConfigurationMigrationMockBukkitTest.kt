@@ -1,4 +1,4 @@
-﻿package com.carinaschoppe.skylife.utility.configuration
+package com.carinaschoppe.skylife.utility.configuration
 
 import com.carinaschoppe.skylife.Skylife
 import org.junit.jupiter.api.AfterEach
@@ -40,7 +40,7 @@ class ConfigurationMigrationMockBukkitTest {
 
         val migrated = configFile.readText()
         kotlin.test.assertFalse(migrated.contains("&"))
-        kotlin.test.assertFalse(migrated.contains("§"))
+        kotlin.test.assertFalse(migrated.contains("�"))
         kotlin.test.assertTrue(migrated.contains("<"))
     }
 }

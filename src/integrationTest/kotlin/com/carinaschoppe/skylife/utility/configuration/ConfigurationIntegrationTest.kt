@@ -1,4 +1,4 @@
-﻿package com.carinaschoppe.skylife.utility.configuration
+package com.carinaschoppe.skylife.utility.configuration
 
 import com.carinaschoppe.skylife.utility.scoreboard.ScoreboardTextRenderer
 import org.junit.jupiter.api.Test

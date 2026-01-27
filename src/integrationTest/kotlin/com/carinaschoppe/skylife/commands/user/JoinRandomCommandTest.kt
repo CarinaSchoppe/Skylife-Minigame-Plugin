@@ -1,4 +1,4 @@
-﻿package com.carinaschoppe.skylife.commands.user
+package com.carinaschoppe.skylife.commands.user
 
 import com.carinaschoppe.skylife.database.DatabaseConnector
 import com.carinaschoppe.skylife.game.Game

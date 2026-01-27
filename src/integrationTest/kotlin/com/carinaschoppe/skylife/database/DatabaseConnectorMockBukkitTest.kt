@@ -1,4 +1,4 @@
-﻿package com.carinaschoppe.skylife.database
+package com.carinaschoppe.skylife.database
 
 import com.carinaschoppe.skylife.Skylife
 import com.carinaschoppe.skylife.utility.statistics.StatsPlayers

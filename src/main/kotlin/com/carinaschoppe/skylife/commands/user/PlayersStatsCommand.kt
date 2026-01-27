@@ -2,9 +2,11 @@ package com.carinaschoppe.skylife.commands.user
 
 import com.carinaschoppe.skylife.utility.messages.Messages
 import com.carinaschoppe.skylife.utility.statistics.StatsPlayer
+import org.bukkit.Bukkit
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
+import org.bukkit.command.TabCompleter
 import org.bukkit.entity.Player
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
@@ -16,7 +18,7 @@ import org.jetbrains.exposed.v1.jdbc.transactions.transaction
  * - `/stats` - Displays the sender's own statistics.
  * - `/stats <playerName>` - Displays the statistics for the specified player.
  */
-class PlayersStatsCommand : CommandExecutor {
+class PlayersStatsCommand : CommandExecutor, TabCompleter {
 
     /**
      * Executes the statistics command.
@@ -85,5 +87,14 @@ class PlayersStatsCommand : CommandExecutor {
         }
 
         return true
+    }
+
+    override fun onTabComplete(sender: CommandSender, command: Command, alias: String, args: Array<out String>): List<String> {
+        if (args.size == 1) {
+            return Bukkit.getOnlinePlayers()
+                .map { it.name }
+                .filter { it.lowercase().startsWith(args[0].lowercase()) }
+        }
+        return emptyList()
     }
 }

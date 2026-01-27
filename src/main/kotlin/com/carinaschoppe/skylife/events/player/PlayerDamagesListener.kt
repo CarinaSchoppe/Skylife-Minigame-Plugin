@@ -51,7 +51,8 @@ class PlayerDamagesListener : Listener {
             if (victimGame != null && damagerGame != null) {
                 // Check if they're in the same guild
                 if (GuildManager.areInSameGuild(damager.uniqueId, victim.uniqueId)) {
-                    val guildId = GuildManager.getPlayerGuildId(damager.uniqueId)!!
+                    val guildId = GuildManager.getPlayerGuildId(damager.uniqueId)
+                    if (guildId == null) return // Safety check
 
                     // Check if friendly fire is enabled for the guild
                     val guild = GuildManager.getGuild(guildId)

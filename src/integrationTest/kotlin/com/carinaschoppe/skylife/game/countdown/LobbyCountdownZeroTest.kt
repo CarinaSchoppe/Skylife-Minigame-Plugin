@@ -1,4 +1,4 @@
-﻿package com.carinaschoppe.skylife.game.countdown
+package com.carinaschoppe.skylife.game.countdown
 
 import com.carinaschoppe.skylife.Skylife
 import com.carinaschoppe.skylife.game.Game

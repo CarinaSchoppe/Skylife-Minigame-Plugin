@@ -1,4 +1,4 @@
-﻿package com.carinaschoppe.skylife.game.managers
+package com.carinaschoppe.skylife.game.managers
 
 import com.carinaschoppe.skylife.game.Game
 import com.carinaschoppe.skylife.game.GamePattern

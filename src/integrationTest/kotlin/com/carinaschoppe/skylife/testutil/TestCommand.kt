@@ -1,4 +1,4 @@
-﻿package com.carinaschoppe.skylife.testutil
+package com.carinaschoppe.skylife.testutil
 
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender

@@ -7,6 +7,7 @@ import com.carinaschoppe.skylife.utility.messages.Messages
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
+import org.bukkit.command.TabCompleter
 import org.bukkit.entity.Player
 
 /**
@@ -18,7 +19,7 @@ import org.bukkit.entity.Player
  * - `/game save <name>` - Saves a configured game pattern to a file.
  * - `/game delete <name>` - Deletes a game pattern and its file.
  */
-class CreateGamePatternCommand : CommandExecutor {
+class CreateGamePatternCommand : CommandExecutor, TabCompleter {
 
     /**
      * Executes the game pattern management commands.
@@ -108,5 +109,22 @@ class CreateGamePatternCommand : CommandExecutor {
             }
         }
         return true
+    }
+
+    override fun onTabComplete(sender: CommandSender, command: Command, alias: String, args: Array<out String>): List<String> {
+        return when (args.size) {
+            1 -> listOf("create", "save", "delete")
+                .filter { it.startsWith(args[0].lowercase()) }
+
+            2 -> when (args[0].lowercase()) {
+                "save", "delete" -> GameCluster.gamePatterns
+                    .map { it.mapName }
+                    .filter { it.lowercase().startsWith(args[1].lowercase()) }
+
+                else -> emptyList()
+            }
+
+            else -> emptyList()
+        }
     }
 }

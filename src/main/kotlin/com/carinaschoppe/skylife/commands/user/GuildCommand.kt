@@ -93,7 +93,10 @@ class GuildCommand : CommandExecutor, TabCompleter {
 
         val result = GuildManager.invitePlayer(guildId, player.uniqueId, target.uniqueId)
         if (result.isSuccess) {
-            val guild = GuildManager.getGuild(guildId)!!
+            val guild = GuildManager.getGuild(guildId) ?: run {
+                player.sendMessage(Messages.PREFIX.append(Component.text("Guild not found", Messages.ERROR_COLOR)))
+                return
+            }
             player.sendMessage(
                 Messages.PREFIX.append(Component.text(target.name, Messages.NAME_COLOR, TextDecoration.BOLD))
                     .append(Component.text(" has been invited to the guild", Messages.MESSAGE_COLOR))
@@ -167,7 +170,10 @@ class GuildCommand : CommandExecutor, TabCompleter {
             return
         }
 
-        val guild = GuildManager.getGuild(guildId)!!
+        val guild = GuildManager.getGuild(guildId) ?: run {
+            player.sendMessage(Messages.PREFIX.append(Component.text("Guild not found", Messages.ERROR_COLOR)))
+            return
+        }
         guild.members[target.uniqueId]
 
         val result = GuildManager.promotePlayer(guildId, player.uniqueId, target.uniqueId)
@@ -233,7 +239,7 @@ class GuildCommand : CommandExecutor, TabCompleter {
 
         val result = GuildManager.toggleFriendlyFire(guildId, player.uniqueId)
         if (result.isSuccess) {
-            val enabled = result.getOrNull()!!
+            val enabled = result.getOrNull() ?: false
             val statusText = if (enabled) "enabled" else "disabled"
             val statusColor = if (enabled) Messages.ERROR_COLOR else Messages.MESSAGE_COLOR
 

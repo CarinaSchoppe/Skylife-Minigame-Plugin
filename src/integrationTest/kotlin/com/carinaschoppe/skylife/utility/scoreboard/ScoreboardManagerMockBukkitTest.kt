@@ -1,4 +1,4 @@
-﻿package com.carinaschoppe.skylife.utility.scoreboard
+package com.carinaschoppe.skylife.utility.scoreboard
 
 import com.carinaschoppe.skylife.Skylife
 import com.carinaschoppe.skylife.database.DatabaseConnector
@@ -85,6 +85,6 @@ class ScoreboardManagerMockBukkitTest {
     }
 
     private fun stripLegacy(text: String): String {
-        return text.replace(Regex("(?i)§[0-9A-FK-OR]"), "").replace("\u200B", "")
+        return text.replace(Regex("(?i)�[0-9A-FK-OR]"), "").replace("\u200B", "")
     }
 }

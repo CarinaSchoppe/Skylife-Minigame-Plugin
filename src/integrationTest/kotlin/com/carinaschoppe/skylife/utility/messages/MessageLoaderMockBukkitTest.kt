@@ -1,4 +1,4 @@
-﻿package com.carinaschoppe.skylife.utility.messages
+package com.carinaschoppe.skylife.utility.messages
 
 import com.carinaschoppe.skylife.Skylife
 import org.junit.jupiter.api.AfterEach

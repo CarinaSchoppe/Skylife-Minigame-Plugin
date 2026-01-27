@@ -6,6 +6,7 @@ import com.carinaschoppe.skylife.utility.messages.Messages
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
+import org.bukkit.command.TabCompleter
 import org.bukkit.entity.Player
 
 /**
@@ -15,7 +16,7 @@ import org.bukkit.entity.Player
  * Command Usage:
  * - `/setlocation <mapName> <lobby|spawn|spectator|main>`
  */
-class SetIngameLocationCommand : CommandExecutor {
+class SetIngameLocationCommand : CommandExecutor, TabCompleter {
 
     /**
      * Executes the location setting command.
@@ -90,5 +91,18 @@ class SetIngameLocationCommand : CommandExecutor {
             }
         }
         return true
+    }
+
+    override fun onTabComplete(sender: CommandSender, command: Command, alias: String, args: Array<out String>): List<String> {
+        return when (args.size) {
+            1 -> GameCluster.gamePatterns
+                .map { it.mapName }
+                .filter { it.lowercase().startsWith(args[0].lowercase()) }
+
+            2 -> listOf("lobby", "spawn", "spectator", "main")
+                .filter { it.startsWith(args[1].lowercase()) }
+
+            else -> emptyList()
+        }
     }
 }

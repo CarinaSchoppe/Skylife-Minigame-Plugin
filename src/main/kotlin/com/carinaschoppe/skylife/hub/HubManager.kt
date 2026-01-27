@@ -37,8 +37,12 @@ object HubManager {
         ) {
 
             val worldName = config.getString("hub.world")
-            val world = Bukkit.getWorld(worldName!!)
+            if (worldName == null) {
+                Bukkit.getLogger().warning("[Skylife] Hub world name is null in config!")
+                return
+            }
 
+            val world = Bukkit.getWorld(worldName)
             if (world != null) {
                 val x = config.getDouble("hub.x")
                 val y = config.getDouble("hub.y")
