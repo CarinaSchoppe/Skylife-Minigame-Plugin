@@ -27,8 +27,6 @@ import java.io.File
 open class Skylife : JavaPlugin() {
 
 
-    //TODO: events
-    //TODO: party (maybe)
     //TODO: Config files with postgreSQL
 
 

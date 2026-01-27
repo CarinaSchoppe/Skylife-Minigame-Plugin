@@ -35,7 +35,7 @@ class Guild(id: EntityID<Int>) : Entity<Int>(id) {
 object GuildMembers : IntIdTable() {
     val playerUUID = varchar("player_uuid", 36).uniqueIndex()
     val guildId = reference("guild_id", Guilds)
-    val role = enumerationByName("role", 10, GuildRole::class)
+    val role = enumerationByName("role", 6, GuildRole::class)
 }
 
 /**

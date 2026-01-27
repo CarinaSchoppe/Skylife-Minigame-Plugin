@@ -28,9 +28,9 @@ object Messages {
         return PREFIX.append(Component.text("Player amount set", MESSAGE_COLOR, TextDecoration.BOLD))
     }
 
-    val DATABASE_CONNECTED = PREFIX.append(Component.text("The Database was successfully connected!", MESSAGE_COLOR, TextDecoration.BOLD))
+    var DATABASE_CONNECTED: Component = PREFIX.append(Component.text("The Database was successfully connected!", MESSAGE_COLOR, TextDecoration.BOLD))
 
-    val DATABASE_TABLES_CREATED = PREFIX.append(Component.text("The Database tables where successfully created!", MESSAGE_COLOR, TextDecoration.BOLD))
+    var DATABASE_TABLES_CREATED: Component = PREFIX.append(Component.text("The Database tables where successfully created!", MESSAGE_COLOR, TextDecoration.BOLD))
 
     fun STATS(own: Boolean, name: String, kills: Int, deaths: Int, wins: Int, games: Int, points: Int, rank: Int): Component {
         return Component.text()
@@ -260,21 +260,21 @@ object Messages {
     }
 
     // Party System Messages
-    val PARTY_CREATED: Component = PREFIX.append(Component.text("Party created! You are now the party leader.", MESSAGE_COLOR))
+    var PARTY_CREATED: Component = PREFIX.append(Component.text("Party created! You are now the party leader.", MESSAGE_COLOR))
 
-    val PARTY_ALREADY_IN_PARTY: Component = PREFIX.append(Component.text("You are already in a party!", ERROR_COLOR))
+    var PARTY_ALREADY_IN_PARTY: Component = PREFIX.append(Component.text("You are already in a party!", ERROR_COLOR))
 
-    val PARTY_NOT_IN_PARTY: Component = PREFIX.append(Component.text("You are not in a party!", ERROR_COLOR))
+    var PARTY_NOT_IN_PARTY: Component = PREFIX.append(Component.text("You are not in a party!", ERROR_COLOR))
 
-    val PARTY_INVITE_USAGE: Component = PREFIX.append(Component.text("Usage: /party invite <player>", ERROR_COLOR))
+    var PARTY_INVITE_USAGE: Component = PREFIX.append(Component.text("Usage: /party invite <player>", ERROR_COLOR))
 
-    val PARTY_ACCEPT_USAGE: Component = PREFIX.append(Component.text("Usage: /party accept <player>", ERROR_COLOR))
+    var PARTY_ACCEPT_USAGE: Component = PREFIX.append(Component.text("Usage: /party accept <player>", ERROR_COLOR))
 
-    val PARTY_KICK_USAGE: Component = PREFIX.append(Component.text("Usage: /party kick <player>", ERROR_COLOR))
+    var PARTY_KICK_USAGE: Component = PREFIX.append(Component.text("Usage: /party kick <player>", ERROR_COLOR))
 
-    val PARTY_PROMOTE_USAGE: Component = PREFIX.append(Component.text("Usage: /party promote <player>", ERROR_COLOR))
+    var PARTY_PROMOTE_USAGE: Component = PREFIX.append(Component.text("Usage: /party promote <player>", ERROR_COLOR))
 
-    val PARTY_CANNOT_INVITE_SELF: Component = PREFIX.append(Component.text("You cannot invite yourself!", ERROR_COLOR))
+    var PARTY_CANNOT_INVITE_SELF: Component = PREFIX.append(Component.text("You cannot invite yourself!", ERROR_COLOR))
 
     fun PLAYER_NOT_ONLINE(playerName: String): Component {
         return PREFIX.append(Component.text("Player ", ERROR_COLOR))
@@ -308,14 +308,14 @@ object Messages {
             .append(Component.text(" has joined the party!", MESSAGE_COLOR))
     }
 
-    val PARTY_LEFT: Component = PREFIX.append(Component.text("You have left the party.", MESSAGE_COLOR))
+    var PARTY_LEFT: Component = PREFIX.append(Component.text("You have left the party.", MESSAGE_COLOR))
 
     fun PARTY_MEMBER_LEFT(playerName: String): Component {
         return PREFIX.append(Component.text(playerName, ACCENT_COLOR))
             .append(Component.text(" has left the party.", MESSAGE_COLOR))
     }
 
-    val PARTY_PROMOTED_TO_LEADER: Component = PREFIX.append(Component.text("You are now the party leader!", MESSAGE_COLOR, TextDecoration.BOLD))
+    var PARTY_PROMOTED_TO_LEADER: Component = PREFIX.append(Component.text("You are now the party leader!", MESSAGE_COLOR, TextDecoration.BOLD))
 
     fun PARTY_PROMOTED(playerName: String): Component {
         return PREFIX.append(Component.text("You have promoted ", MESSAGE_COLOR))
@@ -334,14 +334,14 @@ object Messages {
             .append(Component.text(" from the party!", MESSAGE_COLOR))
     }
 
-    val PARTY_KICKED_BY_LEADER: Component = PREFIX.append(Component.text("You have been kicked from the party!", ERROR_COLOR))
+    var PARTY_KICKED_BY_LEADER: Component = PREFIX.append(Component.text("You have been kicked from the party!", ERROR_COLOR))
 
     fun PARTY_MEMBER_KICKED(playerName: String): Component {
         return PREFIX.append(Component.text(playerName, ACCENT_COLOR))
             .append(Component.text(" has been kicked from the party!", MESSAGE_COLOR))
     }
 
-    val PARTY_LIST_HEADER: Component = PREFIX.append(Component.text("=== Party Members ===", ACCENT_COLOR, TextDecoration.BOLD))
+    var PARTY_LIST_HEADER: Component = PREFIX.append(Component.text("=== Party Members ===", ACCENT_COLOR, TextDecoration.BOLD))
 
     fun PARTY_LIST_LEADER(leaderName: String): Component {
         return Component.text("  ★ ", NAME_COLOR, TextDecoration.BOLD)
@@ -362,9 +362,9 @@ object Messages {
             .append(Component.text(" members", GRAY_COLOR))
     }
 
-    val PARTY_NO_INVITES: Component = PREFIX.append(Component.text("You have no pending party invites.", MESSAGE_COLOR))
+    var PARTY_NO_INVITES: Component = PREFIX.append(Component.text("You have no pending party invites.", MESSAGE_COLOR))
 
-    val PARTY_INVITES_HEADER: Component = PREFIX.append(Component.text("=== Pending Party Invites ===", ACCENT_COLOR, TextDecoration.BOLD))
+    var PARTY_INVITES_HEADER: Component = PREFIX.append(Component.text("=== Pending Party Invites ===", ACCENT_COLOR, TextDecoration.BOLD))
 
     fun PARTY_INVITE_ENTRY(inviterName: String, secondsLeft: Long): Component {
         return Component.text("  • ", GRAY_COLOR)
@@ -374,32 +374,32 @@ object Messages {
             .append(Component.text(")", GRAY_COLOR))
     }
 
-    val PARTY_ONLY_LEADER_CAN_JOIN: Component = PREFIX.append(Component.text("Only the party leader can join games! The whole party will join together.", ERROR_COLOR))
+    var PARTY_ONLY_LEADER_CAN_JOIN: Component = PREFIX.append(Component.text("Only the party leader can join games! The whole party will join together.", ERROR_COLOR))
 
-    val PARTY_HELP_HEADER: Component = PREFIX.append(Component.text("=== Party Commands ===", ACCENT_COLOR, TextDecoration.BOLD))
+    var PARTY_HELP_HEADER: Component = PREFIX.append(Component.text("=== Party Commands ===", ACCENT_COLOR, TextDecoration.BOLD))
 
-    val PARTY_HELP_CREATE: Component = Component.text("  /party create", ACCENT_COLOR)
+    var PARTY_HELP_CREATE: Component = Component.text("  /party create", ACCENT_COLOR)
         .append(Component.text(" - Create a new party", GRAY_COLOR))
 
-    val PARTY_HELP_INVITE: Component = Component.text("  /party invite <player>", ACCENT_COLOR)
+    var PARTY_HELP_INVITE: Component = Component.text("  /party invite <player>", ACCENT_COLOR)
         .append(Component.text(" - Invite a player to your party", GRAY_COLOR))
 
-    val PARTY_HELP_ACCEPT: Component = Component.text("  /party accept <player>", ACCENT_COLOR)
+    var PARTY_HELP_ACCEPT: Component = Component.text("  /party accept <player>", ACCENT_COLOR)
         .append(Component.text(" - Accept a party invite", GRAY_COLOR))
 
-    val PARTY_HELP_LEAVE: Component = Component.text("  /party leave", ACCENT_COLOR)
+    var PARTY_HELP_LEAVE: Component = Component.text("  /party leave", ACCENT_COLOR)
         .append(Component.text(" - Leave your current party", GRAY_COLOR))
 
-    val PARTY_HELP_KICK: Component = Component.text("  /party kick <player>", ACCENT_COLOR)
+    var PARTY_HELP_KICK: Component = Component.text("  /party kick <player>", ACCENT_COLOR)
         .append(Component.text(" - Kick a player from your party (leader only)", GRAY_COLOR))
 
-    val PARTY_HELP_PROMOTE: Component = Component.text("  /party promote <player>", ACCENT_COLOR)
+    var PARTY_HELP_PROMOTE: Component = Component.text("  /party promote <player>", ACCENT_COLOR)
         .append(Component.text(" - Promote a player to party leader", GRAY_COLOR))
 
-    val PARTY_HELP_LIST: Component = Component.text("  /party list", ACCENT_COLOR)
+    var PARTY_HELP_LIST: Component = Component.text("  /party list", ACCENT_COLOR)
         .append(Component.text(" - List all party members", GRAY_COLOR))
 
-    val PARTY_HELP_INVITES: Component = Component.text("  /party invites", ACCENT_COLOR)
+    var PARTY_HELP_INVITES: Component = Component.text("  /party invites", ACCENT_COLOR)
         .append(Component.text(" - List all pending invites", GRAY_COLOR))
 }
 
