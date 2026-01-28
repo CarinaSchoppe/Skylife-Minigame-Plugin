@@ -42,9 +42,17 @@ object SkillsManager {
     private val activeSkills = ConcurrentHashMap<UUID, MutableSet<Skill>>()
 
     /**
-     * Maximum number of skills a player can select.
+     * Gets the maximum number of skills a player can select based on their rank.
+     * USER: 2, VIP: 3, VIP+: 4
      */
-    const val MAX_SKILLS = 2
+    fun getMaxSkills(player: Player): Int {
+        val rank = com.carinaschoppe.skylife.economy.PlayerRank.getRank(player)
+        return when (rank) {
+            com.carinaschoppe.skylife.economy.PlayerRank.VIP -> 3
+            com.carinaschoppe.skylife.economy.PlayerRank.VIP_PLUS -> 4
+            else -> 2
+        }
+    }
 
     /**
      * Loads all player skill selections from database into cache.
@@ -112,15 +120,13 @@ object SkillsManager {
         } else {
             // Check if skill is unlocked
             if (!SkillUnlockManager.hasUnlocked(uuid, skill)) {
-                val errorMessage = com.carinaschoppe.skylife.utility.messages.Templates.skillMustUnlock
-                return Result.failure(Exception(errorMessage))
+                return Result.failure(Exception("You must unlock this skill before you can select it!"))
             }
 
             // Check if player can select more skills
-            if (skills.size >= MAX_SKILLS) {
-                val errorMessage = com.carinaschoppe.skylife.utility.messages.Templates.skillSelectionFailedSlotsFull
-                    .replace("<max>", MAX_SKILLS.toString())
-                return Result.failure(Exception(errorMessage))
+            val maxSkills = getMaxSkills(player)
+            if (skills.size >= maxSkills) {
+                return Result.failure(Exception("You already have $maxSkills skills selected. Unselect one first."))
             }
 
             // Select skill

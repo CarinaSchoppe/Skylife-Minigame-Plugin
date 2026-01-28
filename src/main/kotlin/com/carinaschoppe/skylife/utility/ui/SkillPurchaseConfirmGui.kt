@@ -164,18 +164,17 @@ class SkillPurchaseConfirmGui(private val player: Player, val skill: Skill) : In
 
         if (result.isSuccess) {
             // Parse template and replace placeholders
+            val colorTag = when (skill.rarity.color) {
+                NamedTextColor.WHITE -> "<white>"
+                NamedTextColor.BLUE -> "<blue>"
+                NamedTextColor.DARK_PURPLE -> "<dark_purple>"
+                NamedTextColor.GOLD -> "<gold>"
+                else -> "<white>"
+            }
             val message = Messages.parse(
                 com.carinaschoppe.skylife.utility.messages.Templates.skillPurchased
                     .replace("<skill>", skill.displayName)
-                    .replace(
-                        "<skillColor>", when (skill.rarity.color) {
-                            NamedTextColor.WHITE -> "white"
-                            NamedTextColor.BLUE -> "blue"
-                            NamedTextColor.DARK_PURPLE -> "dark_purple"
-                            NamedTextColor.GOLD -> "gold"
-                            else -> "white"
-                        }
-                    )
+                    .replace("<skillColor>", colorTag)
             )
             player.sendMessage(message)
             player.playSound(player.location, org.bukkit.Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f)
