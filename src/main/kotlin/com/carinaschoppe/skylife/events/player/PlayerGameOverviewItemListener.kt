@@ -1,5 +1,6 @@
 package com.carinaschoppe.skylife.events.player
 
+import com.carinaschoppe.skylife.game.GameCluster
 import com.carinaschoppe.skylife.utility.messages.Messages
 import com.carinaschoppe.skylife.utility.ui.GUIs
 import com.carinaschoppe.skylife.utility.ui.GameOverviewItems
@@ -12,6 +13,7 @@ import org.bukkit.event.player.PlayerInteractEvent
 
 /**
  * Handles interactions with the game overview menu item.
+ * Only works in Hub (not during active gameplay).
  */
 class PlayerGameOverviewItemListener : Listener {
 
@@ -29,6 +31,14 @@ class PlayerGameOverviewItemListener : Listener {
 
         event.isCancelled = true
         val player = event.player
+
+        // Check if player is in a game - compass should only work in Hub
+        val game = GameCluster.getGamePlayerIsIn(player)
+        if (game != null) {
+            // Player is in a game - don't allow opening game overview
+            return
+        }
+
         if (!player.hasPermission("skylife.overview")) {
             player.sendMessage(Messages.ERROR_PERMISSION)
             return

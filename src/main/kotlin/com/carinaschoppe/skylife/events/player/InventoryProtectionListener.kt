@@ -29,8 +29,7 @@ class InventoryProtectionListener : Listener {
 
         if (GameOverviewItems.isMenuItem(item) ||
             isSkillsItem(item) ||
-            ExitDoorItem.isExitDoor(item) ||
-            isKitSelectorItem(item)
+            ExitDoorItem.isExitDoor(item)
         ) {
             event.isCancelled = true
         }
@@ -49,9 +48,7 @@ class InventoryProtectionListener : Listener {
             isSkillsItem(currentItem) ||
             isSkillsItem(cursor) ||
             ExitDoorItem.isExitDoor(currentItem) ||
-            ExitDoorItem.isExitDoor(cursor) ||
-            isKitSelectorItem(currentItem) ||
-            isKitSelectorItem(cursor)
+            ExitDoorItem.isExitDoor(cursor)
         ) {
             event.isCancelled = true
         }
@@ -66,8 +63,7 @@ class InventoryProtectionListener : Listener {
 
         if (GameOverviewItems.isMenuItem(item) ||
             isSkillsItem(item) ||
-            ExitDoorItem.isExitDoor(item) ||
-            isKitSelectorItem(item)
+            ExitDoorItem.isExitDoor(item)
         ) {
             event.isCancelled = true
         }
@@ -113,16 +109,6 @@ class InventoryProtectionListener : Listener {
         return plainText.contains("Skills", ignoreCase = true)
     }
 
-    /**
-     * Checks if an item is the kit selector item (chest).
-     */
-    private fun isKitSelectorItem(item: org.bukkit.inventory.ItemStack?): Boolean {
-        if (item == null || item.type != Material.CHEST) return false
-        val meta = item.itemMeta ?: return false
-        val displayName = meta.displayName() ?: return false
-        val plainText = net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer.plainText().serialize(displayName)
-        return plainText.contains("Kit Selector", ignoreCase = true)
-    }
 
     /**
      * Prevents spectators from picking up items.
