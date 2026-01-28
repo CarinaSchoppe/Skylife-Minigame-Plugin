@@ -115,8 +115,6 @@
 - [ ] **Vault Integration**: Economy Plugin Support
 - [ ] **Discord Integration**: Discord Bot für Server Status
 - [ ] **MySQL Support**: Alternative zu SQLite
-- [ ] **Redis Support**: Für Multi-Server Setup
-- [ ] **BungeeCord/Velocity Support**: Multi-Server Network
 - [ ] **REST API**: HTTP API für externe Tools
 
 ---

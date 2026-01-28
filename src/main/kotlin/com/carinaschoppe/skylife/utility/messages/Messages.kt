@@ -73,7 +73,8 @@ object Messages {
 
     // Message templates - stored as strings and can be loaded from messages.json
     // Use placeholders like <player>, <game>, <count>, etc.
-    var TEMPLATES = Templates()
+    // Note: Templates is now an object (singleton) to avoid JVM parameter limit
+    val TEMPLATES = Templates
 
     // ===== Message Properties and Functions =====
     // These use the TEMPLATES system and can be fully customized via messages.json

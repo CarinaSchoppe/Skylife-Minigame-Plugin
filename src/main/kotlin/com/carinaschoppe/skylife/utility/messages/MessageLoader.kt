@@ -74,10 +74,18 @@ object MessageLoader {
         val json: String = file.readText()
 
         try {
-            // Deserialize JSON into Templates object
-            val templates = gson.fromJson(json, Templates::class.java)
-            if (templates != null) {
-                Messages.TEMPLATES = templates
+            // Deserialize JSON into a map and manually assign to Templates object
+            val jsonMap = gson.fromJson<Map<String, String>>(json, object : com.google.gson.reflect.TypeToken<Map<String, String>>() {}.type)
+
+            if (jsonMap != null) {
+                // Use reflection to set all properties
+                Templates::class.java.declaredFields.forEach { field ->
+                    field.isAccessible = true
+                    val value = jsonMap[field.name]
+                    if (value != null && field.type == String::class.java) {
+                        field.set(Templates, value)
+                    }
+                }
                 Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text("Messages loaded!", Messages.MESSAGE_COLOR)))
             }
         } catch (e: Exception) {
