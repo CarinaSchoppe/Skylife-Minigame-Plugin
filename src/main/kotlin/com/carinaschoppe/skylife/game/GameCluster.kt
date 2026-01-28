@@ -78,11 +78,25 @@ object GameCluster {
 
     /**
      * Adds a player to a specific game.
+     * Thread-safe to prevent race conditions when multiple players join simultaneously.
      *
      * @param player The player to add.
      * @param game The game to join.
+     * @return true if player was added successfully, false if game is full or already started
      */
-    fun addPlayerToGame(player: Player, game: Game) {
+    @Synchronized
+    fun addPlayerToGame(player: Player, game: Game): Boolean {
+        // Check if game is full or already started
+        if (game.livingPlayers.size >= game.maxPlayers) {
+            player.sendMessage(com.carinaschoppe.skylife.utility.messages.Messages.ERROR_GAME_FULL_OR_STARTED)
+            return false
+        }
+
+        if (game.state != GameState.States.LOBBY) {
+            player.sendMessage(com.carinaschoppe.skylife.utility.messages.Messages.ERROR_GAME_FULL_OR_STARTED)
+            return false
+        }
+
         player.inventory.clear()
         player.inventory.armorContents = arrayOfNulls(4)
         game.livingPlayers.add(player)
@@ -100,6 +114,8 @@ object GameCluster {
         game.currentState.playerJoined(player)
         ScoreboardManager.setScoreboard(player, game)
         game.getAllPlayers().forEach { ScoreboardManager.updateScoreboard(it, game) }
+
+        return true
     }
 
     /**

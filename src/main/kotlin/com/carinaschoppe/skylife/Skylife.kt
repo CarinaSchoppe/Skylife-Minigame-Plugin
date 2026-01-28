@@ -76,6 +76,10 @@ open class Skylife : JavaPlugin() {
         }
 
         KitManager.initializeKits()
+
+        // Cleanup orphaned worlds from previous crashes
+        com.carinaschoppe.skylife.game.managers.MapManager.cleanupOrphanedWorlds()
+
         GameLoader.findAllGames().forEach { GameLoader.loadGameFromFile(it) }
         registerCommands()
         registerEventListeners(pluginManager)

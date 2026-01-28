@@ -114,33 +114,37 @@ object MapManager {
      */
     fun unloadAndDeleteWorld(gameID: UUID) {
         val worldName = activeWorlds[gameID] ?: run {
-            Bukkit.getLogger().warning("No active world found for game $gameID")
+            Bukkit.getLogger().warning("[MapManager] No active world found for game $gameID")
             return
         }
 
-        val world = Bukkit.getWorld(worldName)
-        if (world == null) {
-            Bukkit.getLogger().warning("World '$worldName' not found for game $gameID")
-            activeWorlds.remove(gameID)
-            return
-        }
-
-        // Unload the world
-        val unloaded = Bukkit.unloadWorld(world, false) // Don't save changes
-        if (!unloaded) {
-            Bukkit.getLogger().severe("Failed to unload world '$worldName' for game $gameID")
-            return
-        }
-
-        // Delete the world folder
-        val worldFolder = File(Bukkit.getWorldContainer(), worldName)
         try {
+            val world = Bukkit.getWorld(worldName)
+            if (world == null) {
+                Bukkit.getLogger().warning("[MapManager] World '$worldName' not found for game $gameID")
+                activeWorlds.remove(gameID)
+                return
+            }
+
+            // Unload the world
+            val unloaded = Bukkit.unloadWorld(world, false) // Don't save changes
+            if (!unloaded) {
+                Bukkit.getLogger().severe("[MapManager] Failed to unload world '$worldName' for game $gameID")
+                // Still remove from activeWorlds to prevent memory leak
+                activeWorlds.remove(gameID)
+                return
+            }
+
+            // Delete the world folder
+            val worldFolder = File(Bukkit.getWorldContainer(), worldName)
             deleteDirectory(worldFolder)
-            activeWorlds.remove(gameID)
-            Bukkit.getLogger().info("Deleted world '$worldName' for game $gameID")
+            Bukkit.getLogger().info("[MapManager] Deleted world '$worldName' for game $gameID")
         } catch (e: Exception) {
-            Bukkit.getLogger().severe("Error deleting world '$worldName': ${e.message}")
+            Bukkit.getLogger().severe("[MapManager] Error during world cleanup for game $gameID: ${e.message}")
             e.printStackTrace()
+        } finally {
+            // Always remove from activeWorlds to prevent memory leaks
+            activeWorlds.remove(gameID)
         }
     }
 
@@ -215,8 +219,43 @@ object MapManager {
      * This should only be called on plugin disable.
      */
     fun cleanupAllWorlds() {
+        Bukkit.getLogger().info("[MapManager] Cleaning up ${activeWorlds.size} active game worlds...")
         activeWorlds.keys.toList().forEach { gameID ->
             unloadAndDeleteWorld(gameID)
+        }
+        Bukkit.getLogger().info("[MapManager] World cleanup completed")
+    }
+
+    /**
+     * Cleans up orphaned game worlds on startup.
+     * Finds and deletes any world folders matching "game_*" pattern that weren't properly cleaned up.
+     */
+    fun cleanupOrphanedWorlds() {
+        val worldContainer = Bukkit.getWorldContainer()
+        val orphanedWorlds = worldContainer.listFiles { file ->
+            file.isDirectory && file.name.startsWith("game_")
+        } ?: return
+
+        if (orphanedWorlds.isEmpty()) {
+            return
+        }
+
+        Bukkit.getLogger().warning("[MapManager] Found ${orphanedWorlds.size} orphaned game worlds from previous sessions")
+
+        orphanedWorlds.forEach { worldFolder ->
+            try {
+                // Try to unload world if it's loaded
+                val world = Bukkit.getWorld(worldFolder.name)
+                if (world != null) {
+                    Bukkit.unloadWorld(world, false)
+                }
+
+                // Delete the folder
+                deleteDirectory(worldFolder)
+                Bukkit.getLogger().info("[MapManager] Cleaned up orphaned world: ${worldFolder.name}")
+            } catch (e: Exception) {
+                Bukkit.getLogger().severe("[MapManager] Failed to cleanup orphaned world ${worldFolder.name}: ${e.message}")
+            }
         }
     }
 

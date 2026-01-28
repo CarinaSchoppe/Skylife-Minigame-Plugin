@@ -27,10 +27,21 @@ class PlayerDisconnectsServerListener : Listener {
 
         // Only handle game-related cleanup if the player was in a managed game
         if (game != null) {
+            // Clear inventory and armor to prevent item duplication
+            player.inventory.clear()
+            player.inventory.armorContents = arrayOfNulls(4)
+
             // Remove player from the game
             game.livingPlayers.remove(player)
             game.spectators.remove(player)
             ScoreboardManager.removeScoreboard(player)
+
+            // Remove kit selection
+            com.carinaschoppe.skylife.game.kit.KitManager.removePlayer(player)
+
+            // Deactivate skills
+            com.carinaschoppe.skylife.skills.SkillsManager.deactivateSkills(player)
+            com.carinaschoppe.skylife.skills.SkillEffectsManager.removeSkillEffects(player)
 
             // Update statistics
             StatsUtility.addStatsToPlayerWhenLeave(player, game)
