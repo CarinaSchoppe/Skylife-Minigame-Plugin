@@ -3,7 +3,7 @@ package com.carinaschoppe.skylife.events.player
 import com.carinaschoppe.skylife.game.GameCluster
 import com.carinaschoppe.skylife.utility.ui.GUIs
 import com.carinaschoppe.skylife.utility.ui.GameOverviewItems
-import com.carinaschoppe.skylife.utility.ui.GameOverviewItems.NavAction
+import com.carinaschoppe.skylife.utility.ui.NavAction
 import com.carinaschoppe.skylife.utility.ui.inventoryholders.GameOverviewHolderFactory
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler

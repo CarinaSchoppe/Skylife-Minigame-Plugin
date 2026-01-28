@@ -1,7 +1,6 @@
 package com.carinaschoppe.skylife.utility.ui
 
 import com.carinaschoppe.skylife.game.GameCluster
-import com.carinaschoppe.skylife.utility.ui.GameOverviewItems.NavAction
 import com.carinaschoppe.skylife.utility.ui.inventoryholders.GameOverviewHolderFactory
 import com.carinaschoppe.skylife.utility.ui.inventoryholders.SkillSelectorHolderFactory
 import org.bukkit.inventory.Inventory
