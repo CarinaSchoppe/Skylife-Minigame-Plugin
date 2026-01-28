@@ -208,5 +208,74 @@ data class Templates(
     var chatGuild: String = "<light_purple>[G] </light_purple><sender><gray>: </gray><white><message></white>",
     var chatParty: String = "<blue>[P] </blue><sender><gray>: </gray><white><message></white>",
     var chatGame: String = "<yellow>[Game] </yellow><sender><gray>: </gray><white><message></white>",
-    var chatSpectator: String = "<gray>[Spectator] </gray><sender><gray>: </gray><white><message></white>"
+    var chatSpectator: String = "<gray>[Spectator] </gray><sender><gray>: </gray><white><message></white>",
+
+    // Title messages
+    var titleGameStarted: String = "<green>Game Started!</green>",
+    var titleGameStartedSubtitle: String = "<gold>Survive and be the last one standing!</gold>",
+    var titleVictory: String = "<gold>VICTORY!</gold>",
+    var titleVictorySubtitle: String = "<green>You are the champion!</green>",
+    var titleGameOver: String = "<red>Game Over!</red>",
+    var titleGameOverSubtitle: String = "<green><winner> won the game!</green>",
+    var titlePvpEnabled: String = "<red>PvP Enabled!</red>",
+    var titlePvpEnabledSubtitle: String = "<green>Fight!</green>",
+    var titleProtectionCountdown: String = "<green>Protection: <seconds></green>",
+
+    // GUI text - Game Setup GUI
+    var guiGameSetupDecreaseMinPlayers: String = "<red><bold>Decrease Min Players</bold></red>",
+    var guiGameSetupDecreaseMinPlayersLore: String = "<gray>Click to decrease</gray>",
+    var guiGameSetupMinPlayers: String = "<yellow><bold>Min Players</bold></yellow>",
+    var guiGameSetupMinPlayersLore1: String = "<white>Current: <count></white>",
+    var guiGameSetupMinPlayersLore2: String = "<gray>(Minimum: 1)</gray>",
+    var guiGameSetupIncreaseMinPlayers: String = "<green><bold>Increase Min Players</bold></green>",
+    var guiGameSetupIncreaseMinPlayersLore: String = "<gray>Click to increase</gray>",
+    var guiGameSetupDecreaseMaxPlayers: String = "<red><bold>Decrease Max Players</bold></red>",
+    var guiGameSetupDecreaseMaxPlayersLore: String = "<gray>Click to decrease</gray>",
+    var guiGameSetupMaxPlayers: String = "<yellow><bold>Max Players</bold></yellow>",
+    var guiGameSetupMaxPlayersLore1: String = "<white>Current: <count></white>",
+    var guiGameSetupMaxPlayersLore2: String = "<gray>(Must be ≥ Min Players)</gray>",
+    var guiGameSetupIncreaseMaxPlayers: String = "<green><bold>Increase Max Players</bold></green>",
+    var guiGameSetupIncreaseMaxPlayersLore: String = "<gray>Click to increase</gray>",
+    var guiGameSetupLobbyLocation: String = "<bold>Lobby Location</bold>",
+    var guiGameSetupLobbyLocationSet: String = "<green>✓ Location set!</green>",
+    var guiGameSetupLobbyLocationNotSet: String = "<gray>Click to set your current location</gray>",
+    var guiGameSetupSpectatorLocation: String = "<bold>Spectator Location</bold>",
+    var guiGameSetupSpectatorLocationSet: String = "<green>✓ Location set!</green>",
+    var guiGameSetupSpectatorLocationNotSet: String = "<gray>Click to set your current location</gray>",
+    var guiGameSetupMainLocation: String = "<bold>Main Location</bold>",
+    var guiGameSetupMainLocationSet: String = "<green>✓ Location set!</green>",
+    var guiGameSetupMainLocationNotSet: String = "<gray>Click to set your current location</gray>",
+    var guiGameSetupSpawnLocations: String = "<aqua><bold>Spawn Locations</bold></aqua>",
+    var guiGameSetupSpawnLocationsLore1: String = "<white>Current spawns: <count></white>",
+    var guiGameSetupSpawnLocationsLore2: String = "<gray>Click to add your current location</gray>",
+    var guiGameSetupSpawnLocationsLore3: String = "<yellow>Use /removespawn <number> to remove</yellow>",
+    var guiGameSetupCancel: String = "<red><bold>✗ Cancel Setup</bold></red>",
+    var guiGameSetupCancelLore1: String = "<gray>Discard this setup without saving</gray>",
+    var guiGameSetupCancelLore2: String = "<dark_red>This cannot be undone!</dark_red>",
+    var guiGameSetupSave: String = "<green><bold>✓ Save Game Pattern</bold></green>",
+    var guiGameSetupSaveLore: String = "<green>Click to save the game pattern!</green>",
+    var guiGameSetupMissingRequirements: String = "<red>Missing requirements:</red>",
+    var guiGameSetupMissingItem: String = "<gray>• <requirement></gray>",
+
+    // GUI text - Skills GUI
+    var guiSkillsTitle: String = "<light_purple><bold>Skills</bold></light_purple>",
+    var guiSkillsLore1: String = "<gray>Click to select your skills</gray>",
+    var guiSkillsLore2: String = "<yellow>You can choose up to </yellow><gold><bold>2 skills</bold></gold>",
+    var guiSkillsInfo: String = "<aqua><bold>Skill Selection Info</bold></aqua>",
+    var guiSkillsInfoSelected: String = "<gray>Selected: </gray><green><count>/2</green>",
+    var guiSkillsInfoClickToSelect: String = "<yellow>Click skills to select/unselect them</yellow>",
+    var guiSkillSelected: String = "<green><bold>✔ SELECTED</bold></green>",
+    var guiSkillClickToSelect: String = "<yellow>Click to select</yellow>",
+
+    // GUI text - Kit Selector
+    var guiKitItems: String = "<gray>Items:</gray>",
+    var guiKitItem: String = " <dark_gray>- </dark_gray><aqua><amount>x <item></aqua>",
+    var guiKitClickToSelect: String = "<yellow><bold>Click to select!</bold></yellow>",
+
+    // Skill item names
+    var skillLuckyEggName: String = "<gold>Lucky Egg</gold>",
+    var skillLuckyEggLore: String = "<gray>Throw for a random effect!</gray>",
+
+    // Stats loading
+    var statsLoaded: String = "<prefix><green>Stats loaded!</green>"
 )
