@@ -50,6 +50,9 @@ class ProtectionCountdown(private val game: Game) : Countdown() {
                         state.disableProtection()
                     }
 
+                    // Check if game should end (only 1 or 0 players left)
+                    com.carinaschoppe.skylife.game.managers.GameManager.checkGameOver(game)
+
                     stop()
                     return
                 }

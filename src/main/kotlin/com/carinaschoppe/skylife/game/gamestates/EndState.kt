@@ -29,8 +29,26 @@ class EndState(private val game: Game) : GameState {
 
     /**
      * Starts the ending state and its countdown.
+     * Teleports all players to lobby and sets them to adventure mode.
      */
     override fun start() {
+        // Teleport all players (living + spectators) to game lobby in adventure mode
+        val lobbyLocation = com.carinaschoppe.skylife.game.managers.MapManager.locationWorldConverter(
+            game.lobbyLocation,
+            game
+        )
+
+        game.getAllPlayers().forEach { player ->
+            player.gameMode = org.bukkit.GameMode.ADVENTURE
+            player.teleport(lobbyLocation)
+
+            // Make all players visible to each other (remove spectator invisibility)
+            game.getAllPlayers().forEach { other ->
+                player.showPlayer(Skylife.instance, other)
+                other.showPlayer(Skylife.instance, player)
+            }
+        }
+
         countdown.start()
         GameManager.endingMatchMessage(game)
 

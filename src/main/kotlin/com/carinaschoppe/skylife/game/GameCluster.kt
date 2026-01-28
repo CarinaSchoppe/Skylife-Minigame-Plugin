@@ -108,10 +108,13 @@ object GameCluster {
         game.livingPlayers.remove(player)
         game.spectators.remove(player)
         game.currentState.playerLeft(player)
-        ScoreboardManager.removeScoreboard(player)
+
+        // Update scoreboard for remaining players in game
         game.getAllPlayers().forEach { ScoreboardManager.updateScoreboard(it, game) }
 
         // Reset player for hub
+        ScoreboardManager.removeScoreboard(player)
+        KitManager.removePlayer(player)
         player.inventory.clear()
         player.inventory.armorContents = arrayOfNulls(4)
         if (player.hasPermission("skylife.overview")) {
@@ -123,7 +126,7 @@ object GameCluster {
         // Teleport to hub
         HubManager.teleportToHub(player)
 
-        // Restore lobby scoreboard
+        // Restore lobby scoreboard AFTER hub teleport
         com.carinaschoppe.skylife.utility.scoreboard.LobbyScoreboardManager.setLobbyScoreboard(player)
 
         if (game.state == GameState.States.INGAME && game.livingPlayers.size <= 1) {
@@ -137,7 +140,13 @@ object GameCluster {
      * @param game The game to start.
      */
     fun startGame(game: Game) {
+        // Stop lobby state
+        game.currentState.stop()
+
+        // Transition to ingame state
         game.state = GameState.States.INGAME
+        game.currentState = com.carinaschoppe.skylife.game.gamestates.IngameState(game)
+
         lobbyGames.remove(game)
         activeGames.add(game)
 
@@ -146,7 +155,8 @@ object GameCluster {
             com.carinaschoppe.skylife.utility.statistics.StatsUtility.addStatsToPlayerWhenJoiningGame(player)
         }
 
-        game.start()
+        // Start ingame state
+        game.currentState.start()
     }
 
     /**
@@ -157,8 +167,6 @@ object GameCluster {
      */
     fun stopGame(game: Game) {
         game.getAllPlayers().forEach { player ->
-            ScoreboardManager.removeScoreboard(player)
-
             // Deactivate skills
             SkillsManager.deactivateSkills(player)
             SkillEffectsManager.removeSkillEffects(player)
@@ -174,6 +182,10 @@ object GameCluster {
 
             // Teleport to hub
             HubManager.teleportToHub(player)
+
+            // Switch to lobby scoreboard AFTER teleporting to hub
+            ScoreboardManager.removeScoreboard(player)
+            com.carinaschoppe.skylife.utility.scoreboard.LobbyScoreboardManager.setLobbyScoreboard(player)
         }
         game.livingPlayers.clear()
         game.spectators.clear()

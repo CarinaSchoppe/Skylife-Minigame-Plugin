@@ -91,6 +91,11 @@ object LobbyScoreboardManager {
         val rank = getPlayerRank(player)
         val stats = StatsUtility.statsPlayers.firstOrNull { it.uuid == player.uniqueId.toString() }
 
+        // Get selected skills for display
+        val selectedSkills = com.carinaschoppe.skylife.skills.SkillsManager.getSelectedSkills(player).toList()
+        val skill1Name = selectedSkills.getOrNull(0)?.displayName ?: "None"
+        val skill2Name = selectedSkills.getOrNull(1)?.displayName ?: "None"
+
         val placeholders = mapOf(
             "{server}" to scoreboardConfig.serverName,
             "{rank}" to rank.displayName,
@@ -103,7 +108,9 @@ object LobbyScoreboardManager {
             "{wins}" to (stats?.wins?.toString() ?: "0"),
             "{games}" to (stats?.games?.toString() ?: "0"),
             "{points}" to (stats?.points?.toString() ?: "0"),
-            "{player_rank}" to StatsUtility.getPlayerRank(player).toString()
+            "{player_rank}" to StatsUtility.getPlayerRank(player).toString(),
+            "{skill1}" to skill1Name,
+            "{skill2}" to skill2Name
         )
 
         val templateLines = scoreboardConfig.lobbyLines.ifEmpty { defaultLobbyLines }
@@ -133,7 +140,9 @@ object LobbyScoreboardManager {
         "<aqua>Rank</aqua><gray>: </gray>{rank_color}{rank}",
         "<aqua>Stats Rank</aqua><gray>: </gray><gold>#{player_rank}</gold>",
         "",
-        "<aqua>Online</aqua><gray>: </gray><green>{online}</green><gray>/</gray><green>{max_players}</green>",
+        "<aqua>Active Skills</aqua><gray>:</gray>",
+        "<yellow>1.</yellow> <white>{skill1}</white>",
+        "<yellow>2.</yellow> <white>{skill2}</white>",
         "",
         "<aqua>Kills</aqua><gray>: </gray><red>{kills}</red>",
         "<aqua>Wins</aqua><gray>: </gray><yellow>{wins}</yellow>",
