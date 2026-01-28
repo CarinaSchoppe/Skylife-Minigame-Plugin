@@ -129,5 +129,62 @@ data class Templates(
     var partyHelpKick: String = "  <aqua>/party kick <player></aqua><gray> - Kick a player from your party (leader only)</gray>",
     var partyHelpPromote: String = "  <aqua>/party promote <player></aqua><gray> - Promote a player to party leader</gray>",
     var partyHelpList: String = "  <aqua>/party list</aqua><gray> - List all party members</gray>",
-    var partyHelpInvites: String = "  <aqua>/party invites</aqua><gray> - List all pending invites</gray>"
+    var partyHelpInvites: String = "  <aqua>/party invites</aqua><gray> - List all pending invites</gray>",
+
+    // Guild messages
+    var guildCreateUsage: String = "<prefix><red>Usage: /guild create <name> <tag></red>",
+    var guildCreated: String = "<prefix><green>Guild </green><gold><bold><name></bold></gold><green> created with tag </green><aqua><bold>[<tag>]</bold></aqua>",
+    var guildInviteUsage: String = "<prefix><red>Usage: /guild invite <player></red>",
+    var guildNotInGuild: String = "<prefix><red>You are not in a guild</red>",
+    var guildInvited: String = "<prefix><gold><bold><player></bold></gold><green> has been invited to the guild</green>",
+    var guildInviteReceived: String = "<prefix><green>You have been invited to guild </green><gold><bold><guild></bold></gold>",
+    var guildKickUsage: String = "<prefix><red>Usage: /guild kick <player></red>",
+    var guildKicked: String = "<prefix><gold><bold><player></bold></gold><green> has been kicked from the guild</green>",
+    var guildKickedSelf: String = "<prefix><red>You have been kicked from the guild</red>",
+    var guildPromoteUsage: String = "<prefix><red>Usage: /guild promote <player></red>",
+    var guildNotFound: String = "<prefix><red>Guild not found</red>",
+    var guildPromoted: String = "<prefix><gold><bold><player></bold></gold><green> has been promoted to </green><aqua><bold><role></bold></aqua>",
+    var guildLeft: String = "<prefix><green>You have left the guild </green><gold><bold><guild></bold></gold>",
+    var guildMemberLeft: String = "<prefix><gold><bold><player></bold></gold><green> has left the guild</green>",
+    var guildFriendlyFireToggled: String = "<prefix><green>Friendly fire has been </green><status>",
+    var guildInfoHeader: String = "<aqua><bold>--- Guild Info ---</bold></aqua>",
+    var guildInfoName: String = "<green>Name: </green><gold><bold><name></bold></gold>",
+    var guildInfoTag: String = "<green>Tag: </green><aqua><bold>[<tag>]</bold></aqua>",
+    var guildInfoLeader: String = "<green>Leader: </green><gold><bold><leader></bold></gold>",
+    var guildInfoFriendlyFire: String = "<green>Friendly Fire: </green><status>",
+    var guildInfoMembers: String = "<green><bold>Members (<count>):</bold></green>",
+    var guildMemberEntry: String = "  <gray>- </gray><gold><member></gold><roleColor> <role></roleColor>",
+    var guildHelpHeader: String = "<aqua><bold>--- Guild Commands ---</bold></aqua>",
+    var guildHelpCreate: String = "<green>/guild create <name> <tag></green>",
+    var guildHelpInvite: String = "<green>/guild invite <player></green>",
+    var guildHelpKick: String = "<green>/guild kick <player></green>",
+    var guildHelpPromote: String = "<green>/guild promote <player></green>",
+    var guildHelpLeave: String = "<green>/guild leave</green>",
+    var guildHelpToggleFF: String = "<green>/guild toggleff</green>",
+    var guildHelpInfo: String = "<green>/guild info</green>",
+    var guildError: String = "<prefix><red><error></red>",
+
+    // Direct message system
+    var dmUsage: String = "<prefix><red>Usage: /msg <player> <message></red>",
+    var dmCannotSelfMessage: String = "<prefix><red>You cannot send a message to yourself</red>",
+    var dmCannotSendToPlayer: String = "<prefix><red>You cannot send a direct message to this player right now</red>",
+    var dmReceived: String = "<light_purple><bold>[DM] </bold></light_purple><sender> <gray>-> </gray><aqua>You</aqua><white>: <message></white>",
+    var dmSent: String = "<light_purple><bold>[DM] </bold></light_purple><aqua>You</aqua> <gray>-> </gray><receiver><white>: <message></white>",
+
+    // Game setup messages
+    var gameSetupInstruction: String = "<prefix><green>Use /gamesetup to open the setup GUI or use commands like /setlocation, /playeramount</green>",
+    var gameSetupActive: String = "<prefix><red>You already have an active game setup. Save or delete it first.</red>",
+    var locationRemoved: String = "<prefix><green>Spawn location removed</green>",
+    var locationRemoveFailed: String = "<prefix><red>Failed to remove spawn location</red>",
+    var hubSet: String = "<prefix><green>Hub location has been set</green>",
+    var playerAmountUpdated: String = "<prefix><green>Player amount updated to <count></green>",
+
+    // System messages
+    var pluginEnabled: String = "<prefix><green>Skylife has been started!</green>",
+    var pluginDisabled: String = "<prefix><red>Skylife has been stopped!</red>",
+    var configLoaded: String = "<prefix><green>Configuration loaded successfully!</green>",
+    var messagesLoaded: String = "<prefix><green>Messages loaded!</green>",
+    var messagesSaved: String = "<prefix><green>Messages saved!</green>",
+    var messagesExported: String = "<prefix><green><bold>Messages exported to messages.json!</bold></green>",
+    var messagesRestartNote: String = "<green>Restart the server to load any changes you make.</green>"
 )
