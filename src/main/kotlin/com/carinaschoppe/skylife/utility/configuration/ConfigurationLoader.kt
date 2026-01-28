@@ -87,9 +87,6 @@ object ConfigurationLoader {
             defaults.timer = gson.fromJson(jsonObject.get("timer_settings"), Timer::class.java)
         }
 
-        if (jsonObject.has("kits_enabled")) {
-            defaults.kitsEnabled = jsonObject.get("kits_enabled").asBoolean
-        }
 
         if (jsonObject.has("database")) {
             defaults.database = gson.fromJson(jsonObject.get("database"), DatabaseConfig::class.java)
