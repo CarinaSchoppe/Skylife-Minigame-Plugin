@@ -22,10 +22,16 @@ object SkillUnlockManager {
      */
     fun loadUnlocks() {
         transaction {
+            val count = SkillUnlock.all().count()
+            org.bukkit.Bukkit.getLogger().info("[SkillUnlockManager] Loading $count skill unlocks from database...")
+
             SkillUnlock.all().forEach { unlock ->
                 val playerUUID = UUID.fromString(unlock.playerUUID)
                 unlockedSkillsCache.getOrPut(playerUUID) { mutableSetOf() }.add(unlock.skillName)
+                org.bukkit.Bukkit.getLogger().info("[SkillUnlockManager] Loaded: ${unlock.playerUUID} -> ${unlock.skillName}")
             }
+
+            org.bukkit.Bukkit.getLogger().info("[SkillUnlockManager] Finished loading unlocks for ${unlockedSkillsCache.size} players")
         }
     }
 
@@ -43,7 +49,9 @@ object SkillUnlockManager {
             return true
         }
 
-        return unlockedSkillsCache.getOrPut(player) { mutableSetOf() }.contains(skill.name)
+        val hasIt = unlockedSkillsCache.getOrPut(player) { mutableSetOf() }.contains(skill.name)
+        org.bukkit.Bukkit.getLogger().info("[SkillUnlockManager] Checking unlock for $player - ${skill.name}: $hasIt (Cache: ${unlockedSkillsCache[player]})")
+        return hasIt
     }
 
     /**
@@ -121,5 +129,32 @@ object SkillUnlockManager {
      */
     fun getUnlockedSkills(player: UUID): Set<String> {
         return unlockedSkillsCache.getOrPut(player) { mutableSetOf() }.toSet()
+    }
+
+    /**
+     * Reloads unlocks for a specific player from the database.
+     * Useful if cache becomes out of sync.
+     *
+     * @param player The player's UUID
+     */
+    fun reloadPlayerUnlocks(player: UUID) {
+        transaction {
+            // Clear existing cache for this player
+            unlockedSkillsCache.remove(player)
+
+            // Reload from database
+            val unlocks = SkillUnlock.find {
+                SkillUnlockTable.playerUUID eq player.toString()
+            }
+
+            val playerUnlocks = mutableSetOf<String>()
+            unlocks.forEach { unlock ->
+                playerUnlocks.add(unlock.skillName)
+                org.bukkit.Bukkit.getLogger().info("[SkillUnlockManager] Reloaded: ${player} -> ${unlock.skillName}")
+            }
+
+            unlockedSkillsCache[player] = playerUnlocks
+            org.bukkit.Bukkit.getLogger().info("[SkillUnlockManager] Reloaded ${playerUnlocks.size} unlocks for player $player")
+        }
     }
 }

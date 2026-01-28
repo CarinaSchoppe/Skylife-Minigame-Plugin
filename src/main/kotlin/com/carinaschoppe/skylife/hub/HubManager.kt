@@ -56,6 +56,10 @@ object HubManager {
                 player.teleport(world.spawnLocation)
             }
         }
+
+        // Reset XP bar when entering hub
+        player.level = 0
+        player.exp = 0f
     }
 
     /**

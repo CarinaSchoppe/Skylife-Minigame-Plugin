@@ -65,6 +65,26 @@ class LobbyCountdown(private val game: Game) : Countdown() {
                         player.sendMessage(Messages.COUNTDOWN(seconds))
                         player.level = seconds
                         player.playSound(player.location, Sound.BLOCK_NOTE_BLOCK_PLING, 1.0f, 1.0f)
+
+                        // Show title for countdown
+                        player.showTitle(
+                            net.kyori.adventure.title.Title.title(
+                                net.kyori.adventure.text.Component.text(
+                                    seconds.toString(),
+                                    net.kyori.adventure.text.format.NamedTextColor.YELLOW,
+                                    net.kyori.adventure.text.format.TextDecoration.BOLD
+                                ),
+                                net.kyori.adventure.text.Component.text(
+                                    "Game starting...",
+                                    net.kyori.adventure.text.format.NamedTextColor.GRAY
+                                ),
+                                net.kyori.adventure.title.Title.Times.times(
+                                    java.time.Duration.ofMillis(0),
+                                    java.time.Duration.ofMillis(1000),
+                                    java.time.Duration.ofMillis(250)
+                                )
+                            )
+                        )
                     }
                 } else if (seconds % 5 == 0) {
                     game.livingPlayers.forEach { player ->

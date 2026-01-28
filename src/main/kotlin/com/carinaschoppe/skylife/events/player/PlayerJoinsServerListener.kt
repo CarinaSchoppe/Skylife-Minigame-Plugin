@@ -40,6 +40,10 @@ class PlayerJoinsServerListener : Listener {
         player.health = 20.0
         player.foodLevel = 20
 
+        // Reset XP bar
+        player.level = 0
+        player.exp = 0f
+
         // Clear inventory and armor
         player.inventory.clear()
         player.inventory.armorContents = arrayOfNulls(4) // Empty armor array (4 slots: boots, leggings, chestplate, helmet)
