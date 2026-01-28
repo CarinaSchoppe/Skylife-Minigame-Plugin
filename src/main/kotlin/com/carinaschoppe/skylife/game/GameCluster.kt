@@ -1,6 +1,7 @@
 package com.carinaschoppe.skylife.game
 
 import com.carinaschoppe.skylife.game.gamestates.GameState
+import com.carinaschoppe.skylife.game.kit.KitManager
 import com.carinaschoppe.skylife.game.managers.GameLocationManager
 import com.carinaschoppe.skylife.hub.HubManager
 import com.carinaschoppe.skylife.skills.SkillEffectsManager
