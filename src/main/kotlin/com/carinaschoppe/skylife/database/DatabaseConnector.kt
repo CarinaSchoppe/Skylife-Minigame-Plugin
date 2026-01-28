@@ -101,7 +101,8 @@ object DatabaseConnector {
             Bukkit.getServer().consoleSender.sendMessage(Messages.DATABASE_CONNECTED)
 
             transaction {
-                SchemaUtils.create(StatsPlayers, Guilds, GuildMembers, PlayerSkills, PlayerEconomyTable, SkillUnlockTable)
+                // Create missing tables and add missing columns (for schema updates)
+                SchemaUtils.createMissingTablesAndColumns(StatsPlayers, Guilds, GuildMembers, PlayerSkills, PlayerEconomyTable, SkillUnlockTable)
             }
 
             Bukkit.getServer().consoleSender.sendMessage(Messages.DATABASE_TABLES_CREATED)
