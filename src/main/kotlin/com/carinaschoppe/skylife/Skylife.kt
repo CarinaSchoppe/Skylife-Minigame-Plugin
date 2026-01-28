@@ -167,7 +167,7 @@ open class Skylife : JavaPlugin() {
         pluginManager.registerEvents(SkillFeatherfallListener(), this)
         pluginManager.registerEvents(SkillInvisibleStalkerListener(), this)
         pluginManager.registerEvents(SkillLuckyBirdListener(), this)
-        pluginManager.registerEvents(SkillKlettererListener(), this)
+        pluginManager.registerEvents(SkillClimberListener(), this)
         pluginManager.registerEvents(SkillKangarooListener(), this)
         pluginManager.registerEvents(SkillNinjaListener(), this)
         pluginManager.registerEvents(SkillPilotListener(), this)

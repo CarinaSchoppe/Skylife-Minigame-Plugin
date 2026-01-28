@@ -159,21 +159,9 @@ class SkillsGui(private val player: Player) : InventoryHolder {
         if (result.isSuccess) {
             val selected = result.getOrNull() ?: return
             if (selected) {
-                player.sendMessage(
-                    Messages.PREFIX.append(
-                        Component.text("Skill ", Messages.MESSAGE_COLOR)
-                            .append(Component.text(skill.displayName, NamedTextColor.GOLD, TextDecoration.BOLD))
-                            .append(Component.text(" selected!", Messages.MESSAGE_COLOR))
-                    )
-                )
+                player.sendMessage(Messages.SKILL_SELECTED(skill.displayName))
             } else {
-                player.sendMessage(
-                    Messages.PREFIX.append(
-                        Component.text("Skill ", Messages.MESSAGE_COLOR)
-                            .append(Component.text(skill.displayName, NamedTextColor.GOLD, TextDecoration.BOLD))
-                            .append(Component.text(" unselected!", Messages.MESSAGE_COLOR))
-                    )
-                )
+                player.sendMessage(Messages.SKILL_UNSELECTED(skill.displayName))
             }
             refresh()
         } else {

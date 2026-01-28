@@ -60,6 +60,15 @@ object Templates {
     var lobbyTimer: String = "<prefix><green><bold>Round starts in </bold></green><gold><bold><time></bold></gold><green> seconds</green>"
     var protectionTime: String = "<prefix><green><bold>Protection time ends in </bold></green><gold><bold><time></bold></gold><green> seconds</green>"
 
+    // Skill messages
+    var skillSelected: String = "<prefix><green>Skill </green><gold><bold><skill></bold></gold><green> selected!</green>"
+    var skillUnselected: String = "<prefix><green>Skill </green><gold><bold><skill></bold></gold><green> unselected!</green>"
+    var skillPurchased: String = "<prefix><green>Successfully purchased </green><gold><bold><skill></bold></gold><green> for </green><gold><bold><price> coins</bold></gold><green>!</green>"
+    var skillAlreadyOwned: String = "<prefix><red>You already own this skill!</red>"
+    var skillNotUnlocked: String = "<prefix><red>You must unlock this skill before you can select it!</red>"
+    var skillMaxReached: String = "<prefix><red>You already have <max> skills selected. Unselect one first.</red>"
+    var skillInsufficientFunds: String = "<prefix><red>Insufficient coins! Need <price>, have <current></red>"
+
     // Economy messages
     var coinsEarnedGame: String = "<prefix><green>You earned </green><gold><bold><amount> coins</bold></gold><green> for playing!</green>"
     var coinsEarnedKill: String = "<prefix><green>+</green><gold><bold><amount> coins</bold></gold><green> for a kill!</green>"
@@ -203,11 +212,8 @@ object Templates {
     var messagesExported: String = "<prefix><green><bold>Messages exported to messages.json!</bold></green>"
     var messagesRestartNote: String = "<green>Restart the server to load any changes you make.</green>"
 
-    // Skills messages
-    var skillSelected: String = "<prefix><green>Skill </green><gold><bold><skill></bold></gold><green> selected!</green>"
-    var skillUnselected: String = "<prefix><green>Skill </green><gold><bold><skill></bold></gold><green> unselected!</green>"
+    // Legacy skill messages (for backwards compatibility)
     var skillError: String = "<prefix><red><error></red>"
-    var skillPurchased: String = "<prefix><green>Successfully purchased </green><skillColor><bold><skill></bold></skillColor><green>!</green>"
     var skillPurchaseFailed: String = "<prefix><red>Failed to purchase skill: </red><gold><error></gold>"
     var skillMustUnlock: String = "<prefix><red>You must unlock this skill before you can select it!</red>"
     var skillSelectionFailedSlotsFull: String = "<prefix><red>You already have <max> skills selected. Unselect one first.</red>"

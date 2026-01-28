@@ -140,6 +140,15 @@ object Messages {
     fun LOBBY_TIMER(roundTime: Int): Component = parseTemplate(TEMPLATES.lobbyTimer, "time" to roundTime)
     fun PROTECTION_TIME(protectionTime: Int): Component = parseTemplate(TEMPLATES.protectionTime, "time" to protectionTime)
 
+    // Skill messages
+    fun SKILL_SELECTED(skillName: String): Component = parseTemplate(TEMPLATES.skillSelected, "skill" to skillName)
+    fun SKILL_UNSELECTED(skillName: String): Component = parseTemplate(TEMPLATES.skillUnselected, "skill" to skillName)
+    fun SKILL_PURCHASED(skillName: String, price: Int): Component = parseTemplate(TEMPLATES.skillPurchased, "skill" to skillName, "price" to price)
+    val SKILL_ALREADY_OWNED: Component get() = parseTemplate(TEMPLATES.skillAlreadyOwned)
+    val SKILL_NOT_UNLOCKED: Component get() = parseTemplate(TEMPLATES.skillNotUnlocked)
+    fun SKILL_MAX_REACHED(max: Int): Component = parseTemplate(TEMPLATES.skillMaxReached, "max" to max)
+    fun SKILL_INSUFFICIENT_FUNDS(price: Int, current: Int): Component = parseTemplate(TEMPLATES.skillInsufficientFunds, "price" to price, "current" to current)
+
     // Economy messages
     fun COINS_EARNED_GAME(amount: Int): Component = parseTemplate(TEMPLATES.coinsEarnedGame, "amount" to amount)
     fun COINS_EARNED_KILL(amount: Int): Component = parseTemplate(TEMPLATES.coinsEarnedKill, "amount" to amount)
