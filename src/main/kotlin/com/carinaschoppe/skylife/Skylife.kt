@@ -127,6 +127,10 @@ open class Skylife : JavaPlugin() {
         val removeCoinsCommand = com.carinaschoppe.skylife.commands.economy.RemoveCoinsCommand()
         getCommand("removecoins")?.setExecutor(removeCoinsCommand)
         getCommand("removecoins")?.tabCompleter = removeCoinsCommand
+
+        val deleteGameCommand = DeleteGameCommand()
+        getCommand("deletegame")?.setExecutor(deleteGameCommand)
+        getCommand("deletegame")?.tabCompleter = deleteGameCommand
     }
 
     private fun registerEventListeners(pluginManager: PluginManager) {

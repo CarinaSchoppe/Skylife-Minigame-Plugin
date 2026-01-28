@@ -62,6 +62,9 @@ commands:
   removecoins:
     description: Remove coins from a player (Admin only)
     aliases: [ takecoins, removecoins ]
+  deletegame:
+    description: Delete a game pattern and all its instances (Admin only)
+    aliases: [ dg, removegame, delgame ]
 permissions:
   skylife.*:
     description: Gives access to all Skylife commands
@@ -99,6 +102,7 @@ permissions:
       skylife.savemessages: true
       skylife.admin.givecoins: true
       skylife.admin.removecoins: true
+      skylife.admin.deletegame: true
   skylife.join:
     description: Allows joining games
     default: true
@@ -143,6 +147,9 @@ permissions:
     default: op
   skylife.admin.removecoins:
     description: Allows removing coins from players
+    default: op
+  skylife.admin.deletegame:
+    description: Allows deleting game patterns and instances
     default: op
   skylife.rank.user:
     description: User rank (default)
