@@ -28,6 +28,7 @@ object Messages {
      * Parses a template string with placeholder replacements.
      * Replaces <prefix> tag with the actual prefix component.
      * Supports any placeholder tags like <player>, <game>, <count>, etc.
+     * Validates that all placeholders have been replaced.
      */
     private fun parseTemplate(template: String, vararg placeholders: Pair<String, Any>): Component {
         // First replace <prefix> with serialized PREFIX
@@ -37,6 +38,32 @@ object Messages {
         // Replace all other placeholders
         placeholders.forEach { (key, value) ->
             processed = processed.replace("<$key>", value.toString())
+        }
+
+        // Validate that no unreplaced placeholders remain
+        val unreplacedPattern = Regex("<([a-zA-Z0-9_]+)>")
+        val matches = unreplacedPattern.findAll(processed)
+        val unreplaced = matches.map { it.groupValues[1] }.toList()
+
+        if (unreplaced.isNotEmpty()) {
+            // Filter out MiniMessage formatting tags (color names, formatting)
+            val validMiniMessageTags = setOf(
+                "gray", "grey", "dark_gray", "dark_grey", "black", "white",
+                "green", "dark_green", "aqua", "dark_aqua", "blue", "dark_blue",
+                "red", "dark_red", "light_purple", "dark_purple", "yellow", "gold",
+                "bold", "italic", "underlined", "strikethrough", "obfuscated",
+                "reset", "newline", "transition", "gradient", "rainbow", "click", "hover",
+                "insertion", "key", "translatable", "score", "selector", "nbt", "color"
+            )
+
+            val actualUnreplaced = unreplaced.filterNot { tag ->
+                validMiniMessageTags.contains(tag.lowercase()) ||
+                        tag.startsWith("/") // Closing tags like </gray>
+            }
+
+            if (actualUnreplaced.isNotEmpty()) {
+                org.bukkit.Bukkit.getLogger().warning("[Messages] Template has unreplaced placeholders: $actualUnreplaced in '$template'")
+            }
         }
 
         return MINI_MESSAGE.deserialize(processed)
@@ -203,6 +230,17 @@ object Messages {
     val PARTY_HELP_PROMOTE: Component get() = parseTemplate(TEMPLATES.partyHelpPromote)
     val PARTY_HELP_LIST: Component get() = parseTemplate(TEMPLATES.partyHelpList)
     val PARTY_HELP_INVITES: Component get() = parseTemplate(TEMPLATES.partyHelpInvites)
+    fun PARTY_LEADER_DISCONNECTED(oldLeader: String, newLeader: String): Component =
+        parseTemplate(TEMPLATES.partyLeaderDisconnected, "oldLeader" to oldLeader, "newLeader" to newLeader)
+
+    // Leaderboard Messages
+    fun LEADERBOARD_HEADER(statType: String): Component = parseTemplate(TEMPLATES.leaderboardHeader, "stat" to statType)
+    val LEADERBOARD_EMPTY: Component get() = parseTemplate(TEMPLATES.leaderboardEmpty)
+    fun LEADERBOARD_ENTRY(rank: Int, playerName: String, value: String): Component =
+        parseTemplate(TEMPLATES.leaderboardEntry, "rank" to rank, "player" to playerName, "value" to value)
+
+    val LEADERBOARD_FOOTER: Component get() = parseTemplate(TEMPLATES.leaderboardFooter)
+    val LEADERBOARD_INVALID_STAT: Component get() = parseTemplate(TEMPLATES.leaderboardInvalidStat)
 }
 
 

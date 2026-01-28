@@ -41,10 +41,15 @@ class PlayerDeathListener : Listener {
 
         // --- Respawn Logic ---
         // Set respawn location and handle respawn for Paper 1.21
-        val spectatorLocation = MapManager.locationWorldConverter(
-            GameLocationManager.skylifeLocationToLocationConverter(game.pattern.gameLocationManager.spectatorLocation),
-            game
-        )
+        val skylifeSpectatorLoc = GameLocationManager.skylifeLocationToLocationConverter(game.pattern.gameLocationManager.spectatorLocation)
+
+        val spectatorLocation = if (skylifeSpectatorLoc == null) {
+            Bukkit.getLogger().severe("[PlayerDeathListener] Failed to load spectator location for game ${game.name}")
+            // Fallback to lobby location if spectator location fails
+            MapManager.locationWorldConverter(game.lobbyLocation, game)
+        } else {
+            MapManager.locationWorldConverter(skylifeSpectatorLoc, game)
+        }
 
         // Set the respawn location for the player
         player.setRespawnLocation(spectatorLocation, true)

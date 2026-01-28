@@ -53,3 +53,80 @@ commands:
   savemessages:
     description: Exports current messages to messages.json for reference
     aliases: [ sm, exportmessages ]
+  leaderboard:
+    description: Shows the top 10 players for various statistics (points, kills, wins, games, kd)
+    aliases: [ lb, top, ranks ]
+permissions:
+  skylife.*:
+    description: Gives access to all Skylife commands
+    default: true
+    children:
+      skylife.user.*: true
+      skylife.admin.*: true
+  skylife.user.*:
+    description: Gives access to all user commands
+    default: true
+    children:
+      skylife.join: true
+      skylife.join.random: true
+      skylife.join.map: true
+      skylife.leave: true
+      skylife.start: true
+      skylife.stats: true
+      skylife.stats.other: true
+      skylife.overview: true
+      skylife.skills: true
+      skylife.guild: true
+      skylife.msg: true
+      skylife.party: true
+      skylife.leaderboard: true
+  skylife.admin.*:
+    description: Gives access to all admin commands
+    default: op
+    children:
+      skylife.game: true
+      skylife.setlocation: true
+      skylife.playeramount: true
+      skylife.sethub: true
+      skylife.gamesetup: true
+      skylife.removespawn: true
+      skylife.savemessages: true
+  skylife.join:
+    description: Allows joining games
+    default: true
+  skylife.join.random:
+    description: Allows joining random games
+    default: true
+  skylife.join.map:
+    description: Allows joining specific maps
+    default: true
+  skylife.leave:
+    description: Allows leaving games
+    default: true
+  skylife.start:
+    description: Allows quick-starting games
+    default: true
+  skylife.stats:
+    description: Allows viewing own stats
+    default: true
+  skylife.stats.other:
+    description: Allows viewing other players' stats
+    default: true
+  skylife.overview:
+    description: Allows opening game overview
+    default: true
+  skylife.skills:
+    description: Allows viewing skills
+    default: true
+  skylife.guild:
+    description: Allows using guild commands
+    default: true
+  skylife.msg:
+    description: Allows sending messages
+    default: true
+  skylife.party:
+    description: Allows using party commands
+    default: true
+  skylife.leaderboard:
+    description: Allows viewing leaderboards
+    default: true

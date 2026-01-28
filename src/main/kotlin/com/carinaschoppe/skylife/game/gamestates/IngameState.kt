@@ -43,10 +43,15 @@ class IngameState(private val game: Game) : GameState {
         game.livingPlayers.forEachIndexed { index, player ->
             // Teleport to spawn location (cycle through available spawns)
             val spawnIndex = index % spawnLocations.size
-            val spawnLocation = MapManager.locationWorldConverter(
-                GameLocationManager.skylifeLocationToLocationConverter(spawnLocations[spawnIndex]),
-                game
-            )
+            val skylifeSpawnLoc = GameLocationManager.skylifeLocationToLocationConverter(spawnLocations[spawnIndex])
+
+            if (skylifeSpawnLoc == null) {
+                org.bukkit.Bukkit.getLogger().severe("[IngameState] Failed to convert spawn location for player ${player.name}")
+                player.sendMessage(Messages.PREFIX.append(Component.text("Failed to load spawn location", net.kyori.adventure.text.format.NamedTextColor.RED)))
+                return
+            }
+
+            val spawnLocation = MapManager.locationWorldConverter(skylifeSpawnLoc, game)
             player.teleport(spawnLocation)
 
             // Clear inventory and armor

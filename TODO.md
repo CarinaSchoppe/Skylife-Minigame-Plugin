@@ -23,9 +23,9 @@
 
 ### Niedrig
 
-- [ ] **Scoreboard Flicker**: Mögliches Flackern wenn zu oft upgedated wird
-- [ ] **Message Placeholders**: Fehlende Validation ob alle Placeholders ersetzt wurden
-- [ ] **Location World Check**: Prüfen ob World existiert bevor Location geladen wird
+- [X ] **Scoreboard Flicker**: Mögliches Flackern wenn zu oft upgedated wird
+- [X ] **Message Placeholders**: Fehlende Validation ob alle Placeholders ersetzt wurden
+- [X ] **Location World Check**: Prüfen ob World existiert bevor Location geladen wird
 
 ---
 
@@ -77,7 +77,7 @@
 - [ ] **Guild Bank**: Gemeinsame Item/Point Storage
 - [ ] **Clan Tags**: Farbige Clan Tags im Chat
 - [ ] **Player Profiles**: Detaillierte Profile mit Stats, Achievements, etc.
-- [ ] **Leaderboards**: Top 10 für verschiedene Stats
+- [X] **Leaderboards**: Top 10 für verschiedene Stats (points, kills, wins, games, kd) - `/leaderboard` oder `/lb`
 
 ### Administrative Features
 

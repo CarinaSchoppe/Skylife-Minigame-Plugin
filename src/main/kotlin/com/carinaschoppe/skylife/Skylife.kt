@@ -112,6 +112,10 @@ open class Skylife : JavaPlugin() {
         val partyCommand = PartyCommand()
         getCommand("party")?.setExecutor(partyCommand)
         getCommand("party")?.tabCompleter = partyCommand
+
+        val leaderboardCommand = LeaderboardCommand()
+        getCommand("leaderboard")?.setExecutor(leaderboardCommand)
+        getCommand("leaderboard")?.tabCompleter = leaderboardCommand
     }
 
     private fun registerEventListeners(pluginManager: PluginManager) {

@@ -74,12 +74,15 @@ class GameLocationManager {
          * Converts a [SkylifeLocation] to a Bukkit [Location].
          *
          * @param skylifeLocation The [SkylifeLocation] to convert
-         * @return The corresponding Bukkit [Location] object
-         * @throws IllegalStateException if the world specified in skylifeLocation is not loaded
+         * @return The corresponding Bukkit [Location] object, or null if world doesn't exist
          */
-        fun skylifeLocationToLocationConverter(skylifeLocation: SkylifeLocation): Location {
+        fun skylifeLocationToLocationConverter(skylifeLocation: SkylifeLocation): Location? {
             val world = Bukkit.getWorld(skylifeLocation.world)
-                ?: throw IllegalStateException("World '${skylifeLocation.world}' is not loaded")
+
+            if (world == null) {
+                Bukkit.getLogger().warning("[GameLocationManager] World '${skylifeLocation.world}' is not loaded or doesn't exist")
+                return null
+            }
 
             return Location(
                 world,

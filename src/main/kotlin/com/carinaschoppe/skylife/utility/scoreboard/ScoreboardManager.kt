@@ -18,6 +18,10 @@ import org.bukkit.scoreboard.DisplaySlot
  */
 object ScoreboardManager {
 
+    // Debounce map to prevent scoreboard flicker (UUID -> last update timestamp)
+    private val lastUpdateMap = java.util.concurrent.ConcurrentHashMap<java.util.UUID, Long>()
+    private const val UPDATE_COOLDOWN_MS = 50L // Minimum time between updates
+
     /**
      * Creates and assigns a new scoreboard to a player when they join a game.
      *
@@ -35,11 +39,22 @@ object ScoreboardManager {
 
     /**
      * Updates the content of a player's scoreboard with the latest game information.
+     * Includes debounce mechanism to prevent flicker from too-frequent updates.
      *
      * @param player The player whose scoreboard needs updating.
      * @param game The game providing the stats.
      */
     fun updateScoreboard(player: Player, game: Game) {
+        // Debounce check - prevent updates that are too frequent
+        val now = System.currentTimeMillis()
+        val lastUpdate = lastUpdateMap[player.uniqueId] ?: 0L
+
+        if (now - lastUpdate < UPDATE_COOLDOWN_MS) {
+            return // Skip update to prevent flicker
+        }
+
+        lastUpdateMap[player.uniqueId] = now
+
         val scoreboard = player.scoreboard
         val objective = scoreboard.getObjective("skylife") ?: return
 
@@ -64,6 +79,7 @@ object ScoreboardManager {
      */
     fun removeScoreboard(player: Player) {
         player.scoreboard = Bukkit.getScoreboardManager().mainScoreboard
+        lastUpdateMap.remove(player.uniqueId) // Clean up debounce map
     }
 
     /**

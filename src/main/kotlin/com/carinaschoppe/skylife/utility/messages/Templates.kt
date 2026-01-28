@@ -130,6 +130,7 @@ data class Templates(
     var partyHelpPromote: String = "  <aqua>/party promote <player></aqua><gray> - Promote a player to party leader</gray>",
     var partyHelpList: String = "  <aqua>/party list</aqua><gray> - List all party members</gray>",
     var partyHelpInvites: String = "  <aqua>/party invites</aqua><gray> - List all pending invites</gray>",
+    var partyLeaderDisconnected: String = "<prefix><yellow><oldLeader> has disconnected. <newLeader> is now the party leader!</yellow>",
 
     // Guild messages
     var guildCreateUsage: String = "<prefix><red>Usage: /guild create <name> <tag></red>",
@@ -297,5 +298,12 @@ data class Templates(
     var itemPaderbornName: String = "Paderborn",
 
     // Error messages - skills
-    var skillFailedToSelect: String = "Failed to select skill"
+    var skillFailedToSelect: String = "Failed to select skill",
+
+    // Leaderboard messages
+    var leaderboardHeader: String = "<prefix><gold>═════════════════════════════</gold>\n<prefix><yellow><bold>🏆 Top 10 - <stat></bold></yellow>\n<prefix><gold>═════════════════════════════</gold>",
+    var leaderboardEmpty: String = "<prefix><gray>No players found in the leaderboard.</gray>",
+    var leaderboardEntry: String = "<prefix><gray>#<rank></gray> <gold><player></gold> <gray>-</gray> <green><value></green>",
+    var leaderboardFooter: String = "<prefix><gold>═════════════════════════════</gold>",
+    var leaderboardInvalidStat: String = "<prefix><red>Invalid stat type! Use: points, kills, wins, games, kd</red>"
 )

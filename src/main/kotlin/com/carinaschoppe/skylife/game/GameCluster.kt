@@ -48,12 +48,19 @@ object GameCluster {
      * @return The created game instance.
      */
     fun createGameFromPattern(pattern: GamePattern): Game {
+        val lobbyLoc = GameLocationManager.skylifeLocationToLocationConverter(pattern.gameLocationManager.lobbyLocation)
+        val ingameLoc = GameLocationManager.skylifeLocationToLocationConverter(pattern.gameLocationManager.mainLocation)
+
+        if (lobbyLoc == null || ingameLoc == null) {
+            throw IllegalStateException("Failed to create game '${pattern.mapName}': Required worlds not loaded")
+        }
+        
         val game = Game(
             name = pattern.mapName,
             minPlayers = pattern.minPlayers,
             maxPlayers = pattern.maxPlayers,
-            lobbyLocation = GameLocationManager.skylifeLocationToLocationConverter(pattern.gameLocationManager.lobbyLocation),
-            ingameLocation = GameLocationManager.skylifeLocationToLocationConverter(pattern.gameLocationManager.mainLocation),
+            lobbyLocation = lobbyLoc,
+            ingameLocation = ingameLoc,
             mapName = pattern.mapName,
             pattern = pattern
         )

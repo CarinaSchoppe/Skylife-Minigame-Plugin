@@ -38,7 +38,7 @@ class PlayerDisconnectsServerListener : Listener {
 
                 // Notify party members about leadership change
                 onlineMembers.forEach { member ->
-                    member.sendMessage(Messages.PREFIX.append(net.kyori.adventure.text.Component.text("${player.name} has disconnected. ${newLeader.name} is now the party leader!", net.kyori.adventure.text.format.NamedTextColor.YELLOW)))
+                    member.sendMessage(Messages.PARTY_LEADER_DISCONNECTED(player.name, newLeader.name))
                 }
             }
         }
