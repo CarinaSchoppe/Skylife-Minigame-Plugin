@@ -40,6 +40,8 @@ object SkillEffectsManager {
                 Skill.NINJA -> applyNinja(player)
                 Skill.PILOT -> applyPilot(player)
                 Skill.GOD -> {} // Handled by task
+                Skill.KUNG_FU_MASTER -> applyKungFuMaster(player)
+                Skill.RITTER -> applyRitter(player)
             }
         }
     }
@@ -185,5 +187,35 @@ object SkillEffectsManager {
         )
         pilotItem.itemMeta = meta
         player.inventory.addItem(pilotItem)
+    }
+
+    private fun applyKungFuMaster(player: Player) {
+        // Give knockback stick
+        val stick = ItemStack(Material.STICK, 1)
+        stick.addEnchantment(Enchantment.KNOCKBACK, 1)
+
+        val meta = stick.itemMeta
+        meta.displayName(net.kyori.adventure.text.Component.text("Kung Fu Stick", net.kyori.adventure.text.format.NamedTextColor.GOLD))
+        meta.lore(
+            listOf(
+                net.kyori.adventure.text.Component.text("Push your enemies away!", net.kyori.adventure.text.format.NamedTextColor.GRAY)
+            )
+        )
+        stick.itemMeta = meta
+
+        player.inventory.addItem(stick)
+    }
+
+    private fun applyRitter(player: Player) {
+        // Give full diamond armor
+        val helmet = ItemStack(Material.DIAMOND_HELMET)
+        val chestplate = ItemStack(Material.DIAMOND_CHESTPLATE)
+        val leggings = ItemStack(Material.DIAMOND_LEGGINGS)
+        val boots = ItemStack(Material.DIAMOND_BOOTS)
+
+        player.inventory.helmet = helmet
+        player.inventory.chestplate = chestplate
+        player.inventory.leggings = leggings
+        player.inventory.boots = boots
     }
 }

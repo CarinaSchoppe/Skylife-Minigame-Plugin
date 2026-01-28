@@ -261,6 +261,32 @@ enum class Skill(
         Material.GOLDEN_APPLE,
         SkillType.SUSTAIN,
         SkillRarity.LEGENDARY
+    ),
+
+    KUNG_FU_MASTER(
+        "Kung Fu Master",
+        listOf(
+            "Start with a knockback stick",
+            "to push enemies away.",
+            "",
+            "<gray>Type: <yellow>Combat / Control</yellow></gray>"
+        ),
+        Material.STICK,
+        SkillType.COMBAT,
+        SkillRarity.COMMON
+    ),
+
+    RITTER(
+        "Ritter",
+        listOf(
+            "Begin the battle with full",
+            "diamond armor protection.",
+            "",
+            "<gray>Type: <yellow>Defense</yellow></gray>"
+        ),
+        Material.DIAMOND_CHESTPLATE,
+        SkillType.DEFENSE,
+        SkillRarity.RARE
     );
 
     /**
