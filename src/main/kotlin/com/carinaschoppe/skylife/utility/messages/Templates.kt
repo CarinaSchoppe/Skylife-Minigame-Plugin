@@ -183,8 +183,30 @@ data class Templates(
     var pluginEnabled: String = "<prefix><green>Skylife has been started!</green>",
     var pluginDisabled: String = "<prefix><red>Skylife has been stopped!</red>",
     var configLoaded: String = "<prefix><green>Configuration loaded successfully!</green>",
+    var configSaved: String = "<prefix><green>Configuration saved!</green>",
     var messagesLoaded: String = "<prefix><green>Messages loaded!</green>",
     var messagesSaved: String = "<prefix><green>Messages saved!</green>",
     var messagesExported: String = "<prefix><green><bold>Messages exported to messages.json!</bold></green>",
-    var messagesRestartNote: String = "<green>Restart the server to load any changes you make.</green>"
+    var messagesRestartNote: String = "<green>Restart the server to load any changes you make.</green>",
+
+    // Skills messages
+    var skillSelected: String = "<prefix><green>Skill </green><gold><bold><skill></bold></gold><green> selected!</green>",
+    var skillUnselected: String = "<prefix><green>Skill </green><gold><bold><skill></bold></gold><green> unselected!</green>",
+    var skillError: String = "<prefix><red><error></red>",
+
+    // Admin command messages
+    var noActiveSetup: String = "<prefix><red>No active setup! Use /game create <name> or /gamesetup <name> first.</red>",
+    var gamePatternNotFound: String = "<prefix><red>Game pattern '<game>' not found!</red>",
+    var amountMustBeAtLeastOne: String = "<prefix><red>Amount must be at least 1!</red>",
+    var maxPlayersGreaterThanMin: String = "<prefix><red>Max players must be >= min players (<min>)!</red>",
+    var onlyPlayersCanUse: String = "<prefix><red>This command can only be used by players!</red>",
+    var configurationSaved: String = "<prefix><green>Configuration saved!</green>",
+    var configurationLoaded: String = "<prefix><green>Configuration loaded!</green>",
+
+    // Chat format (guild chat, party chat, game chat)
+    var chatGlobal: String = "<sender><gray>: </gray><white><message></white>",
+    var chatGuild: String = "<light_purple>[G] </light_purple><sender><gray>: </gray><white><message></white>",
+    var chatParty: String = "<blue>[P] </blue><sender><gray>: </gray><white><message></white>",
+    var chatGame: String = "<yellow>[Game] </yellow><sender><gray>: </gray><white><message></white>",
+    var chatSpectator: String = "<gray>[Spectator] </gray><sender><gray>: </gray><white><message></white>"
 )
