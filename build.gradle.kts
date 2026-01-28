@@ -25,6 +25,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-dao:1.0.0")
     implementation("org.jetbrains.exposed:exposed-jdbc:1.0.0")
     implementation("org.xerial:sqlite-jdbc:3.51.1.0")
+    implementation("org.postgresql:postgresql:42.7.4")
     implementation("com.google.code.gson:gson:2.13.2")
     testImplementation(kotlin("test"))
     compileOnly("io.papermc.paper:paper-api:1.21.+")

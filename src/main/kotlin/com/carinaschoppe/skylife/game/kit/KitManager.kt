@@ -1,5 +1,6 @@
 ﻿package com.carinaschoppe.skylife.game.kit
 
+import com.carinaschoppe.skylife.Skylife
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
@@ -15,12 +16,25 @@ object KitManager {
     val playerKits = mutableMapOf<Player, Kit>()
 
     /**
+     * Returns whether kits are enabled in the configuration.
+     */
+    fun areKitsEnabled(): Boolean {
+        return Skylife.config.kitsEnabled
+    }
+
+    /**
      * Initializes all available kits using the [KitBuilder].
      * This should be called once when the plugin starts.
+     * If kits are disabled in config, this will clear all kits.
      */
     fun initializeKits() {
         // Clear existing kits to prevent duplicates on reload
         kits.clear()
+
+        // Check if kits are enabled in config
+        if (!areKitsEnabled()) {
+            return
+        }
 
         val soldierKit = KitBuilder("Soldier")
             .icon(KitItem(Material.DIAMOND_SWORD, name = "<red>Soldier Kit</red>"))

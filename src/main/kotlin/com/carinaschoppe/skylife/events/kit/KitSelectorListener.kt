@@ -31,6 +31,9 @@ class KitSelectorListener : Listener {
      */
     @EventHandler
     fun onPlayerInteract(event: PlayerInteractEvent) {
+        // Only proceed if kits are enabled
+        if (!KitManager.areKitsEnabled()) return
+
         if (event.action != Action.RIGHT_CLICK_AIR && event.action != Action.RIGHT_CLICK_BLOCK) return
 
         val item = event.item ?: return
@@ -58,6 +61,9 @@ class KitSelectorListener : Listener {
      */
     @EventHandler
     fun onInventoryClick(event: InventoryClickEvent) {
+        // Only proceed if kits are enabled
+        if (!KitManager.areKitsEnabled()) return
+
         // Check if this is the kit selector GUI
         val plainText = net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer.plainText()
         val titleText = plainText.serialize(event.view.title())

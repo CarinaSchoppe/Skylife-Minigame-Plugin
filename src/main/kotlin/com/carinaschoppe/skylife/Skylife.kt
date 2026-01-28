@@ -32,6 +32,7 @@ open class Skylife : JavaPlugin() {
     companion object {
         lateinit var instance: Skylife
         val folderLocation = "Skylife/"
+        val config get() = ConfigurationLoader.config
     }
 
 

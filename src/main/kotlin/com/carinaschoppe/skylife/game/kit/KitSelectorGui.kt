@@ -25,6 +25,19 @@ object KitSelectorGui {
     }
 
     /**
+     * Creates the kit selector item that players can click to open the kit GUI.
+     *
+     * @return The kit selector ItemStack.
+     */
+    fun createKitSelectorItem(): ItemStack {
+        return ItemStack(Material.CHEST).apply {
+            val meta = itemMeta
+            meta.displayName(Messages.parse("<green><bold>Kit Selector</bold></green>"))
+            itemMeta = meta
+        }
+    }
+
+    /**
      * Creates and opens the kit selector GUI for a specific player.
      *
      * @param player The player to whom the GUI will be shown.
