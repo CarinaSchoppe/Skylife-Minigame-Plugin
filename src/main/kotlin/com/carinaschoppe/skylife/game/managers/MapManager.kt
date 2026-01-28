@@ -2,9 +2,9 @@ package com.carinaschoppe.skylife.game.managers
 
 import com.carinaschoppe.skylife.Skylife
 import org.bukkit.Bukkit
+import org.bukkit.GameRule
 import org.bukkit.World
 import org.bukkit.WorldCreator
-import org.bukkit.WorldType
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
@@ -71,10 +71,10 @@ object MapManager {
             // Delete uid.dat to prevent world UID conflicts
             File(worldFolder, "uid.dat").delete()
 
-            // Load the world
+            // Load the world (Paper 1.21+ compatible)
             val world = Bukkit.createWorld(
                 WorldCreator(worldName)
-                    .type(WorldType.NORMAL)
+                    .environment(World.Environment.NORMAL)
                     .generateStructures(false)
             )
 
@@ -82,11 +82,12 @@ object MapManager {
                 activeWorlds[gameID] = worldName
                 Bukkit.getLogger().info("Loaded map '$template' as world '$worldName' for game $gameID")
 
-                // Set world properties
-                world.setGameRuleValue("doDaylightCycle", "false")
-                world.setGameRuleValue("doWeatherCycle", "false")
-                world.setGameRuleValue("doMobSpawning", "false")
-                world.setGameRuleValue("announceAdvancements", "false")
+                // Set world properties (Paper 1.21+ GameRule API)
+                world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false)
+                world.setGameRule(GameRule.DO_WEATHER_CYCLE, false)
+                world.setGameRule(GameRule.DO_MOB_SPAWNING, false)
+                world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false)
+                world.setGameRule(GameRule.DO_FIRE_TICK, false)
                 world.time = 6000 // Set to noon
 
                 return world

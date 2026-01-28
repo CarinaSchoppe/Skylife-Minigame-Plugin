@@ -109,9 +109,11 @@ class EndState(private val game: Game) : GameState {
         // - Creating new game instance
         GameCluster.stopGame(game)
 
-        // After GameCluster.stopGame() has teleported all players out,
-        // we can safely unload and delete the game world
-        com.carinaschoppe.skylife.game.managers.MapManager.unloadAndDeleteWorld(game.gameID)
+        // Schedule world cleanup with a small delay to ensure all players have been teleported
+        // This prevents potential issues with players still being in the world during unload
+        org.bukkit.Bukkit.getScheduler().runTaskLater(Skylife.instance, Runnable {
+            com.carinaschoppe.skylife.game.managers.MapManager.unloadAndDeleteWorld(game.gameID)
+        }, 20L) // 1 second delay
     }
 
     /**
