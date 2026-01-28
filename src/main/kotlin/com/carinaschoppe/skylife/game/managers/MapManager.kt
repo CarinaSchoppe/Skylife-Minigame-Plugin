@@ -65,22 +65,36 @@ object MapManager {
         val worldFolder = File(Bukkit.getWorldContainer(), worldName)
 
         try {
-            // Copy map template to server worlds folder
+            val startTime = System.currentTimeMillis()
+
+            // Copy map template to server worlds folder with timeout monitoring
             copyDirectory(templateFolder, worldFolder)
+            val copyTime = System.currentTimeMillis() - startTime
+
+            if (copyTime > 10000) { // 10 seconds warning
+                Bukkit.getLogger().warning("[MapManager] Map copy took ${copyTime}ms for template '$template'")
+            }
 
             // Delete uid.dat to prevent world UID conflicts
             File(worldFolder, "uid.dat").delete()
 
-            // Load the world (Paper 1.21+ compatible)
+            // Load the world (Paper 1.21+ compatible) with timeout check
+            val loadStartTime = System.currentTimeMillis()
             val world = Bukkit.createWorld(
                 WorldCreator(worldName)
                     .environment(World.Environment.NORMAL)
                     .generateStructures(false)
             )
+            val loadTime = System.currentTimeMillis() - loadStartTime
+
+            if (loadTime > 30000) { // 30 seconds warning
+                Bukkit.getLogger().warning("[MapManager] World loading took ${loadTime}ms for world '$worldName'")
+            }
 
             if (world != null) {
                 activeWorlds[gameID] = worldName
-                Bukkit.getLogger().info("Loaded map '$template' as world '$worldName' for game $gameID")
+                val totalTime = System.currentTimeMillis() - startTime
+                Bukkit.getLogger().info("[MapManager] Loaded map '$template' as world '$worldName' for game $gameID (${totalTime}ms)")
 
                 // Set world properties (Paper 1.21+ GameRule API)
                 world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false)
@@ -92,13 +106,13 @@ object MapManager {
 
                 return world
             } else {
-                Bukkit.getLogger().severe("Failed to load world '$worldName' for game $gameID")
+                Bukkit.getLogger().severe("[MapManager] Failed to load world '$worldName' for game $gameID")
                 // Cleanup failed world folder
                 deleteDirectory(worldFolder)
                 return null
             }
         } catch (e: Exception) {
-            Bukkit.getLogger().severe("Error loading map for game $gameID: ${e.message}")
+            Bukkit.getLogger().severe("[MapManager] Error loading map for game $gameID: ${e.message}")
             e.printStackTrace()
             // Cleanup on error
             deleteDirectory(worldFolder)

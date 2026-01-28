@@ -51,16 +51,17 @@ class PlayerDamagesListener : Listener {
 
             // Check guild friendly fire (parties can always damage each other)
             if (victimGame != null && damagerGame != null) {
-                // Check if they're in the same guild
-                if (GuildManager.areInSameGuild(damager.uniqueId, victim.uniqueId)) {
-                    val guildId = GuildManager.getPlayerGuildId(damager.uniqueId)
-                    if (guildId == null) return // Safety check
+                // Snapshot guild membership at time of damage check
+                val damagerGuildId = GuildManager.getPlayerGuildId(damager.uniqueId)
+                val victimGuildId = GuildManager.getPlayerGuildId(victim.uniqueId)
 
+                // Only check friendly fire if both are in guilds AND the same guild
+                if (damagerGuildId != null && victimGuildId != null && damagerGuildId == victimGuildId) {
                     // Check if friendly fire is enabled for the guild
-                    val guild = GuildManager.getGuild(guildId)
+                    val guild = GuildManager.getGuild(damagerGuildId)
                     if (guild != null && !guild.friendlyFireEnabled) {
                         // Check if guild is last team standing (only guild members alive)
-                        val isLastTeam = GuildManager.isLastTeamStanding(guildId, victimGame.livingPlayers)
+                        val isLastTeam = GuildManager.isLastTeamStanding(damagerGuildId, victimGame.livingPlayers)
                         if (!isLastTeam) {
                             // Cancel damage - friendly fire is disabled and guild is not last team
                             event.isCancelled = true

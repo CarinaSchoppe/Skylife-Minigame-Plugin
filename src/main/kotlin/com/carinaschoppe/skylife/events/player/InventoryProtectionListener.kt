@@ -3,9 +3,12 @@ package com.carinaschoppe.skylife.events.player
 import com.carinaschoppe.skylife.game.GameCluster
 import com.carinaschoppe.skylife.utility.ui.ExitDoorItem
 import com.carinaschoppe.skylife.utility.ui.GameOverviewItems
+import org.bukkit.GameMode
 import org.bukkit.Material
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.entity.EntityPickupItemEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryDragEvent
 import org.bukkit.event.player.PlayerDropItemEvent
@@ -119,5 +122,19 @@ class InventoryProtectionListener : Listener {
         val displayName = meta.displayName() ?: return false
         val plainText = net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer.plainText().serialize(displayName)
         return plainText.contains("Kit Selector", ignoreCase = true)
+    }
+
+    /**
+     * Prevents spectators from picking up items.
+     */
+    @EventHandler(ignoreCancelled = true)
+    fun onEntityPickupItem(event: EntityPickupItemEvent) {
+        val entity = event.entity
+        if (entity !is Player) return
+
+        // Cancel pickup for spectators
+        if (entity.gameMode == GameMode.SPECTATOR) {
+            event.isCancelled = true
+        }
     }
 }

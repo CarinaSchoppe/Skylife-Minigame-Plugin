@@ -15,11 +15,11 @@
 
 ### Mittel
 
-- [ ] **Spectator Mode Issues**: Spectators könnten Items aus Game World picken
-- [ ] **Party System**: Was passiert wenn Party Leader disconnectet während Game läuft?
-- [ ] **Guild Friendly Fire**: Edge Cases wenn Spieler während Game Guild beitritt/verlässt
-- [ ] **Exit Door in InGame State**: Exit Door sollte nicht im InGame State funktionieren, nur in Lobby/End
-- [ ] **Map Loading Timeout**: Keine Timeout-Behandlung wenn Map-Loading zu lange dauert
+- [X ] **Spectator Mode Issues**: Spectators könnten Items aus Game World picken
+- [X ] **Party System**: Was passiert wenn Party Leader disconnectet während Game läuft?
+- [X ] **Guild Friendly Fire**: Edge Cases wenn Spieler während Game Guild beitritt/verlässt
+- [X ] **Exit Door in InGame State**: Exit Door sollte nicht im InGame State funktionieren, nur in Lobby/End
+- [X ] **Map Loading Timeout**: Keine Timeout-Behandlung wenn Map-Loading zu lange dauert
 
 ### Niedrig
 

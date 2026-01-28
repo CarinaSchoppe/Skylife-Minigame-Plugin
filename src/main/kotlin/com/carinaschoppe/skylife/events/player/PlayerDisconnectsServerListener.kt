@@ -25,6 +25,27 @@ class PlayerDisconnectsServerListener : Listener {
         // Suppress the default quit message to replace it with a custom one.
         event.quitMessage(null)
 
+        // Handle party cleanup - if leader disconnects, promote next member or disband
+        val party = com.carinaschoppe.skylife.party.PartyManager.getPlayerParty(player.uniqueId)
+        if (party != null && party.isLeader(player.uniqueId)) {
+            // Party leader is disconnecting
+            val onlineMembers = party.members.mapNotNull { org.bukkit.Bukkit.getPlayer(it) }.filter { it.uniqueId != player.uniqueId }
+
+            if (onlineMembers.isNotEmpty()) {
+                // Promote first online member to leader
+                val newLeader = onlineMembers.first()
+                party.leader = newLeader.uniqueId
+
+                // Notify party members about leadership change
+                onlineMembers.forEach { member ->
+                    member.sendMessage(Messages.PREFIX.append(net.kyori.adventure.text.Component.text("${player.name} has disconnected. ${newLeader.name} is now the party leader!", net.kyori.adventure.text.format.NamedTextColor.YELLOW)))
+                }
+            }
+        }
+
+        // Clean up party data
+        com.carinaschoppe.skylife.party.PartyManager.handlePlayerDisconnect(player.uniqueId)
+
         // Only handle game-related cleanup if the player was in a managed game
         if (game != null) {
             // Clear inventory and armor to prevent item duplication
