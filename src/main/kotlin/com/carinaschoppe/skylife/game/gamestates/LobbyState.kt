@@ -3,6 +3,7 @@
 import com.carinaschoppe.skylife.game.Game
 import com.carinaschoppe.skylife.game.countdown.LobbyCountdown
 import com.carinaschoppe.skylife.utility.messages.Messages
+import com.carinaschoppe.skylife.utility.ui.ExitDoorItem
 import com.carinaschoppe.skylife.utility.ui.SkillsGui
 import org.bukkit.entity.Player
 
@@ -49,6 +50,9 @@ class LobbyState(private val game: Game) : GameState {
 
         // Skills selector in middle
         player.inventory.setItem(4, SkillsGui.createSkillsMenuItem())
+
+        // Exit door in last slot
+        player.inventory.setItem(8, ExitDoorItem.create())
 
         if (game.livingPlayers.size >= game.minPlayers && !countdown.isRunning) {
             countdown.start()
