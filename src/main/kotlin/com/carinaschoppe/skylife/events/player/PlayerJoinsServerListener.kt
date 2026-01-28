@@ -64,11 +64,7 @@ class PlayerJoinsServerListener : Listener {
         // Set lobby scoreboard
         LobbyScoreboardManager.setLobbyScoreboard(player)
 
-        // Broadcast join message with online player count and max players
-        val server = player.server
-        player.server.broadcast(Messages.PLAYER_JOINED(player.name, server.onlinePlayers.size, server.maxPlayers))
-
-        // Send a custom welcome message.
+        // Send a custom welcome message (no broadcast - player only joined the server, not a game)
         player.sendMessage(Messages.PLAYER_JOINS_SERVER(player.name))
     }
 }
