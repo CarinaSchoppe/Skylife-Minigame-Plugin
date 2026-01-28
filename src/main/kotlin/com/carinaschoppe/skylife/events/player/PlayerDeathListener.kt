@@ -71,6 +71,11 @@ class PlayerDeathListener : Listener {
             // Case: Player was killed by another player in the same game
             StatsUtility.addKillStatsToPlayer(killer)
             game.gameKills[killer.uniqueId] = game.gameKills.getOrDefault(killer.uniqueId, 0) + 1
+
+            // Award kill coins
+            val killerRank = com.carinaschoppe.skylife.economy.PlayerRank.getRank(killer)
+            com.carinaschoppe.skylife.economy.CoinManager.awardKillCoins(killer.uniqueId, killerRank)
+
             game.broadcast(Messages.PLAYER_KILLED(player.name, killer.name))
         } else {
             // Case: Player died from environment or other causes

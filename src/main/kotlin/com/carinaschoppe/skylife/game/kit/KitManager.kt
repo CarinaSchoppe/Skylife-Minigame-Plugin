@@ -43,10 +43,12 @@ object KitManager {
             .item(KitItem(Material.IRON_CHESTPLATE))
             .item(KitItem(Material.IRON_LEGGINGS))
             .item(KitItem(Material.IRON_BOOTS))
+            .rarity(KitRarity.COMMON)
             .build()
 
         val archerKit = KitBuilder("Archer")
             .icon(KitItem(Material.BOW, name = "<green>Archer Kit</green>"))
+            .rarity(KitRarity.RARE)
             .item(KitItem(Material.BOW, enchantments = mapOf(Enchantment.POWER to 1)))
             .item(KitItem(Material.ARROW, 32))
             .item(KitItem(Material.LEATHER_HELMET))
@@ -61,13 +63,20 @@ object KitManager {
 
     /**
      * Assigns a selected kit to a player.
+     * Checks if the player has unlocked the kit first.
      *
      * @param player The player selecting the kit.
      * @param kit The kit being selected.
+     * @return true if successful, false if kit is locked
      */
-    fun selectKit(player: Player, kit: Kit) {
+    fun selectKit(player: Player, kit: Kit): Boolean {
+        // Check if player has unlocked this kit
+        if (!com.carinaschoppe.skylife.economy.KitUnlockManager.hasUnlocked(player.uniqueId, kit)) {
+            return false
+        }
+
         playerKits[player] = kit
-        // Nachricht an Spieler & Scoreboard Update kommt spÃ¤ter
+        return true
     }
 
     /**

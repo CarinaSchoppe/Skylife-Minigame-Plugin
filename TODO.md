@@ -52,12 +52,12 @@
 - [ ] **More Kits**: Mehr Kit-Variationen entwickeln (Tank, Mage, Assassin, Support, etc.)
 - [ ] **Kit Balancing**: Kit Stats analysieren und balancen
 - [ ] **Custom Kits**: Admin-Commands für Custom Kit Creation
-- [ ] **Kit Unlocks**: Kits mit Level/Points freischalten
+- [X ] **Kit Unlocks**: Kits mit Level/Points freischalten
 - [ ] **Kit Presets**: Multiple Kit-Loadouts speichern
 - [ ] **Kit Statistics**: Track welche Kits am meisten gewählt/gewonnen werden
 - [ ] **Random Kit Mode**: Gamemode wo jeder Random Kit bekommt
 - [ ] **Kit Abilities**: Spezielle Abilities für Kits (Rechtsklick Chest = Special Ability)
-- [ ] **Kit Rarity System**: Common, Rare, Epic, Legendary Kits
+- [X ] **Kit Rarity System**: Common, Rare, Epic, Legendary Kits
 
 ### Skills System
 
@@ -74,8 +74,6 @@
 - [ ] **Friends System**: Freunde hinzufügen und deren Status sehen
 - [ ] **Guild Wars**: Guild vs Guild Matches
 - [ ] **Guild Levels**: Guild XP und Level System
-- [ ] **Guild Bank**: Gemeinsame Item/Point Storage
-- [ ] **Clan Tags**: Farbige Clan Tags im Chat
 - [ ] **Player Profiles**: Detaillierte Profile mit Stats, Achievements, etc.
 - [X] **Leaderboards**: Top 10 für verschiedene Stats (points, kills, wins, games, kd) - `/leaderboard` oder `/lb`
 

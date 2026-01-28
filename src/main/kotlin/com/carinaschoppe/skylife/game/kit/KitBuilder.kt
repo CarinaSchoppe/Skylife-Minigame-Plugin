@@ -10,6 +10,7 @@ import org.bukkit.Material
 class KitBuilder(private val name: String) {
     private var icon: KitItem = KitItem(Material.STONE, name = name)
     private val items = mutableListOf<KitItem>()
+    private var rarity: KitRarity = KitRarity.COMMON
 
     /**
      * Sets the icon for the kit.
@@ -34,11 +35,22 @@ class KitBuilder(private val name: String) {
     }
 
     /**
+     * Sets the rarity for the kit.
+     *
+     * @param rarity The [KitRarity] level.
+     * @return This [KitBuilder] instance for chaining.
+     */
+    fun rarity(rarity: KitRarity): KitBuilder {
+        this.rarity = rarity
+        return this
+    }
+
+    /**
      * Constructs the final [Kit] instance.
      *
      * @return The fully configured [Kit].
      */
     fun build(): Kit {
-        return Kit(name, icon, items)
+        return Kit(name, icon, items, rarity)
     }
 }
