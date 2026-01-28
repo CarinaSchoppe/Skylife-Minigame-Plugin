@@ -34,12 +34,34 @@ object GameLoader {
         val json = file.readText()
         val gamePattern = gson.fromJson(json, GamePattern::class.java)
         GameCluster.gamePatterns.add(gamePattern)
-        Bukkit.getServer().consoleSender.sendMessage(
-            Messages.PREFIX
-                .append(Component.text("The Game: '", Messages.MESSAGE_COLOR))
-                .append(Component.text(gamePattern.mapName, Messages.NAME_COLOR))
-                .append(Component.text("' has been loaded!", Messages.MESSAGE_COLOR))
-        )
+
+        // Create a game instance from the pattern if it's complete
+        if (gamePattern.isComplete()) {
+            try {
+                GameCluster.createGameFromPattern(gamePattern)
+                Bukkit.getServer().consoleSender.sendMessage(
+                    Messages.PREFIX
+                        .append(Component.text("Game '", Messages.MESSAGE_COLOR))
+                        .append(Component.text(gamePattern.mapName, Messages.NAME_COLOR))
+                        .append(Component.text("' loaded and game instance created!", Messages.MESSAGE_COLOR))
+                )
+            } catch (e: IllegalStateException) {
+                Bukkit.getServer().consoleSender.sendMessage(
+                    Messages.PREFIX
+                        .append(Component.text("Game pattern '", Messages.MESSAGE_COLOR))
+                        .append(Component.text(gamePattern.mapName, Messages.NAME_COLOR))
+                        .append(Component.text("' loaded, but failed to create game instance: ", Messages.ERROR_COLOR))
+                        .append(Component.text(e.message ?: "Unknown error", Messages.ERROR_COLOR))
+                )
+            }
+        } else {
+            Bukkit.getServer().consoleSender.sendMessage(
+                Messages.PREFIX
+                    .append(Component.text("Game pattern '", Messages.MESSAGE_COLOR))
+                    .append(Component.text(gamePattern.mapName, Messages.NAME_COLOR))
+                    .append(Component.text("' loaded, but is incomplete!", Messages.ERROR_COLOR))
+            )
+        }
     }
 
     /**

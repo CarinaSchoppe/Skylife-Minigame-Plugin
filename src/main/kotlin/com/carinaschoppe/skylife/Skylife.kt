@@ -131,6 +131,8 @@ open class Skylife : JavaPlugin() {
         val deleteGameCommand = DeleteGameCommand()
         getCommand("deletegame")?.setExecutor(deleteGameCommand)
         getCommand("deletegame")?.tabCompleter = deleteGameCommand
+
+        getCommand("managegames")?.setExecutor(ManageGamesCommand())
     }
 
     private fun registerEventListeners(pluginManager: PluginManager) {
@@ -155,6 +157,7 @@ open class Skylife : JavaPlugin() {
     private fun registerSkillListeners(pluginManager: PluginManager) {
         pluginManager.registerEvents(SkillsGuiListener(), this)
         pluginManager.registerEvents(GameSetupGuiListener(), this)
+        pluginManager.registerEvents(com.carinaschoppe.skylife.events.ui.GameManagementGuiListener(), this)
         pluginManager.registerEvents(PlayerSkillsItemListener(), this)
         pluginManager.registerEvents(SkillJumboListener(), this)
         pluginManager.registerEvents(SkillFeatherfallListener(), this)

@@ -54,7 +54,8 @@ class LobbyState(private val game: Game) : GameState {
         // Exit door in last slot
         player.inventory.setItem(8, ExitDoorItem.create())
 
-        if (game.livingPlayers.size >= game.minPlayers && !countdown.isRunning) {
+        val minPlayersToStart = game.pattern.minPlayersToStart
+        if (game.livingPlayers.size >= minPlayersToStart && !countdown.isRunning) {
             countdown.start()
         }
         // Notify all players about the new player joining with current player count
@@ -73,7 +74,8 @@ class LobbyState(private val game: Game) : GameState {
      * @param player The player who left.
      */
     override fun playerLeft(player: Player) {
-        if (game.livingPlayers.size < game.minPlayers && countdown.isRunning) {
+        val minPlayersToStart = game.pattern.minPlayersToStart
+        if (game.livingPlayers.size < minPlayersToStart && countdown.isRunning) {
             countdown.stop()
             game.livingPlayers.forEach { p ->
                 p.sendMessage(Messages.COUNTDOWN_STOPPED)

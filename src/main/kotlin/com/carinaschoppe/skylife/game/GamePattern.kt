@@ -29,6 +29,12 @@ class GamePattern(val mapName: String) {
     var maxPlayers: Int = 0
 
     /**
+     * The minimum number of players needed to start the countdown/game.
+     * Defaults to minPlayers if not set.
+     */
+    var minPlayersToStart: Int = 2
+
+    /**
      * Manages all location-related settings for this game pattern,
      * including spawn points, lobby location, and other important positions.
      */

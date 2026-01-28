@@ -1,4 +1,4 @@
-bar package com.carinaschoppe.skylife.commands.admin
+package com.carinaschoppe.skylife.commands.admin
 
 import com.carinaschoppe.skylife.game.GameCluster
 import com.carinaschoppe.skylife.game.GameLoader

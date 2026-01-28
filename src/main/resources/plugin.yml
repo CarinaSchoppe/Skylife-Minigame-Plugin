@@ -65,6 +65,9 @@ commands:
   deletegame:
     description: Delete a game pattern and all its instances (Admin only)
     aliases: [ dg, removegame, delgame ]
+  managegames:
+    description: Open the game management GUI (Admin only)
+    aliases: [ mg, editgames, gamemanager ]
 permissions:
   skylife.*:
     description: Gives access to all Skylife commands
@@ -103,6 +106,7 @@ permissions:
       skylife.admin.givecoins: true
       skylife.admin.removecoins: true
       skylife.admin.deletegame: true
+      skylife.admin.managegames: true
   skylife.join:
     description: Allows joining games
     default: true
@@ -150,6 +154,9 @@ permissions:
     default: op
   skylife.admin.deletegame:
     description: Allows deleting game patterns and instances
+    default: op
+  skylife.admin.managegames:
+    description: Allows managing game patterns via GUI
     default: op
   skylife.rank.user:
     description: User rank (default)
