@@ -153,15 +153,25 @@ class GameSetupGuiListener : Listener {
                     GameCluster.gamePatterns.add(gamePattern)
                     GameLoader.saveGameToFile(gamePattern)
 
+                    // Create a game instance from the pattern
+                    try {
+                        GameCluster.createGameFromPattern(gamePattern)
+                        player.sendMessage(
+                            Messages.PREFIX
+                                .append(Component.text("Game '", Messages.MESSAGE_COLOR))
+                                .append(Component.text(gamePattern.mapName, Messages.NAME_COLOR))
+                                .append(Component.text("' is now available in the compass!", Messages.MESSAGE_COLOR))
+                        )
+                    } catch (e: IllegalStateException) {
+                        player.sendMessage(
+                            Messages.PREFIX
+                                .append(Component.text("Game pattern saved, but failed to create game instance: ", Messages.ERROR_COLOR))
+                                .append(Component.text(e.message ?: "Unknown error", Messages.ERROR_COLOR))
+                        )
+                    }
+
                     // Remove from active setups
                     GameSetupCommand.activeSetups.remove(player)
-
-                    player.sendMessage(
-                        Messages.PREFIX
-                            .append(Component.text("Game pattern '", Messages.MESSAGE_COLOR))
-                            .append(Component.text(gamePattern.mapName, Messages.NAME_COLOR))
-                            .append(Component.text("' has been saved successfully!", Messages.MESSAGE_COLOR))
-                    )
 
                     // Close inventory
                     player.closeInventory()
