@@ -101,12 +101,14 @@ class SkillsGui(private val player: Player) : InventoryHolder {
         val item = ItemStack(Material.BOOK)
         val meta = item.itemMeta
 
+        val maxSkills = SkillsManager.getMaxSkills(player)
+
         meta.displayName(Component.text("Skill Selection Info", NamedTextColor.AQUA, TextDecoration.BOLD))
         meta.lore(
             listOf(
                 Component.empty(),
                 Component.text("Selected: ", NamedTextColor.GRAY)
-                    .append(Component.text("$selectedCount/${SkillsManager.MAX_SKILLS}", NamedTextColor.GREEN)),
+                    .append(Component.text("$selectedCount/$maxSkills", NamedTextColor.GREEN)),
                 Component.empty(),
                 Component.text("Click skills to select/unselect them", NamedTextColor.YELLOW)
             )

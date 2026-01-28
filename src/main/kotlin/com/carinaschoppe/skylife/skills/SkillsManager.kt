@@ -43,14 +43,15 @@ object SkillsManager {
 
     /**
      * Gets the maximum number of skills a player can select based on their rank.
-     * USER: 2, VIP: 3, VIP+: 4
+     * Values are loaded from config.json (default: USER=2, VIP=3, VIP+=4)
      */
     fun getMaxSkills(player: Player): Int {
         val rank = com.carinaschoppe.skylife.economy.PlayerRank.getRank(player)
+        val config = com.carinaschoppe.skylife.Skylife.config.maxSkills
         return when (rank) {
-            com.carinaschoppe.skylife.economy.PlayerRank.VIP -> 3
-            com.carinaschoppe.skylife.economy.PlayerRank.VIP_PLUS -> 4
-            else -> 2
+            com.carinaschoppe.skylife.economy.PlayerRank.VIP -> config.vip
+            com.carinaschoppe.skylife.economy.PlayerRank.VIP_PLUS -> config.vipPlus
+            else -> config.default
         }
     }
 

@@ -16,7 +16,10 @@ data class Config(
     var database: DatabaseConfig = DatabaseConfig(),
 
     @SerializedName("skill_prices")
-    var skillPrices: SkillPriceConfig = SkillPriceConfig()
+    var skillPrices: SkillPriceConfig = SkillPriceConfig(),
+
+    @SerializedName("max_skills")
+    var maxSkills: MaxSkillsConfig = MaxSkillsConfig()
 )
 
 data class DatabaseConfig(
@@ -56,4 +59,15 @@ data class SkillPriceConfig(
 
     @SerializedName("legendary")
     var legendary: Int = 5000
+)
+
+data class MaxSkillsConfig(
+    @SerializedName("default")
+    var default: Int = 2,
+
+    @SerializedName("vip")
+    var vip: Int = 3,
+
+    @SerializedName("vip_plus")
+    var vipPlus: Int = 4
 )
