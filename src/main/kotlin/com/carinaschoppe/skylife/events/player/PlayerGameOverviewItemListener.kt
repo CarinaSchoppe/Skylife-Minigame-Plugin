@@ -15,14 +15,14 @@ import org.bukkit.event.player.PlayerInteractEvent
  */
 class PlayerGameOverviewItemListener : Listener {
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(ignoreCancelled = false)  // Listen even if cancelled
     fun onPlayerInteract(event: PlayerInteractEvent) {
         val item = event.item ?: return
         if (!GameOverviewItems.isMenuItem(item)) {
             return
         }
 
-        // Trigger on any right-click, not just on blocks
+        // Trigger on any right-click (air or block)
         if (!event.action.name.contains("RIGHT")) {
             return
         }
