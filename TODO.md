@@ -4,11 +4,14 @@
 
 ### Kritisch
 
+- [ ] **🔴 KITS WERDEN NICHT VERGEBEN**: `IngameState.kt:61` - KitManager.giveKitItems(player) fehlt komplett! Spieler starten ohne Kit-Items
+- [ ] **Kit Selector Item nicht geschützt**: Kit Selector (Chest) kann gedroppt/bewegt werden - muss zu InventoryProtectionListener hinzugefügt werden
 - [ ] **World Cleanup bei Server Crash**: Was passiert wenn Server abstürzt während Games laufen? Alte World-Ordner könnten nicht gelöscht werden
 - [ ] **Player Inventory bei Disconnect**: Prüfen ob Inventory korrekt cleared wird wenn Spieler während Game disconnectet
 - [ ] **Memory Leak Check**: MapManager.activeWorlds könnte bei Fehlern nie gecleart werden
 - [ ] **Race Condition**: Mehrere Spieler joinen gleichzeitig → könnte maxPlayers überschreiten
 - [ ] **Skill Items Duplication**: Prüfen ob Skills-Items gedupliziert werden können (z.B. durch Drop-Exploit)
+- [ ] **Default Kit Selection**: Was passiert wenn Spieler kein Kit auswählt? Sollte Default-Kit geben
 
 ### Mittel
 
@@ -41,6 +44,20 @@
 - [ ] **Border Shrink**: World Border der sich über Zeit verkleinert (Battle Royale Style)
 - [ ] **Weather Events**: Zufällige Wetter-Events die Gameplay beeinflussen
 - [ ] **Night/Day Cycle**: Dynamischer Tag/Nacht Wechsel während Game
+- [ ] **Kill Streak Rewards**: Bonus Items/Effects für Kill-Streaks
+- [ ] **Spectator Features**: Spectators können teleportieren zu Spielern, Gamemode wechseln, etc.
+
+### Kit System (Aktuell nur 2 Kits!)
+
+- [ ] **More Kits**: Mehr Kit-Variationen entwickeln (Tank, Mage, Assassin, Support, etc.)
+- [ ] **Kit Balancing**: Kit Stats analysieren und balancen
+- [ ] **Custom Kits**: Admin-Commands für Custom Kit Creation
+- [ ] **Kit Unlocks**: Kits mit Level/Points freischalten
+- [ ] **Kit Presets**: Multiple Kit-Loadouts speichern
+- [ ] **Kit Statistics**: Track welche Kits am meisten gewählt/gewonnen werden
+- [ ] **Random Kit Mode**: Gamemode wo jeder Random Kit bekommt
+- [ ] **Kit Abilities**: Spezielle Abilities für Kits (Rechtsklick Chest = Special Ability)
+- [ ] **Kit Rarity System**: Common, Rare, Epic, Legendary Kits
 
 ### Skills System
 
@@ -49,6 +66,8 @@
 - [ ] **Skill Combos**: Bonus wenn bestimmte Skills kombiniert werden
 - [ ] **Skill Presets**: Spieler können Skill-Sets speichern
 - [ ] **Random Skill Mode**: Gamemode wo jeder Random Skills bekommt
+- [ ] **Skill Statistics**: Track welche Skills am häufigsten gewählt werden
+- [ ] **Skill Cooldown Display**: Actionbar/Bossbar für Cooldowns
 
 ### Social Features
 
@@ -144,17 +163,25 @@
 
 ### Aktuell offen
 
+- **🔴 KRITISCH**: Kits werden beim Game Start nicht vergeben! (IngameState.kt:61)
+- **🔴 KRITISCH**: Kit Selector Item (Chest) nicht geschützt vor Drop/Move
 - Exit Door funktioniert in allen States (sollte nur in Lobby/End sein)
 - Keine Prüfung ob Hub gesetzt ist bevor Spieler beitreten
 - Skills könnten in Lobby/Hub aktiviert werden
 - GameOverview Compass könnte in Game verwendet werden
+- Kein Default-Kit wenn Spieler keins auswählt
+- Nur 2 Kits vorhanden (sehr limitiert)
 
 ### Geplante Fixes
 
+- [ ] **🔴 SOFORT FIX**: KitManager.giveKitItems(player) in IngameState.start() hinzufügen
+- [ ] **🔴 SOFORT FIX**: Kit Selector zu InventoryProtectionListener hinzufügen
+- [ ] Default-Kit Logik implementieren (z.B. erstes Kit in Liste)
 - [ ] Exit Door nur in Lobby/End/Hub aktivieren
 - [ ] Hub-Check beim Server Start mit Warning
 - [ ] Skills nur im InGame State aktivierbar machen
 - [ ] Inventory Items State-basiert aktivieren/deaktivieren
+- [ ] Mehr Kits erstellen (mindestens 5-6 verschiedene)
 
 ---
 

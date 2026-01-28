@@ -43,43 +43,77 @@ object DatabaseConnector {
      * @throws IllegalStateException if there's an error creating the database file or connecting to it.
      */
     fun connectDatabase() {
-        val config = Skylife.config
-        val dbType = config.database.type.lowercase()
+        try {
+            val config = Skylife.config
+            val dbType = config.database.type.lowercase().trim()
 
-        val url = when (dbType) {
-            "postgresql" -> {
-                val pgConfig = config.database.postgresql
-                "jdbc:postgresql://${pgConfig.host}:${pgConfig.port}/${pgConfig.database}"
+            // Validate database type
+            if (dbType != "sqlite" && dbType != "postgresql") {
+                Bukkit.getServer().consoleSender.sendMessage(
+                    Messages.PREFIX.append(
+                        net.kyori.adventure.text.Component.text(
+                            "Invalid database type '$dbType' in config! Using SQLite as fallback.",
+                            net.kyori.adventure.text.format.NamedTextColor.YELLOW
+                        )
+                    )
+                )
             }
 
-            else -> {
-                // Default to SQLite
-                val file = File(Bukkit.getServer().pluginsFolder, Skylife.folderLocation + "database.db")
-                if (!file.exists()) {
-                    file.parentFile.mkdirs()
-                    file.createNewFile()
+            val url = when (dbType) {
+                "postgresql" -> {
+                    val pgConfig = config.database.postgresql
+
+                    // Validate PostgreSQL config
+                    if (pgConfig.host.isBlank() || pgConfig.database.isBlank()) {
+                        throw IllegalArgumentException("PostgreSQL configuration incomplete! Host and database name are required.")
+                    }
+
+                    "jdbc:postgresql://${pgConfig.host}:${pgConfig.port}/${pgConfig.database}"
                 }
-                "jdbc:sqlite:${file.absolutePath}"
+
+                else -> {
+                    // Default to SQLite
+                    val file = File(Bukkit.getServer().pluginsFolder, Skylife.folderLocation + "database.db")
+                    if (!file.exists()) {
+                        file.parentFile.mkdirs()
+                        file.createNewFile()
+                    }
+                    "jdbc:sqlite:${file.absolutePath}"
+                }
             }
-        }
 
-        database = if (dbType == "postgresql") {
-            val pgConfig = config.database.postgresql
-            Database.connect(
-                url = url,
-                driver = "org.postgresql.Driver",
-                user = pgConfig.username,
-                password = pgConfig.password
+            database = if (dbType == "postgresql") {
+                val pgConfig = config.database.postgresql
+                Database.connect(
+                    url = url,
+                    driver = "org.postgresql.Driver",
+                    user = pgConfig.username,
+                    password = pgConfig.password
+                )
+            } else {
+                Database.connect(url)
+            }
+
+            Bukkit.getServer().consoleSender.sendMessage(Messages.DATABASE_CONNECTED)
+
+            transaction {
+                SchemaUtils.create(StatsPlayers, Guilds, GuildMembers, PlayerSkills)
+            }
+
+            Bukkit.getServer().consoleSender.sendMessage(Messages.DATABASE_TABLES_CREATED)
+
+        } catch (e: Exception) {
+            Bukkit.getServer().consoleSender.sendMessage(
+                Messages.PREFIX.append(
+                    net.kyori.adventure.text.Component.text(
+                        "Failed to connect to database: ${e.message}",
+                        net.kyori.adventure.text.format.NamedTextColor.RED
+                    )
+                )
             )
-        } else {
-            Database.connect(url)
+            e.printStackTrace()
+            throw IllegalStateException("Database connection failed", e)
         }
-
-        Bukkit.getServer().consoleSender.sendMessage(Messages.DATABASE_CONNECTED)
-        transaction {
-            SchemaUtils.create(StatsPlayers, Guilds, GuildMembers, PlayerSkills)
-        }
-        Bukkit.getServer().consoleSender.sendMessage(Messages.DATABASE_TABLES_CREATED)
     }
 
 }
