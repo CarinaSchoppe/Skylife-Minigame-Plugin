@@ -75,8 +75,9 @@ class SkillsGui(private val player: Player) : InventoryHolder {
 
         // Place skills in specific slots
         val skillSlots = listOf(
-            10, 11, 12, 13, 14, 15, 16, // Row 2
-            19, 20, 21, 22, 23, 24, 25  // Row 3
+            10, 11, 12, 13, 14, 15, 16, // Row 2 (7 skills)
+            19, 20, 21, 22, 23, 24, 25, // Row 3 (7 skills)
+            28, 29, 30, 31, 32, 33, 34  // Row 4 (7 skills) = 21 total slots
         )
 
         val skills = Skill.values()
