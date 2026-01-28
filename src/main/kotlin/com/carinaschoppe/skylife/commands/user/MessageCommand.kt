@@ -24,6 +24,11 @@ class MessageCommand : CommandExecutor, TabCompleter {
             return true
         }
 
+        if (!sender.hasPermission("skylife.msg")) {
+            sender.sendMessage(Messages.ERROR_PERMISSION)
+            return true
+        }
+
         if (args.size < 2) {
             sender.sendMessage(Messages.PREFIX.append(Component.text("Usage: /msg <player> <message>", Messages.ERROR_COLOR)))
             return true

@@ -1,11 +1,9 @@
 package com.carinaschoppe.skylife.hub
 
-import com.carinaschoppe.skylife.Skylife
+import com.carinaschoppe.skylife.utility.location.LocationManager
 import org.bukkit.Bukkit
 import org.bukkit.Location
-import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
-import java.io.File
 
 /**
  * Manages the hub spawn location where players spawn on server join
@@ -13,45 +11,18 @@ import java.io.File
  */
 object HubManager {
 
-    private var hubSpawn: Location? = null
-    private val configFile = File(Bukkit.getServer().pluginsFolder, Skylife.folderLocation + "hub.yml")
-    private lateinit var config: YamlConfiguration
+    private const val HUB_LOCATION_NAME = "hub"
 
     /**
-     * Loads the hub spawn location from configuration.
+     * Loads the hub spawn location from the location manager.
      * Should be called on plugin startup.
      */
     fun loadHubSpawn() {
-        if (!configFile.exists()) {
-            configFile.parentFile.mkdirs()
-            configFile.createNewFile()
-        }
-
-        config = YamlConfiguration.loadConfiguration(configFile)
-
-        // Load hub spawn if configured
-        if (config.contains("hub.world") &&
-            config.contains("hub.x") &&
-            config.contains("hub.y") &&
-            config.contains("hub.z")
-        ) {
-
-            val worldName = config.getString("hub.world")
-            if (worldName == null) {
-                Bukkit.getLogger().warning("[Skylife] Hub world name is null in config!")
-                return
-            }
-
-            val world = Bukkit.getWorld(worldName)
-            if (world != null) {
-                val x = config.getDouble("hub.x")
-                val y = config.getDouble("hub.y")
-                val z = config.getDouble("hub.z")
-                val yaw = config.getDouble("hub.yaw", 0.0).toFloat()
-                val pitch = config.getDouble("hub.pitch", 0.0).toFloat()
-
-                hubSpawn = Location(world, x, y, z, yaw, pitch)
-            }
+        // The LocationManager will handle loading all locations
+        if (isHubSpawnSet()) {
+            Bukkit.getLogger().info("[Skylife] Hub spawn loaded successfully")
+        } else {
+            Bukkit.getLogger().warning("[Skylife] Hub spawn not set! Use /sethub to configure it.")
         }
     }
 
@@ -60,24 +31,14 @@ object HubManager {
      * @param location The new hub spawn location
      */
     fun setHubSpawn(location: Location) {
-        hubSpawn = location
-
-        // Save to config
-        config.set("hub.world", location.world.name)
-        config.set("hub.x", location.x)
-        config.set("hub.y", location.y)
-        config.set("hub.z", location.z)
-        config.set("hub.yaw", location.yaw.toDouble())
-        config.set("hub.pitch", location.pitch.toDouble())
-
-        config.save(configFile)
+        LocationManager.saveLocation(HUB_LOCATION_NAME, location)
     }
 
     /**
      * Gets the current hub spawn location.
      * @return The hub spawn location, or null if not set
      */
-    fun getHubSpawn(): Location? = hubSpawn
+    fun getHubSpawn(): Location? = LocationManager.getLocation(HUB_LOCATION_NAME)
 
     /**
      * Teleports a player to the hub spawn.
@@ -85,7 +46,7 @@ object HubManager {
      * @param player The player to teleport
      */
     fun teleportToHub(player: Player) {
-        val spawn = hubSpawn
+        val spawn = getHubSpawn()
         if (spawn != null) {
             player.teleport(spawn)
         } else {
@@ -101,5 +62,5 @@ object HubManager {
      * Checks if hub spawn has been configured.
      * @return true if hub spawn is set, false otherwise
      */
-    fun isHubSpawnSet(): Boolean = hubSpawn != null
+    fun isHubSpawnSet(): Boolean = LocationManager.hasLocation(HUB_LOCATION_NAME)
 }

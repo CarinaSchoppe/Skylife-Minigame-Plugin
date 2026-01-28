@@ -58,14 +58,18 @@ class CreateGamePatternCommand : CommandExecutor, TabCompleter {
                     return true
                 }
 
-                // Create and add the new pattern
-                val pattern = GamePattern(name)
-                GameCluster.gamePatterns.add(pattern)
+                // Check if player already has an active setup
+                if (GameSetupCommand.activeSetups.containsKey(sender)) {
+                    sender.sendMessage(Messages.ERROR_ARGUMENT)
+                    return true
+                }
 
-                // Create a game instance from this pattern
-                GameCluster.createGameFromPattern(pattern)
-                
+                // Create the new pattern and start setup session
+                val pattern = GamePattern(name)
+                GameSetupCommand.activeSetups[sender] = pattern
+
                 sender.sendMessage(Messages.GAME_CREATED(name))
+                sender.sendMessage(Messages.PREFIX.append(net.kyori.adventure.text.Component.text("Use /gamesetup to open the setup GUI or use commands like /setlocation, /playeramount", Messages.MESSAGE_COLOR)))
             }
 
             "save" -> {
@@ -73,18 +77,37 @@ class CreateGamePatternCommand : CommandExecutor, TabCompleter {
                     sender.sendMessage(Messages.ERROR_PERMISSION)
                     return true
                 }
-                val game = GameCluster.gamePatterns.firstOrNull { it.mapName.equals(name, ignoreCase = true) }
+
+                // Check if it's the player's active setup first
+                val game = if (GameSetupCommand.activeSetups[sender]?.mapName.equals(name, ignoreCase = true)) {
+                    GameSetupCommand.activeSetups[sender]
+                } else {
+                    // Otherwise look in already saved patterns
+                    GameCluster.gamePatterns.firstOrNull { it.mapName.equals(name, ignoreCase = true) }
+                        ?: GameSetupCommand.activeSetups.values.firstOrNull { it.mapName.equals(name, ignoreCase = true) }
+                }
+
                 if (game == null) {
-                    sender.sendMessage(Messages.GAME_DELETED) // Using a generic message, consider creating GAME_NOT_FOUND
+                    sender.sendMessage(Messages.PREFIX.append(net.kyori.adventure.text.Component.text("Game pattern '$name' not found!", Messages.ERROR_COLOR)))
                     return true
                 }
 
-                if (!game.gameLocationManager.gamePatternComplete()) {
+                if (!game.isComplete()) {
                     sender.sendMessage(Messages.GAME_PATTERN_NOT_FULLY_DONE(game.mapName))
                     return true
                 }
 
+                // Add to cluster if not already there
+                if (!GameCluster.gamePatterns.contains(game)) {
+                    GameCluster.gamePatterns.add(game)
+                }
+
+                // Save to file
                 GameLoader.saveGameToFile(game)
+
+                // Remove from active setups
+                GameSetupCommand.activeSetups.remove(sender)
+
                 sender.sendMessage(Messages.GAME_SAVED)
             }
 
@@ -93,14 +116,25 @@ class CreateGamePatternCommand : CommandExecutor, TabCompleter {
                     sender.sendMessage(Messages.ERROR_PERMISSION)
                     return true
                 }
+
+                // Check in saved patterns and active setups
                 val game = GameCluster.gamePatterns.firstOrNull { it.mapName.equals(name, ignoreCase = true) }
+                    ?: GameSetupCommand.activeSetups.values.firstOrNull { it.mapName.equals(name, ignoreCase = true) }
+
                 if (game == null) {
-                    sender.sendMessage(Messages.GAME_DELETED) // Using a generic message
+                    sender.sendMessage(Messages.PREFIX.append(net.kyori.adventure.text.Component.text("Game pattern '$name' not found!", Messages.ERROR_COLOR)))
                     return true
                 }
 
+                // Remove from cluster if it's there
                 GameCluster.gamePatterns.remove(game)
+
+                // Remove from active setups if it's there
+                GameSetupCommand.activeSetups.entries.removeIf { it.value == game }
+
+                // Delete file if exists
                 GameLoader.deleteGameFile(game)
+
                 sender.sendMessage(Messages.GAME_DELETED)
             }
 

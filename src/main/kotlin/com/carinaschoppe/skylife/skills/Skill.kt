@@ -21,7 +21,7 @@ enum class Skill(
             "You never feel hunger.",
             "Your food bar stays full at all times.",
             "",
-            "§7Type: §eResource / Sustain"
+            "<gray>Type: <yellow>Resource / Sustain</yellow></gray>"
         ),
         Material.BREAD,
         SkillType.SUSTAIN
@@ -33,7 +33,7 @@ enum class Skill(
             "Constant regeneration keeps you",
             "alive during combat.",
             "",
-            "§7Type: §eSustain"
+            "<gray>Type: <yellow>Sustain</yellow></gray>"
         ),
         Material.HEART_OF_THE_SEA,
         SkillType.SUSTAIN
@@ -45,7 +45,7 @@ enum class Skill(
             "Gain extra absorption hearts",
             "for increased durability.",
             "",
-            "§7Type: §eDefense"
+            "<gray>Type: <yellow>Defense</yellow></gray>"
         ),
         Material.GOLDEN_APPLE,
         SkillType.DEFENSE
@@ -57,7 +57,7 @@ enum class Skill(
             "Fall damage is significantly reduced.",
             "Safer bridging and knockback resistance.",
             "",
-            "§7Type: §eMobility / Defense"
+            "<gray>Type: <yellow>Mobility / Defense</yellow></gray>"
         ),
         Material.FEATHER,
         SkillType.MOBILITY
@@ -69,7 +69,7 @@ enum class Skill(
             "You receive snowballs regularly",
             "to disrupt enemies.",
             "",
-            "§7Type: §eUtility / Control"
+            "<gray>Type: <yellow>Utility / Control</yellow></gray>"
         ),
         Material.SNOWBALL,
         SkillType.UTILITY
@@ -81,7 +81,7 @@ enum class Skill(
             "A lucky bird grants unpredictable",
             "effects when used.",
             "",
-            "§7Type: §eUtility / Fun"
+            "<gray>Type: <yellow>Utility / Fun</yellow></gray>"
         ),
         Material.EGG,
         SkillType.UTILITY
@@ -93,7 +93,7 @@ enum class Skill(
             "Summon a loyal wolf pack",
             "to fight for you.",
             "",
-            "§7Type: §eSummoner"
+            "<gray>Type: <yellow>Summoner</yellow></gray>"
         ),
         Material.BONE,
         SkillType.SUMMONER
@@ -105,7 +105,7 @@ enum class Skill(
             "Ender Pearls regenerate over time,",
             "allowing rapid movement.",
             "",
-            "§7Type: §eMobility"
+            "<gray>Type: <yellow>Mobility</yellow></gray>"
         ),
         Material.ENDER_PEARL,
         SkillType.MOBILITY
@@ -117,7 +117,7 @@ enum class Skill(
             "Random potions appear regularly.",
             "Power comes with unpredictability.",
             "",
-            "§7Type: §eRandom Utility"
+            "<gray>Type: <yellow>Random Utility</yellow></gray>"
         ),
         Material.BREWING_STAND,
         SkillType.UTILITY
@@ -129,7 +129,7 @@ enum class Skill(
             "Start with a massive supply",
             "of building blocks.",
             "",
-            "§7Type: §eEconomy / Control"
+            "<gray>Type: <yellow>Economy / Control</yellow></gray>"
         ),
         Material.STONE_BRICKS,
         SkillType.UTILITY
@@ -141,7 +141,7 @@ enum class Skill(
             "Begin the match armed for close",
             "combat with sword and shield.",
             "",
-            "§7Type: §eCombat"
+            "<gray>Type: <yellow>Combat</yellow></gray>"
         ),
         Material.IRON_SWORD,
         SkillType.COMBAT
@@ -153,7 +153,7 @@ enum class Skill(
             "Master the battlefield from range",
             "with an enchanted bow.",
             "",
-            "§7Type: §eRanged Combat"
+            "<gray>Type: <yellow>Ranged Combat</yellow></gray>"
         ),
         Material.BOW,
         SkillType.COMBAT
@@ -165,7 +165,7 @@ enum class Skill(
             "Become invisible under the right",
             "conditions and strike unseen.",
             "",
-            "§7Type: §eStealth"
+            "<gray>Type: <yellow>Stealth</yellow></gray>"
         ),
         Material.FERMENTED_SPIDER_EYE,
         SkillType.UTILITY
@@ -177,7 +177,7 @@ enum class Skill(
             "Increased attack damage turns",
             "you into a killing machine.",
             "",
-            "§7Type: §eBurst Combat"
+            "<gray>Type: <yellow>Burst Combat</yellow></gray>"
         ),
         Material.BLAZE_POWDER,
         SkillType.COMBAT
@@ -194,7 +194,11 @@ enum class Skill(
         meta.displayName(Component.text(displayName, NamedTextColor.GOLD, TextDecoration.BOLD))
 
         val lore = description.map { line ->
-            Component.text(line, NamedTextColor.GRAY)
+            if (line.contains('<') && line.contains('>')) {
+                com.carinaschoppe.skylife.utility.messages.Messages.parse(line)
+            } else {
+                Component.text(line, NamedTextColor.GRAY)
+            }
         }.toMutableList()
 
         if (selected) {

@@ -42,6 +42,21 @@ class GameLocationManager {
     val spawnLocations = mutableSetOf<SkylifeLocation>()
 
     /**
+     * Checks if a specific location has been initialized.
+     *
+     * @param locationType The type of location to check ("lobby", "spectator", or "main")
+     * @return `true` if the location is initialized, `false` otherwise
+     */
+    fun isLocationInitialized(locationType: String): Boolean {
+        return when (locationType.lowercase()) {
+            "lobby" -> ::lobbyLocation.isInitialized
+            "spectator" -> ::spectatorLocation.isInitialized
+            "main" -> ::mainLocation.isInitialized
+            else -> false
+        }
+    }
+
+    /**
      * Checks if all required locations for a game pattern have been set.
      *
      * @return `true` if all required locations are initialized and at least one spawn location exists,

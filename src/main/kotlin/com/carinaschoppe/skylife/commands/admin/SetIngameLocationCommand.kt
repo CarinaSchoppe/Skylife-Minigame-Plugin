@@ -1,6 +1,7 @@
 package com.carinaschoppe.skylife.commands.admin
 
 import com.carinaschoppe.skylife.game.GameCluster
+import com.carinaschoppe.skylife.game.GamePattern
 import com.carinaschoppe.skylife.game.managers.GameLocationManager
 import com.carinaschoppe.skylife.utility.messages.Messages
 import org.bukkit.command.Command
@@ -35,18 +36,39 @@ class SetIngameLocationCommand : CommandExecutor, TabCompleter {
             return true
         }
 
-        if (args.size != 2) {
-            sender.sendMessage(Messages.ERROR_ARGUMENT)
-            return true
-        }
+        // Support both modes: with mapName or without (using active setup)
+        val game: GamePattern?
+        val type: String
 
-        val mapName = args[0]
-        val type = args[1].lowercase()
+        when (args.size) {
+            1 -> {
+                // Use active setup: /setlocation <type>
+                game = GameSetupCommand.activeSetups[sender]
+                if (game == null) {
+                    sender.sendMessage(Messages.PREFIX.append(net.kyori.adventure.text.Component.text("No active setup! Use /game create <name> or /gamesetup <name> first.", Messages.ERROR_COLOR)))
+                    return true
+                }
+                type = args[0].lowercase()
+            }
 
-        val game = GameCluster.gamePatterns.firstOrNull { it.mapName.equals(mapName, ignoreCase = true) }
-        if (game == null) {
-            sender.sendMessage(Messages.ERROR_NO_PATTERN)
-            return true
+            2 -> {
+                // Traditional mode: /setlocation <mapName> <type>
+                val mapName = args[0]
+                type = args[1].lowercase()
+
+                game = GameCluster.gamePatterns.firstOrNull { it.mapName.equals(mapName, ignoreCase = true) }
+                    ?: GameSetupCommand.activeSetups.values.firstOrNull { it.mapName.equals(mapName, ignoreCase = true) }
+
+                if (game == null) {
+                    sender.sendMessage(Messages.ERROR_NO_PATTERN)
+                    return true
+                }
+            }
+
+            else -> {
+                sender.sendMessage(Messages.ERROR_ARGUMENT)
+                return true
+            }
         }
 
         when (type) {
@@ -95,9 +117,12 @@ class SetIngameLocationCommand : CommandExecutor, TabCompleter {
 
     override fun onTabComplete(sender: CommandSender, command: Command, alias: String, args: Array<out String>): List<String> {
         return when (args.size) {
-            1 -> GameCluster.gamePatterns
-                .map { it.mapName }
-                .filter { it.lowercase().startsWith(args[0].lowercase()) }
+            1 -> {
+                // Suggest both map names and location types for shorthand mode
+                val maps = GameCluster.gamePatterns.map { it.mapName }
+                val types = listOf("lobby", "spawn", "spectator", "main")
+                (maps + types).filter { it.lowercase().startsWith(args[0].lowercase()) }
+            }
 
             2 -> listOf("lobby", "spawn", "spectator", "main")
                 .filter { it.startsWith(args[1].lowercase()) }

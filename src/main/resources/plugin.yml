@@ -44,3 +44,12 @@ commands:
   party:
     description: Manage your party (create, invite, accept, leave, kick, promote, list, invites)
     aliases: [ p ]
+  gamesetup:
+    description: Opens a GUI to setup a new game pattern with all settings
+    aliases: [ gs, setupgame ]
+  removespawn:
+    description: Removes a spawn location during game setup
+    aliases: [ rs, deletespawn ]
+  savemessages:
+    description: Exports current messages to messages.json for reference
+    aliases: [ sm, exportmessages ]

@@ -22,6 +22,11 @@ class SetHubCommand : CommandExecutor {
             return true
         }
 
+        if (!sender.hasPermission("skylife.admin.sethub")) {
+            sender.sendMessage(Messages.ERROR_PERMISSION)
+            return true
+        }
+
         // Set hub spawn to player's current location
         HubManager.setHubSpawn(sender.location)
 

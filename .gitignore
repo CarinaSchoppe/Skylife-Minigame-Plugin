@@ -1,6 +1,7 @@
 # User-specific stuff
 .idea/
-
+.kotlin
+backup_tests
 *.iml
 *.ipr
 *.iws

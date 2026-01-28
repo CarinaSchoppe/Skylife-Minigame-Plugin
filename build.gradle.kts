@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "2.2.10"
+    kotlin("jvm") version "2.1.0"
     idea
     id("com.gradleup.shadow") version "9.2.2"
     id("xyz.jpenilla.run-paper") version "3.0.2"
@@ -27,7 +27,7 @@ dependencies {
     implementation("org.xerial:sqlite-jdbc:3.51.1.0")
     implementation("com.google.code.gson:gson:2.13.2")
     testImplementation(kotlin("test"))
-    compileOnly("io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.+")
     implementation(kotlin("stdlib"))
 }
 
@@ -52,7 +52,7 @@ tasks {
     }
 
     runServer {
-        minecraftVersion("1.21.8")
+        minecraftVersion("1.21.11")
     }
 }
 

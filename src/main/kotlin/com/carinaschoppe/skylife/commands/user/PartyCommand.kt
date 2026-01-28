@@ -28,6 +28,11 @@ class PartyCommand : TabExecutor {
             return true
         }
 
+        if (!sender.hasPermission("skylife.party")) {
+            sender.sendMessage(Messages.ERROR_PERMISSION)
+            return true
+        }
+
         if (args.isEmpty()) {
             sendHelp(sender)
             return true

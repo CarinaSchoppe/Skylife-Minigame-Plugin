@@ -108,12 +108,28 @@ object ConfigurationLoader {
                 scoreboardDefaults.lines
             }
 
+            val lobbyTitle = if (scoreboardObject.has("lobby_title")) {
+                migrateLegacy(scoreboardObject.get("lobby_title").asString, migration)
+            } else {
+                scoreboardDefaults.lobbyTitle
+            }
+
+            val lobbyLines = if (scoreboardObject.has("lobby_lines") && scoreboardObject.get("lobby_lines").isJsonArray) {
+                gson.fromJson(scoreboardObject.get("lobby_lines"), Array<String>::class.java)
+                    ?.map { migrateLegacy(it, migration) }
+                    ?: scoreboardDefaults.lobbyLines
+            } else {
+                scoreboardDefaults.lobbyLines
+            }
+
             val resolvedTitle = if (title.isBlank()) defaults.scoreboardTitle else title
             defaults.scoreboard = ScoreboardConfig(
                 serverName = serverName.ifBlank { scoreboardDefaults.serverName },
                 title = resolvedTitle,
                 animateTitle = animateTitle,
-                lines = if (lines.isEmpty()) scoreboardDefaults.lines else lines
+                lines = if (lines.isEmpty()) scoreboardDefaults.lines else lines,
+                lobbyTitle = lobbyTitle,
+                lobbyLines = if (lobbyLines.isEmpty()) scoreboardDefaults.lobbyLines else lobbyLines
             )
         } else {
             defaults.scoreboard = scoreboardDefaults.copy(title = defaults.scoreboardTitle)

@@ -32,6 +32,11 @@ class GuildCommand : CommandExecutor, TabCompleter {
             return true
         }
 
+        if (!sender.hasPermission("skylife.guild")) {
+            sender.sendMessage(Messages.ERROR_PERMISSION)
+            return true
+        }
+
         if (args.isEmpty()) {
             sendUsage(sender)
             return true

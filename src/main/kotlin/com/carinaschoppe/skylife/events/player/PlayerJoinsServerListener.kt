@@ -3,6 +3,7 @@ package com.carinaschoppe.skylife.events.player
 import com.carinaschoppe.skylife.events.player.PlayerDisplayNameListener.Companion.updatePlayerDisplayName
 import com.carinaschoppe.skylife.hub.HubManager
 import com.carinaschoppe.skylife.utility.messages.Messages
+import com.carinaschoppe.skylife.utility.scoreboard.LobbyScoreboardManager
 import com.carinaschoppe.skylife.utility.statistics.StatsUtility
 import com.carinaschoppe.skylife.utility.ui.GameOverviewItems
 import org.bukkit.GameMode
@@ -54,6 +55,9 @@ class PlayerJoinsServerListener : Listener {
 
         // Teleport to hub spawn
         HubManager.teleportToHub(player)
+
+        // Set lobby scoreboard
+        LobbyScoreboardManager.setLobbyScoreboard(player)
 
         // Broadcast join message with online player count and max players
         val server = player.server

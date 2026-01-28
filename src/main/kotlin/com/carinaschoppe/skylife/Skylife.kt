@@ -1,8 +1,6 @@
 package com.carinaschoppe.skylife
 
-import com.carinaschoppe.skylife.commands.admin.CreateGamePatternCommand
-import com.carinaschoppe.skylife.commands.admin.PlayerAmountCommand
-import com.carinaschoppe.skylife.commands.admin.SetIngameLocationCommand
+import com.carinaschoppe.skylife.commands.admin.*
 import com.carinaschoppe.skylife.commands.user.*
 import com.carinaschoppe.skylife.database.DatabaseConnector
 import com.carinaschoppe.skylife.events.kit.KitSelectorListener
@@ -11,9 +9,14 @@ import com.carinaschoppe.skylife.events.skills.SkillFeatherfallListener
 import com.carinaschoppe.skylife.events.skills.SkillInvisibleStalkerListener
 import com.carinaschoppe.skylife.events.skills.SkillJumboListener
 import com.carinaschoppe.skylife.events.skills.SkillLuckyBirdListener
+import com.carinaschoppe.skylife.events.ui.GameSetupGuiListener
 import com.carinaschoppe.skylife.events.ui.SkillsGuiListener
 import com.carinaschoppe.skylife.game.GameLoader
 import com.carinaschoppe.skylife.game.kit.KitManager
+import com.carinaschoppe.skylife.guild.GuildManager
+import com.carinaschoppe.skylife.hub.HubManager
+import com.carinaschoppe.skylife.skills.SkillPassiveItemsTask
+import com.carinaschoppe.skylife.skills.SkillsManager
 import com.carinaschoppe.skylife.utility.configuration.ConfigurationLoader
 import com.carinaschoppe.skylife.utility.messages.MessageLoader
 import com.carinaschoppe.skylife.utility.messages.Messages
@@ -25,10 +28,6 @@ import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 
 open class Skylife : JavaPlugin() {
-
-
-    //TODO: Config files with postgreSQL
-
 
     companion object {
         lateinit var instance: Skylife
@@ -49,13 +48,16 @@ open class Skylife : JavaPlugin() {
         StatsUtility.loadAllPlayersIntoStatsPlayer()
 
         // Load guilds into cache
-        com.carinaschoppe.skylife.guild.GuildManager.loadGuilds()
+        GuildManager.loadGuilds()
 
         // Load skills into cache
-        com.carinaschoppe.skylife.skills.SkillsManager.loadSkills()
+        SkillsManager.loadSkills()
 
         // Start passive skills task
-        com.carinaschoppe.skylife.skills.SkillPassiveItemsTask.start(this)
+        SkillPassiveItemsTask.start(this)
+
+        // Start lobby scoreboard update task
+        com.carinaschoppe.skylife.utility.scoreboard.LobbyScoreboardUpdateTask.start(this)
 
         Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text("Skylife has been started!", Messages.MESSAGE_COLOR)))
     }
@@ -63,29 +65,44 @@ open class Skylife : JavaPlugin() {
     private fun initialize(pluginManager: PluginManager) {
         ConfigurationLoader.loadConfiguration()
         DatabaseConnector.connectDatabase()
-        com.carinaschoppe.skylife.hub.HubManager.loadHubSpawn()
+        com.carinaschoppe.skylife.utility.location.LocationManager.loadLocations()
+        HubManager.loadHubSpawn()
         KitManager.initializeKits()
         GameLoader.findAllGames().forEach { GameLoader.loadGameFromFile(it) }
+        registerCommands()
+        registerEventListeners(pluginManager)
+        createGameMapsFolder()
+    }
+
+    private fun registerCommands() {
         getCommand("join")?.setExecutor(JoinGameCommand())
         getCommand("start")?.setExecutor(QuickstartGameCommand())
         getCommand("game")?.setExecutor(CreateGamePatternCommand())
         getCommand("setlocation")?.setExecutor(SetIngameLocationCommand())
         getCommand("playeramount")?.setExecutor(PlayerAmountCommand())
-        getCommand("sethub")?.setExecutor(com.carinaschoppe.skylife.commands.admin.SetHubCommand())
+        getCommand("sethub")?.setExecutor(SetHubCommand())
         getCommand("leave")?.setExecutor(LeaveGameCommand())
         getCommand("stats")?.setExecutor(PlayersStatsCommand())
         getCommand("overview")?.setExecutor(GameOverviewCommand())
         getCommand("skills")?.setExecutor(SkillsListCommand())
+        getCommand("gamesetup")?.setExecutor(GameSetupCommand())
+        getCommand("removespawn")?.setExecutor(RemoveSpawnCommand())
+        getCommand("savemessages")?.setExecutor(SaveMessagesCommand())
+
         val guildCommand = GuildCommand()
         getCommand("guild")?.setExecutor(guildCommand)
         getCommand("guild")?.tabCompleter = guildCommand
+
         val messageCommand = MessageCommand()
         getCommand("msg")?.setExecutor(messageCommand)
         getCommand("msg")?.tabCompleter = messageCommand
+
         val partyCommand = PartyCommand()
         getCommand("party")?.setExecutor(partyCommand)
         getCommand("party")?.tabCompleter = partyCommand
+    }
 
+    private fun registerEventListeners(pluginManager: PluginManager) {
         pluginManager.registerEvents(PlayerLoosesSaturationListener(), this)
         pluginManager.registerEvents(PlayerDisconnectsServerListener(), this)
         pluginManager.registerEvents(PlayerChatsListener(), this)
@@ -101,22 +118,12 @@ open class Skylife : JavaPlugin() {
         pluginManager.registerEvents(PlayerSelectGameListener(), this)
         pluginManager.registerEvents(PlayerDisplayNameListener(), this)
         pluginManager.registerEvents(PlayerDisconnectsPartyListener(), this)
-
-        addSkillListeners(pluginManager)
-
-        //Create game_maps folder if (MockBukkit doesn't implement worldContainer)
-        val worldContainer = runCatching { Bukkit.getServer().worldContainer }
-            .getOrElse { Bukkit.getServer().pluginsFolder }
-        val folder = File(worldContainer, "game_maps")
-
-        if (!folder.exists()) {
-            folder.mkdir()
-        }
-
+        registerSkillListeners(pluginManager)
     }
 
-    private fun addSkillListeners(pluginManager: PluginManager) {
+    private fun registerSkillListeners(pluginManager: PluginManager) {
         pluginManager.registerEvents(SkillsGuiListener(), this)
+        pluginManager.registerEvents(GameSetupGuiListener(), this)
         pluginManager.registerEvents(PlayerSkillsItemListener(), this)
         pluginManager.registerEvents(SkillJumboListener(), this)
         pluginManager.registerEvents(SkillFeatherfallListener(), this)
@@ -124,12 +131,18 @@ open class Skylife : JavaPlugin() {
         pluginManager.registerEvents(SkillLuckyBirdListener(), this)
     }
 
+    private fun createGameMapsFolder() {
+        val worldContainer = runCatching { Bukkit.getServer().worldContainer }
+            .getOrElse { Bukkit.getServer().pluginsFolder }
+        val folder = File(worldContainer, "game_maps")
+        if (!folder.exists()) {
+            folder.mkdir()
+        }
+    }
 
     override fun onDisable() {
-        // Stop passive skills task
-        com.carinaschoppe.skylife.skills.SkillPassiveItemsTask.stop()
-
-        // Plugin shutdown logic
+        SkillPassiveItemsTask.stop()
+        com.carinaschoppe.skylife.utility.scoreboard.LobbyScoreboardUpdateTask.stop()
         Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text("Skylife has been stopped!", Messages.ERROR_COLOR)))
     }
 }

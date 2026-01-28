@@ -110,6 +110,9 @@ object GameCluster {
         // Teleport to hub
         HubManager.teleportToHub(player)
 
+        // Restore lobby scoreboard
+        com.carinaschoppe.skylife.utility.scoreboard.LobbyScoreboardManager.setLobbyScoreboard(player)
+
         if (game.state == GameState.States.INGAME && game.livingPlayers.size <= 1) {
             game.stop()
         }
