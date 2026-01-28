@@ -1,6 +1,7 @@
 package com.carinaschoppe.skylife.utility.ui
 
 import com.carinaschoppe.skylife.skills.Skill
+import com.carinaschoppe.skylife.skills.SkillUnlockManager
 import com.carinaschoppe.skylife.skills.SkillsManager
 import com.carinaschoppe.skylife.utility.messages.Messages
 import net.kyori.adventure.text.Component
@@ -83,7 +84,8 @@ class SkillsGui(private val player: Player) : InventoryHolder {
             if (index < skillSlots.size) {
                 val slot = skillSlots[index]
                 val isSelected = selectedSkills.contains(skill)
-                inventory.setItem(slot, skill.toItemStack(isSelected))
+                val isUnlocked = SkillUnlockManager.hasUnlocked(player.uniqueId, skill)
+                inventory.setItem(slot, skill.toItemStack(isSelected, isUnlocked))
             }
         }
 
@@ -137,6 +139,14 @@ class SkillsGui(private val player: Player) : InventoryHolder {
      * @param skill The skill that was clicked
      */
     fun handleSkillClick(skill: Skill) {
+        // Check if skill is unlocked
+        if (!SkillUnlockManager.hasUnlocked(player.uniqueId, skill)) {
+            // Open purchase confirmation GUI
+            SkillPurchaseConfirmGui(player, skill).open()
+            return
+        }
+
+        // Skill is unlocked, toggle selection
         val result = SkillsManager.toggleSkill(player, skill)
 
         if (result.isSuccess) {

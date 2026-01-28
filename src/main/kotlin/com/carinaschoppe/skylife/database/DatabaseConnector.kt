@@ -7,6 +7,7 @@ import com.carinaschoppe.skylife.economy.PlayerEconomyTable
 import com.carinaschoppe.skylife.guild.GuildMembers
 import com.carinaschoppe.skylife.guild.Guilds
 import com.carinaschoppe.skylife.skills.PlayerSkills
+import com.carinaschoppe.skylife.skills.SkillUnlockTable
 import com.carinaschoppe.skylife.utility.messages.Messages
 import com.carinaschoppe.skylife.utility.statistics.StatsPlayers
 import org.bukkit.Bukkit
@@ -99,7 +100,7 @@ object DatabaseConnector {
             Bukkit.getServer().consoleSender.sendMessage(Messages.DATABASE_CONNECTED)
 
             transaction {
-                SchemaUtils.create(StatsPlayers, Guilds, GuildMembers, PlayerSkills, PlayerEconomyTable, KitUnlockTable)
+                SchemaUtils.create(StatsPlayers, Guilds, GuildMembers, PlayerSkills, PlayerEconomyTable, KitUnlockTable, SkillUnlockTable)
             }
 
             Bukkit.getServer().consoleSender.sendMessage(Messages.DATABASE_TABLES_CREATED)

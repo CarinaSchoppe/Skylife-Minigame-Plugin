@@ -13,7 +13,8 @@ enum class Skill(
     val displayName: String,
     val description: List<String>,
     val material: Material,
-    val type: SkillType
+    val type: SkillType,
+    val rarity: SkillRarity
 ) {
     JUMBO(
         "Jumbo",
@@ -24,7 +25,8 @@ enum class Skill(
             "<gray>Type: <yellow>Resource / Sustain</yellow></gray>"
         ),
         Material.BREAD,
-        SkillType.SUSTAIN
+        SkillType.SUSTAIN,
+        SkillRarity.COMMON
     ),
 
     REGENERATOR(
@@ -36,7 +38,8 @@ enum class Skill(
             "<gray>Type: <yellow>Sustain</yellow></gray>"
         ),
         Material.HEART_OF_THE_SEA,
-        SkillType.SUSTAIN
+        SkillType.SUSTAIN,
+        SkillRarity.RARE
     ),
 
     ABSORBER(
@@ -48,7 +51,8 @@ enum class Skill(
             "<gray>Type: <yellow>Defense</yellow></gray>"
         ),
         Material.GOLDEN_APPLE,
-        SkillType.DEFENSE
+        SkillType.DEFENSE,
+        SkillRarity.RARE
     ),
 
     FEATHERFALL(
@@ -60,7 +64,8 @@ enum class Skill(
             "<gray>Type: <yellow>Mobility / Defense</yellow></gray>"
         ),
         Material.FEATHER,
-        SkillType.MOBILITY
+        SkillType.MOBILITY,
+        SkillRarity.COMMON
     ),
 
     SNOW_SPAMMER(
@@ -72,7 +77,8 @@ enum class Skill(
             "<gray>Type: <yellow>Utility / Control</yellow></gray>"
         ),
         Material.SNOWBALL,
-        SkillType.UTILITY
+        SkillType.UTILITY,
+        SkillRarity.COMMON
     ),
 
     LUCKY_BIRD(
@@ -84,7 +90,8 @@ enum class Skill(
             "<gray>Type: <yellow>Utility / Fun</yellow></gray>"
         ),
         Material.EGG,
-        SkillType.UTILITY
+        SkillType.UTILITY,
+        SkillRarity.RARE
     ),
 
     WOLFLORD(
@@ -96,7 +103,8 @@ enum class Skill(
             "<gray>Type: <yellow>Summoner</yellow></gray>"
         ),
         Material.BONE,
-        SkillType.SUMMONER
+        SkillType.SUMMONER,
+        SkillRarity.EPIC
     ),
 
     ENDERMASTER(
@@ -108,7 +116,8 @@ enum class Skill(
             "<gray>Type: <yellow>Mobility</yellow></gray>"
         ),
         Material.ENDER_PEARL,
-        SkillType.MOBILITY
+        SkillType.MOBILITY,
+        SkillRarity.EPIC
     ),
 
     WITCH(
@@ -120,7 +129,8 @@ enum class Skill(
             "<gray>Type: <yellow>Random Utility</yellow></gray>"
         ),
         Material.BREWING_STAND,
-        SkillType.UTILITY
+        SkillType.UTILITY,
+        SkillRarity.RARE
     ),
 
     BUILDER(
@@ -132,7 +142,8 @@ enum class Skill(
             "<gray>Type: <yellow>Economy / Control</yellow></gray>"
         ),
         Material.STONE_BRICKS,
-        SkillType.UTILITY
+        SkillType.UTILITY,
+        SkillRarity.COMMON
     ),
 
     SWORDMASTER(
@@ -144,7 +155,8 @@ enum class Skill(
             "<gray>Type: <yellow>Combat</yellow></gray>"
         ),
         Material.IRON_SWORD,
-        SkillType.COMBAT
+        SkillType.COMBAT,
+        SkillRarity.RARE
     ),
 
     BOWMASTER(
@@ -156,7 +168,8 @@ enum class Skill(
             "<gray>Type: <yellow>Ranged Combat</yellow></gray>"
         ),
         Material.BOW,
-        SkillType.COMBAT
+        SkillType.COMBAT,
+        SkillRarity.EPIC
     ),
 
     INVISIBLE_STALKER(
@@ -168,7 +181,8 @@ enum class Skill(
             "<gray>Type: <yellow>Stealth</yellow></gray>"
         ),
         Material.FERMENTED_SPIDER_EYE,
-        SkillType.UTILITY
+        SkillType.UTILITY,
+        SkillRarity.LEGENDARY
     ),
 
     STRENGTH_CORE(
@@ -180,18 +194,23 @@ enum class Skill(
             "<gray>Type: <yellow>Burst Combat</yellow></gray>"
         ),
         Material.BLAZE_POWDER,
-        SkillType.COMBAT
+        SkillType.COMBAT,
+        SkillRarity.LEGENDARY
     );
 
     /**
      * Creates an ItemStack representing this skill.
      * @param selected Whether this skill is currently selected
+     * @param unlocked Whether this skill is unlocked by the player
      */
-    fun toItemStack(selected: Boolean): ItemStack {
+    fun toItemStack(selected: Boolean, unlocked: Boolean = true): ItemStack {
         val item = ItemStack(material)
         val meta = item.itemMeta
 
-        meta.displayName(Component.text(displayName, NamedTextColor.GOLD, TextDecoration.BOLD))
+        // Title with rarity color
+        meta.displayName(
+            Component.text(displayName, rarity.color, TextDecoration.BOLD)
+        )
 
         val lore = description.map { line ->
             if (line.contains('<') && line.contains('>')) {
@@ -201,7 +220,23 @@ enum class Skill(
             }
         }.toMutableList()
 
-        if (selected) {
+        // Add rarity information
+        lore.add(Component.empty())
+        lore.add(
+            Component.text("Rarity: ", NamedTextColor.GRAY)
+                .append(rarity.getColoredName())
+        )
+
+        if (!unlocked) {
+            // Show locked status and price
+            lore.add(Component.empty())
+            lore.add(Component.text("🔒 LOCKED", NamedTextColor.RED, TextDecoration.BOLD))
+            if (rarity.price > 0) {
+                lore.add(Component.text("Price: ${rarity.price} coins", NamedTextColor.YELLOW))
+                lore.add(Component.empty())
+                lore.add(Component.text("Click to purchase", NamedTextColor.GREEN))
+            }
+        } else if (selected) {
             lore.add(Component.empty())
             lore.add(Component.text("✔ SELECTED", NamedTextColor.GREEN, TextDecoration.BOLD))
             meta.addEnchant(org.bukkit.enchantments.Enchantment.UNBREAKING, 1, true)

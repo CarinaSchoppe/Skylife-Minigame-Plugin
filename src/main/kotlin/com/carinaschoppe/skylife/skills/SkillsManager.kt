@@ -110,6 +110,11 @@ object SkillsManager {
             saveSkillSelection(uuid, skills)
             return Result.success(false)
         } else {
+            // Check if skill is unlocked
+            if (!SkillUnlockManager.hasUnlocked(uuid, skill)) {
+                return Result.failure(Exception("You must unlock this skill before you can select it!"))
+            }
+
             // Check if player can select more skills
             if (skills.size >= MAX_SKILLS) {
                 return Result.failure(Exception("You already have $MAX_SKILLS skills selected. Unselect one first."))

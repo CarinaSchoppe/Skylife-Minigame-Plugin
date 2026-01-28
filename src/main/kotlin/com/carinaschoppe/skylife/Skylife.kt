@@ -58,6 +58,9 @@ open class Skylife : JavaPlugin() {
         com.carinaschoppe.skylife.economy.CoinManager.loadCoins()
         com.carinaschoppe.skylife.economy.KitUnlockManager.loadUnlocks()
 
+        // Load skill unlocks into cache
+        com.carinaschoppe.skylife.skills.SkillUnlockManager.loadUnlocks()
+
         // Start passive skills task
         SkillPassiveItemsTask.start(this)
 
