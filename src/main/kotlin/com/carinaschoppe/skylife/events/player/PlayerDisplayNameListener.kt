@@ -20,7 +20,7 @@ class PlayerDisplayNameListener : Listener {
 
     companion object {
         /**
-         * Updates a player's display name to include rank tag and guild tag.
+         * Updates a player's display name, tab list name, and custom name (nameplate above head).
          * Format: [RANK] [GUILD] PlayerName
          */
         fun updatePlayerDisplayName(player: org.bukkit.entity.Player) {
@@ -43,7 +43,23 @@ class PlayerDisplayNameListener : Listener {
             // Add player name
             displayName = displayName.append(Component.text(player.name, NamedTextColor.WHITE))
 
+            // Build custom name (above head) - rank on top, name below
+            var customName = Component.empty()
+
+            // Add rank tag if not USER
+            if (rank != com.carinaschoppe.skylife.economy.PlayerRank.USER && rank.tag.isNotEmpty()) {
+                customName = Component.text(rank.tag.trim(), getRankColor(rank))
+                    .append(Component.newline())
+            }
+
+            // Add player name
+            customName = customName.append(Component.text(player.name, NamedTextColor.WHITE))
+
+            // Set display name (for chat), player list name (for tab list), and custom name (above head)
             player.displayName(displayName)
+            player.playerListName(displayName)
+            player.customName(customName)
+            player.isCustomNameVisible = true
         }
 
         private fun getRankColor(rank: com.carinaschoppe.skylife.economy.PlayerRank): NamedTextColor {

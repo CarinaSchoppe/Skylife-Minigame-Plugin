@@ -123,6 +123,9 @@ object ScoreboardManager {
         val skill1Name = selectedSkills.getOrNull(0)?.displayName ?: "None"
         val skill2Name = selectedSkills.getOrNull(1)?.displayName ?: "None"
 
+        // Get player coins
+        val coins = com.carinaschoppe.skylife.economy.CoinManager.getCoins(player.uniqueId)
+
         val placeholders = mapOf(
             "{server}" to scoreboardConfig.serverName,
             "{map}" to game.mapName,
@@ -137,7 +140,8 @@ object ScoreboardManager {
             "{guild_tag}" to guildTag,
             "{skill1}" to skill1Name,
             "{skill2}" to skill2Name,
-            "{kit}" to "$skill1Name, $skill2Name"  // Legacy placeholder
+            "{kit}" to "$skill1Name, $skill2Name",  // Legacy placeholder
+            "{coins}" to coins.toString()
         )
 
         val templateLines = scoreboardConfig.lines.ifEmpty { defaultLines }
@@ -150,7 +154,10 @@ object ScoreboardManager {
         "<aqua>Server</aqua><gray>: </gray><white>{server}</white>",
         "<aqua>Map</aqua><gray>: </gray><white>{map}</white>",
         "<aqua>Alive</aqua><gray>: </gray><green>{alive}</green><gray>/</gray><green>{max}</green>",
+        "",
         "<aqua>Kills</aqua><gray>: </gray><red>{kills}</red>",
+        "<aqua>Coins</aqua><gray>: </gray><gold>{coins}</gold>",
+        "",
         "<aqua>Guild</aqua><gray>: </gray><light_purple>{guild}</light_purple>",
         "<aqua>Rank</aqua><gray>: </gray><gold>#{rank}</gold>",
         "<dark_gray><strikethrough>----------------</strikethrough></dark_gray>"

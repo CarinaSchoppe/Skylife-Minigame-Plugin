@@ -96,6 +96,9 @@ object LobbyScoreboardManager {
         val skill1Name = selectedSkills.getOrNull(0)?.displayName ?: "None"
         val skill2Name = selectedSkills.getOrNull(1)?.displayName ?: "None"
 
+        // Get player coins
+        val coins = com.carinaschoppe.skylife.economy.CoinManager.getCoins(player.uniqueId)
+
         val placeholders = mapOf(
             "{server}" to scoreboardConfig.serverName,
             "{rank}" to rank.displayName,
@@ -110,7 +113,8 @@ object LobbyScoreboardManager {
             "{points}" to (stats?.points?.toString() ?: "0"),
             "{player_rank}" to StatsUtility.getPlayerRank(player).toString(),
             "{skill1}" to skill1Name,
-            "{skill2}" to skill2Name
+            "{skill2}" to skill2Name,
+            "{coins}" to coins.toString()
         )
 
         val templateLines = scoreboardConfig.lobbyLines.ifEmpty { defaultLobbyLines }
@@ -139,6 +143,7 @@ object LobbyScoreboardManager {
         "",
         "<aqua>Rank</aqua><gray>: </gray>{rank_color}{rank}",
         "<aqua>Stats Rank</aqua><gray>: </gray><gold>#{player_rank}</gold>",
+        "<aqua>Coins</aqua><gray>: </gray><gold>{coins}</gold>",
         "",
         "<aqua>Active Skills</aqua><gray>:</gray>",
         "<yellow>1.</yellow> <white>{skill1}</white>",

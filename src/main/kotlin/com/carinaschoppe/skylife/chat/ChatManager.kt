@@ -56,8 +56,13 @@ object ChatManager {
      * All online players can see these messages.
      */
     private fun handleGlobalChat(sender: Player, message: String) {
+        val rank = com.carinaschoppe.skylife.economy.PlayerRank.getRank(sender)
+        val rankTag = if (rank != com.carinaschoppe.skylife.economy.PlayerRank.USER && rank.tag.isNotEmpty()) rank.tag else ""
+        val rankColor = getRankColor(rank)
         val guildTag = GuildManager.getFormattedTag(sender.uniqueId) ?: ""
+
         val formattedMessage = Component.text("[GLOBAL] ", NamedTextColor.GOLD)
+            .append(if (rankTag.isNotEmpty()) Component.text(rankTag, rankColor) else Component.empty())
             .append(if (guildTag.isNotEmpty()) Component.text("$guildTag ", Messages.ACCENT_COLOR) else Component.empty())
             .append(Component.text(sender.name, NamedTextColor.WHITE))
             .append(Component.text(": ", NamedTextColor.GRAY))
@@ -82,9 +87,13 @@ object ChatManager {
             sender.sendMessage(Messages.PREFIX.append(Component.text("Guild not found", Messages.ERROR_COLOR)))
             return
         }
+        val rank = com.carinaschoppe.skylife.economy.PlayerRank.getRank(sender)
+        val rankTag = if (rank != com.carinaschoppe.skylife.economy.PlayerRank.USER && rank.tag.isNotEmpty()) rank.tag else ""
+        val rankColor = getRankColor(rank)
         val guildTag = "[${guild.tag}]"
 
         val formattedMessage = Component.text("[GUILD] ", NamedTextColor.GREEN)
+            .append(if (rankTag.isNotEmpty()) Component.text(rankTag, rankColor) else Component.empty())
             .append(Component.text("$guildTag ", Messages.ACCENT_COLOR))
             .append(Component.text(sender.name, NamedTextColor.WHITE))
             .append(Component.text(": ", NamedTextColor.GRAY))
@@ -111,12 +120,16 @@ object ChatManager {
             return
         }
 
+        val rank = com.carinaschoppe.skylife.economy.PlayerRank.getRank(sender)
+        val rankTag = if (rank != com.carinaschoppe.skylife.economy.PlayerRank.USER && rank.tag.isNotEmpty()) rank.tag else ""
+        val rankColor = getRankColor(rank)
         val isSpectator = game.spectators.contains(sender)
         val guildTag = GuildManager.getFormattedTag(sender.uniqueId) ?: ""
 
         if (isSpectator) {
             // Spectator chat - only visible to other spectators in the same game
             val formattedMessage = Component.text("[SPECTATOR] ", NamedTextColor.AQUA)
+                .append(if (rankTag.isNotEmpty()) Component.text(rankTag, rankColor) else Component.empty())
                 .append(if (guildTag.isNotEmpty()) Component.text("$guildTag ", Messages.ACCENT_COLOR) else Component.empty())
                 .append(Component.text(sender.name, NamedTextColor.WHITE))
                 .append(Component.text(": ", NamedTextColor.GRAY))
@@ -129,6 +142,7 @@ object ChatManager {
             val prefixColor = if (game.currentState is IngameState) NamedTextColor.YELLOW else NamedTextColor.GREEN
 
             val formattedMessage = Component.text("$prefix ", prefixColor)
+                .append(if (rankTag.isNotEmpty()) Component.text(rankTag, rankColor) else Component.empty())
                 .append(if (guildTag.isNotEmpty()) Component.text("$guildTag ", Messages.ACCENT_COLOR) else Component.empty())
                 .append(Component.text(sender.name, NamedTextColor.WHITE))
                 .append(Component.text(": ", NamedTextColor.GRAY))
@@ -142,9 +156,13 @@ object ChatManager {
      * Handles hub chat for players not in any game.
      */
     private fun handleHubChat(sender: Player, message: String) {
+        val rank = com.carinaschoppe.skylife.economy.PlayerRank.getRank(sender)
+        val rankTag = if (rank != com.carinaschoppe.skylife.economy.PlayerRank.USER && rank.tag.isNotEmpty()) rank.tag else ""
+        val rankColor = getRankColor(rank)
         val guildTag = GuildManager.getFormattedTag(sender.uniqueId) ?: ""
 
         val formattedMessage = Component.text("[HUB] ", NamedTextColor.GRAY)
+            .append(if (rankTag.isNotEmpty()) Component.text(rankTag, rankColor) else Component.empty())
             .append(if (guildTag.isNotEmpty()) Component.text("$guildTag ", Messages.ACCENT_COLOR) else Component.empty())
             .append(Component.text(sender.name, NamedTextColor.WHITE))
             .append(Component.text(": ", NamedTextColor.GRAY))
@@ -193,5 +211,16 @@ object ChatManager {
         // For now, just return the message as-is since we're dealing with plain strings
         // If using Components, this would need to extract plain text
         return message
+    }
+
+    /**
+     * Gets the display color for a player rank.
+     */
+    private fun getRankColor(rank: com.carinaschoppe.skylife.economy.PlayerRank): NamedTextColor {
+        return when (rank) {
+            com.carinaschoppe.skylife.economy.PlayerRank.VIP -> NamedTextColor.GREEN
+            com.carinaschoppe.skylife.economy.PlayerRank.VIP_PLUS -> NamedTextColor.GOLD
+            else -> NamedTextColor.GRAY
+        }
     }
 }
