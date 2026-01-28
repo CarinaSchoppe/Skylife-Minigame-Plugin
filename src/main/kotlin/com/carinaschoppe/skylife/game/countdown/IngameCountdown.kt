@@ -15,29 +15,6 @@ import org.bukkit.scheduler.BukkitRunnable
 class IngameCountdown(private val game: Game) : Countdown() {
 
     private var seconds = 600 // 10 minutes
-    private val runnable = object : BukkitRunnable() {
-        override fun run() {
-            if (!isRunning) {
-                cancel()
-                return
-            }
-
-            if (seconds <= 0) {
-                GameCluster.stopGame(game) // End game when time is up
-                stop()
-                return
-            }
-
-            // Announce time remaining at one-minute intervals
-            if (seconds % 60 == 0) {
-                val minutes = seconds / 60
-                val message = Messages.parse("<gray>Only <yellow>$minutes minute${if (minutes != 1) "s" else ""}</yellow><gray> remaining!</gray>")
-                game.livingPlayers.forEach { it.sendMessage(message) }
-            }
-
-            seconds--
-        }
-    }
 
     /**
      * Starts the ingame countdown if it's not already running.
@@ -46,7 +23,31 @@ class IngameCountdown(private val game: Game) : Countdown() {
         if (isRunning) return
         isRunning = true
         seconds = 600 // Reset to 10 minutes
-        task = runnable.runTaskTimer(Skylife.instance, 0, 20)
+
+        // Create a new BukkitRunnable each time to avoid "Already scheduled" error
+        task = object : BukkitRunnable() {
+            override fun run() {
+                if (!isRunning) {
+                    cancel()
+                    return
+                }
+
+                if (seconds <= 0) {
+                    GameCluster.stopGame(game) // End game when time is up
+                    stop()
+                    return
+                }
+
+                // Announce time remaining at one-minute intervals
+                if (seconds % 60 == 0) {
+                    val minutes = seconds / 60
+                    val message = Messages.parse("<gray>Only <yellow>$minutes minute${if (minutes != 1) "s" else ""}</yellow><gray> remaining!</gray>")
+                    game.livingPlayers.forEach { it.sendMessage(message) }
+                }
+
+                seconds--
+            }
+        }.runTaskTimer(Skylife.instance, 0, 20)
     }
 }
 

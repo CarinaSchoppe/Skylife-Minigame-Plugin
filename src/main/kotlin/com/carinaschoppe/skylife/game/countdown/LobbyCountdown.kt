@@ -17,42 +17,6 @@ class LobbyCountdown(private val game: Game) : Countdown() {
 
     var seconds = 15
 
-    private val runnable = object : BukkitRunnable() {
-        override fun run() {
-            if (!isRunning) {
-                cancel()
-                return
-            }
-
-            if (game.livingPlayers.size < game.minPlayers) {
-                // Reset countdown if players leave
-                stop()
-                game.livingPlayers.forEach { it.sendMessage(Messages.COUNTDOWN_STOPPED) }
-                return
-            }
-
-            if (seconds <= 0) {
-                GameCluster.startGame(game)
-                stop()
-                return
-            }
-
-            if (seconds <= 5) {
-                game.livingPlayers.forEach { player ->
-                    player.sendMessage(Messages.COUNTDOWN(seconds))
-                    player.level = seconds
-                    player.playSound(player.location, Sound.BLOCK_NOTE_BLOCK_PLING, 1.0f, 1.0f)
-                }
-            } else if (seconds % 5 == 0) {
-                game.livingPlayers.forEach { player ->
-                    player.sendMessage(Messages.COUNTDOWN(seconds))
-                    player.level = seconds
-                }
-            }
-            seconds--
-        }
-    }
-
     /**
      * Sets the countdown's remaining seconds to a new value.
      * The time will only be changed if the new value is less than the current time,
@@ -74,7 +38,43 @@ class LobbyCountdown(private val game: Game) : Countdown() {
         if (isRunning) return
         isRunning = true
         seconds = 15 // Reset to default value
-        task = runnable.runTaskTimer(Skylife.instance, 0, 20)
+
+        // Create a new BukkitRunnable each time to avoid "Already scheduled" error
+        task = object : BukkitRunnable() {
+            override fun run() {
+                if (!isRunning) {
+                    cancel()
+                    return
+                }
+
+                if (game.livingPlayers.size < game.minPlayers) {
+                    // Reset countdown if players leave
+                    stop()
+                    game.livingPlayers.forEach { it.sendMessage(Messages.COUNTDOWN_STOPPED) }
+                    return
+                }
+
+                if (seconds <= 0) {
+                    GameCluster.startGame(game)
+                    stop()
+                    return
+                }
+
+                if (seconds <= 5) {
+                    game.livingPlayers.forEach { player ->
+                        player.sendMessage(Messages.COUNTDOWN(seconds))
+                        player.level = seconds
+                        player.playSound(player.location, Sound.BLOCK_NOTE_BLOCK_PLING, 1.0f, 1.0f)
+                    }
+                } else if (seconds % 5 == 0) {
+                    game.livingPlayers.forEach { player ->
+                        player.sendMessage(Messages.COUNTDOWN(seconds))
+                        player.level = seconds
+                    }
+                }
+                seconds--
+            }
+        }.runTaskTimer(Skylife.instance, 0, 20)
     }
 
     /**
