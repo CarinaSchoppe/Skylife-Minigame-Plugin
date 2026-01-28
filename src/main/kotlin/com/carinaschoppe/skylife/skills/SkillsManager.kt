@@ -50,21 +50,20 @@ object SkillsManager {
     /**
      * Gets the maximum number of skills a player can select based on their rank.
      * Values are loaded from config.json (default: USER=2, VIP=3, VIP+=4)
-     * Admins/OPs automatically get VIP+ benefits.
+     * Staff ranks (ADMIN, DEV, MOD) and VIP+ get VIP+ benefits (4 skill slots).
      */
     fun getMaxSkills(player: Player): Int {
         val config = com.carinaschoppe.skylife.Skylife.config.maxSkills
 
-        // Check if player is OP or has admin wildcard permission
-        if (player.isOp || player.hasPermission("skylife.*") || player.hasPermission("*")) {
-            return config.vipPlus
-        }
-
         val rank = com.carinaschoppe.skylife.economy.PlayerRank.getRank(player)
         return when (rank) {
-            com.carinaschoppe.skylife.economy.PlayerRank.VIP -> config.vip
+            com.carinaschoppe.skylife.economy.PlayerRank.ADMIN,
+            com.carinaschoppe.skylife.economy.PlayerRank.DEV,
+            com.carinaschoppe.skylife.economy.PlayerRank.MOD,
             com.carinaschoppe.skylife.economy.PlayerRank.VIP_PLUS -> config.vipPlus
-            else -> config.default
+
+            com.carinaschoppe.skylife.economy.PlayerRank.VIP -> config.vip
+            com.carinaschoppe.skylife.economy.PlayerRank.USER -> config.default
         }
     }
 

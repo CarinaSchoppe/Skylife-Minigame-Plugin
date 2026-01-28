@@ -27,6 +27,12 @@ class GameSetupCommand : CommandExecutor {
             return true
         }
 
+        // Check permission
+        if (!sender.hasPermission("skylife.gamesetup")) {
+            sender.sendMessage(Messages.ERROR_PERMISSION)
+            return true
+        }
+
         // No args = open active setup GUI if exists
         if (args.isEmpty()) {
             val activePattern = activeSetups[sender]

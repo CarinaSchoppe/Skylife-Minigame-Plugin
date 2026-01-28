@@ -153,3 +153,12 @@ permissions:
   skylife.rank.vipplus:
     description: VIP+ rank (4x coins, 4 kit slots)
     default: false
+  skylife.rank.mod:
+    description: Moderator rank (4x coins, staff permissions)
+    default: false
+  skylife.rank.dev:
+    description: Developer rank (4x coins, staff permissions)
+    default: false
+  skylife.rank.admin:
+    description: Admin rank (4x coins, highest staff permissions)
+    default: op
