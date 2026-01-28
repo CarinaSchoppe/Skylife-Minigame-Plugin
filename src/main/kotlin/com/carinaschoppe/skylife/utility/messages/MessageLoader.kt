@@ -41,8 +41,17 @@ object MessageLoader {
 
         val gson: Gson = GsonBuilder().setPrettyPrinting().create()
 
-        // Serialize the Templates object
-        val json: String = gson.toJson(Messages.TEMPLATES)
+        // Serialize the Templates object by extracting all its fields into a map
+        val templatesMap = mutableMapOf<String, String>()
+        Templates::class.java.declaredFields.forEach { field ->
+            field.isAccessible = true
+            val value = field.get(Templates)
+            if (value is String) {
+                templatesMap[field.name] = value
+            }
+        }
+
+        val json: String = gson.toJson(templatesMap)
         file.writeText(json)
         Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text("Messages saved!", Messages.MESSAGE_COLOR)))
 
