@@ -1,7 +1,6 @@
 package com.carinaschoppe.skylife.game
 
 import com.carinaschoppe.skylife.game.gamestates.GameStateType
-import com.carinaschoppe.skylife.game.kit.KitManager
 import com.carinaschoppe.skylife.game.managers.GameLocationManager
 import com.carinaschoppe.skylife.hub.HubManager
 import com.carinaschoppe.skylife.skills.SkillEffectsManager
@@ -142,7 +141,6 @@ object GameCluster {
 
         // Reset player for hub
         ScoreboardManager.removeScoreboard(player)
-        KitManager.removePlayer(player)
         player.inventory.clear()
         player.inventory.armorContents = arrayOfNulls(4)
         if (player.hasPermission("skylife.overview")) {

@@ -60,18 +60,10 @@ object Templates {
     var lobbyTimer: String = "<prefix><green><bold>Round starts in </bold></green><gold><bold><time></bold></gold><green> seconds</green>"
     var protectionTime: String = "<prefix><green><bold>Protection time ends in </bold></green><gold><bold><time></bold></gold><green> seconds</green>"
 
-    // Kit messages
-    var kit: String = "<prefix><green><bold>Player uses kit </bold></green><gold><bold><kit></bold></gold>"
-    var kitSelected: String = "<prefix><green>You have selected the </green><aqua><bold><kit></bold></aqua><green> kit!</green>"
-    var kitDeselected: String = "<prefix><green>You have deselected the </green><aqua><bold><kit></bold></aqua><green> kit.</green>"
-    var kitSelectionFailedSlotsFull: String = "<prefix><red>You have reached your maximum kit slots! Deselect a kit first.</red>"
-
     // Economy messages
     var coinsEarnedGame: String = "<prefix><green>You earned </green><gold><bold><amount> coins</bold></gold><green> for playing!</green>"
     var coinsEarnedKill: String = "<prefix><green>+</green><gold><bold><amount> coins</bold></gold><green> for a kill!</green>"
     var coinsEarnedWin: String = "<prefix><green>You earned </green><gold><bold><amount> coins</bold></gold><green> for winning!</green>"
-    var kitPurchased: String = "<prefix><green>You have purchased the </green><aqua><bold><kit></bold></aqua><green> kit!</green>"
-    var kitPurchaseFailed: String = "<prefix><red>Failed to purchase kit: </red><gold><error></gold>"
 
     // Admin coin commands
     var coinsGiveUsage: String = "<prefix><red>Usage: /givecoins <player> <amount></red>"
@@ -215,6 +207,10 @@ object Templates {
     var skillSelected: String = "<prefix><green>Skill </green><gold><bold><skill></bold></gold><green> selected!</green>"
     var skillUnselected: String = "<prefix><green>Skill </green><gold><bold><skill></bold></gold><green> unselected!</green>"
     var skillError: String = "<prefix><red><error></red>"
+    var skillPurchased: String = "<prefix><green>Successfully purchased </green><skillColor><bold><skill></bold></skillColor><green>!</green>"
+    var skillPurchaseFailed: String = "<prefix><red>Failed to purchase skill: </red><gold><error></gold>"
+    var skillMustUnlock: String = "<prefix><red>You must unlock this skill before you can select it!</red>"
+    var skillSelectionFailedSlotsFull: String = "<prefix><red>You already have <max> skills selected. Unselect one first.</red>"
 
     // Admin command messages
     var noActiveSetup: String = "<prefix><red>No active setup! Use /game create <name> or /gamesetup <name> first.</red>"

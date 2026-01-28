@@ -112,12 +112,15 @@ object SkillsManager {
         } else {
             // Check if skill is unlocked
             if (!SkillUnlockManager.hasUnlocked(uuid, skill)) {
-                return Result.failure(Exception("You must unlock this skill before you can select it!"))
+                val errorMessage = com.carinaschoppe.skylife.utility.messages.Templates.skillMustUnlock
+                return Result.failure(Exception(errorMessage))
             }
 
             // Check if player can select more skills
             if (skills.size >= MAX_SKILLS) {
-                return Result.failure(Exception("You already have $MAX_SKILLS skills selected. Unselect one first."))
+                val errorMessage = com.carinaschoppe.skylife.utility.messages.Templates.skillSelectionFailedSlotsFull
+                    .replace("<max>", MAX_SKILLS.toString())
+                return Result.failure(Exception(errorMessage))
             }
 
             // Select skill

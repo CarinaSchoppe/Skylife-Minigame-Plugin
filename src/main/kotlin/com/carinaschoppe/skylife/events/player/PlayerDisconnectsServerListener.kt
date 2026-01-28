@@ -57,8 +57,6 @@ class PlayerDisconnectsServerListener : Listener {
             game.spectators.remove(player)
             ScoreboardManager.removeScoreboard(player)
 
-            // Remove kit selection
-            com.carinaschoppe.skylife.game.kit.KitManager.removePlayer(player)
 
             // Deactivate skills
             com.carinaschoppe.skylife.skills.SkillsManager.deactivateSkills(player)

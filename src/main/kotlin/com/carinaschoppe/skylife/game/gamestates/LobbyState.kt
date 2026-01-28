@@ -36,7 +36,7 @@ class LobbyState(private val game: Game) : GameState {
     }
 
     /**
-     * Handles a player joining the lobby. Gives them the kit selector item
+     * Handles a player joining the lobby. Gives them the skills selector item
      * and starts the countdown if the minimum player count is reached.
      *
      * @param player The player who joined.
@@ -47,11 +47,6 @@ class LobbyState(private val game: Game) : GameState {
 
         // Set adventure mode in lobby
         player.gameMode = org.bukkit.GameMode.ADVENTURE
-
-        // Kit selector in middle (only if kits are enabled)
-        if (com.carinaschoppe.skylife.game.kit.KitManager.areKitsEnabled()) {
-            player.inventory.setItem(3, com.carinaschoppe.skylife.game.kit.KitSelectorGui.createKitSelectorItem())
-        }
 
         // Skills selector in middle
         player.inventory.setItem(4, SkillsGui.createSkillsMenuItem())

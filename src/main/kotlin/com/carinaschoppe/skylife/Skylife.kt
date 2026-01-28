@@ -3,7 +3,6 @@ package com.carinaschoppe.skylife
 import com.carinaschoppe.skylife.commands.admin.*
 import com.carinaschoppe.skylife.commands.user.*
 import com.carinaschoppe.skylife.database.DatabaseConnector
-import com.carinaschoppe.skylife.events.kit.KitSelectorListener
 import com.carinaschoppe.skylife.events.player.*
 import com.carinaschoppe.skylife.events.skills.SkillFeatherfallListener
 import com.carinaschoppe.skylife.events.skills.SkillInvisibleStalkerListener
@@ -12,7 +11,6 @@ import com.carinaschoppe.skylife.events.skills.SkillLuckyBirdListener
 import com.carinaschoppe.skylife.events.ui.GameSetupGuiListener
 import com.carinaschoppe.skylife.events.ui.SkillsGuiListener
 import com.carinaschoppe.skylife.game.GameLoader
-import com.carinaschoppe.skylife.game.kit.KitManager
 import com.carinaschoppe.skylife.guild.GuildManager
 import com.carinaschoppe.skylife.hub.HubManager
 import com.carinaschoppe.skylife.skills.SkillPassiveItemsTask
@@ -54,9 +52,8 @@ open class Skylife : JavaPlugin() {
         // Load skills into cache
         SkillsManager.loadSkills()
 
-        // Load economy data (coins and kit unlocks)
+        // Load economy data
         com.carinaschoppe.skylife.economy.CoinManager.loadCoins()
-        com.carinaschoppe.skylife.economy.KitUnlockManager.loadUnlocks()
 
         // Load skill unlocks into cache
         com.carinaschoppe.skylife.skills.SkillUnlockManager.loadUnlocks()
@@ -81,8 +78,6 @@ open class Skylife : JavaPlugin() {
             Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text("WARNING: Hub spawn is not set! Use /sethub to configure it.", Messages.ERROR_COLOR)))
             Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text("Players will be teleported to world spawn as fallback.", Messages.ERROR_COLOR)))
         }
-
-        KitManager.initializeKits()
 
         // Cleanup orphaned worlds from previous crashes
         com.carinaschoppe.skylife.game.managers.MapManager.cleanupOrphanedWorlds()
@@ -147,7 +142,6 @@ open class Skylife : JavaPlugin() {
         pluginManager.registerEvents(PlayerEntersPortalListener(), this)
         pluginManager.registerEvents(PlayerGameOverviewItemListener(), this)
         pluginManager.registerEvents(InventoryProtectionListener(), this)
-        pluginManager.registerEvents(KitSelectorListener(), this)
         pluginManager.registerEvents(PlayerSelectGameListener(), this)
         pluginManager.registerEvents(PlayerDisplayNameListener(), this)
         pluginManager.registerEvents(PlayerDisconnectsPartyListener(), this)
@@ -162,7 +156,6 @@ open class Skylife : JavaPlugin() {
         pluginManager.registerEvents(SkillFeatherfallListener(), this)
         pluginManager.registerEvents(SkillInvisibleStalkerListener(), this)
         pluginManager.registerEvents(SkillLuckyBirdListener(), this)
-        pluginManager.registerEvents(com.carinaschoppe.skylife.events.ui.KitPurchaseGuiListener(), this)
     }
 
     private fun createGameMapsFolder() {

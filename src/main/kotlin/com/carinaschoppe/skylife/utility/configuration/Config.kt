@@ -12,11 +12,11 @@ data class Config(
     @SerializedName("timer_settings")
     var timer: Timer = Timer(),
 
-    @SerializedName("kits_enabled")
-    var kitsEnabled: Boolean = true,
-
     @SerializedName("database")
-    var database: DatabaseConfig = DatabaseConfig()
+    var database: DatabaseConfig = DatabaseConfig(),
+
+    @SerializedName("skill_prices")
+    var skillPrices: SkillPriceConfig = SkillPriceConfig()
 )
 
 data class DatabaseConfig(
@@ -42,4 +42,18 @@ data class PostgreSQLConfig(
 
     @SerializedName("password")
     var password: String = "password"
+)
+
+data class SkillPriceConfig(
+    @SerializedName("common")
+    var common: Int = 0,
+
+    @SerializedName("rare")
+    var rare: Int = 500,
+
+    @SerializedName("epic")
+    var epic: Int = 1500,
+
+    @SerializedName("legendary")
+    var legendary: Int = 5000
 )

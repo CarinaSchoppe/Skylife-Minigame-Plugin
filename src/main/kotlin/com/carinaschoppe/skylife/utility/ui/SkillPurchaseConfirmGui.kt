@@ -163,20 +163,28 @@ class SkillPurchaseConfirmGui(private val player: Player, val skill: Skill) : In
         val result = SkillUnlockManager.purchaseSkill(player.uniqueId, skill)
 
         if (result.isSuccess) {
-            player.sendMessage(
-                Messages.PREFIX.append(
-                    Component.text("Successfully purchased ", Messages.MESSAGE_COLOR)
-                        .append(Component.text(skill.displayName, skill.rarity.color, TextDecoration.BOLD))
-                        .append(Component.text("!", Messages.MESSAGE_COLOR))
-                )
+            // Parse template and replace placeholders
+            val message = Messages.parse(
+                com.carinaschoppe.skylife.utility.messages.Templates.skillPurchased
+                    .replace("<skill>", skill.displayName)
+                    .replace(
+                        "<skillColor>", when (skill.rarity.color) {
+                            NamedTextColor.WHITE -> "white"
+                            NamedTextColor.BLUE -> "blue"
+                            NamedTextColor.DARK_PURPLE -> "dark_purple"
+                            NamedTextColor.GOLD -> "gold"
+                            else -> "white"
+                        }
+                    )
             )
+            player.sendMessage(message)
             player.playSound(player.location, org.bukkit.Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f)
         } else {
-            player.sendMessage(
-                Messages.PREFIX.append(
-                    Component.text(result.exceptionOrNull()?.message ?: "Failed to purchase skill", Messages.ERROR_COLOR)
-                )
+            val message = Messages.parse(
+                com.carinaschoppe.skylife.utility.messages.Templates.skillPurchaseFailed
+                    .replace("<error>", result.exceptionOrNull()?.message ?: "Unknown error")
             )
+            player.sendMessage(message)
             player.playSound(player.location, org.bukkit.Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f)
         }
 

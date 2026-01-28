@@ -17,7 +17,7 @@ import java.time.Duration
 
 /**
  * Represents the active gameplay state of a game.
- * Manages player spawning, kit distribution, and monitors win conditions.
+ * Manages player spawning, skill activation, and monitors win conditions.
  *
  * @param game The context of the game this state belongs to.
  */
@@ -61,10 +61,6 @@ class IngameState(private val game: Game) : GameState {
             // Set survival mode
             player.gameMode = GameMode.SURVIVAL
 
-            // Give kit items if kits are enabled
-            if (com.carinaschoppe.skylife.game.kit.KitManager.areKitsEnabled()) {
-                com.carinaschoppe.skylife.game.kit.KitManager.giveKitItems(player)
-            }
 
             // Activate skills and give their items
             SkillsManager.activateSkills(player)

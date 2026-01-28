@@ -140,18 +140,10 @@ object Messages {
     fun LOBBY_TIMER(roundTime: Int): Component = parseTemplate(TEMPLATES.lobbyTimer, "time" to roundTime)
     fun PROTECTION_TIME(protectionTime: Int): Component = parseTemplate(TEMPLATES.protectionTime, "time" to protectionTime)
 
-    // Kit messages
-    fun KIT(kitName: String): Component = parseTemplate(TEMPLATES.kit, "kit" to kitName)
-    fun KIT_SELECTED(kitName: String): Component = parseTemplate(TEMPLATES.kitSelected, "kit" to kitName)
-    fun KIT_DESELECTED(kitName: String): Component = parseTemplate(TEMPLATES.kitDeselected, "kit" to kitName)
-    val KIT_SELECTION_FAILED_SLOTS_FULL: Component get() = parseTemplate(TEMPLATES.kitSelectionFailedSlotsFull)
-
     // Economy messages
     fun COINS_EARNED_GAME(amount: Int): Component = parseTemplate(TEMPLATES.coinsEarnedGame, "amount" to amount)
     fun COINS_EARNED_KILL(amount: Int): Component = parseTemplate(TEMPLATES.coinsEarnedKill, "amount" to amount)
     fun COINS_EARNED_WIN(amount: Int): Component = parseTemplate(TEMPLATES.coinsEarnedWin, "amount" to amount)
-    fun KIT_PURCHASED(kitName: String): Component = parseTemplate(TEMPLATES.kitPurchased, "kit" to kitName)
-    fun KIT_PURCHASE_FAILED(error: String): Component = parseTemplate(TEMPLATES.kitPurchaseFailed, "error" to error)
 
     // Admin coin commands
     val COINS_GIVE_USAGE: Component get() = parseTemplate(TEMPLATES.coinsGiveUsage)

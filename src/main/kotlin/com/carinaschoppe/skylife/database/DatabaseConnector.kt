@@ -2,7 +2,6 @@ package com.carinaschoppe.skylife.database
 
 import com.carinaschoppe.skylife.Skylife
 import com.carinaschoppe.skylife.database.DatabaseConnector.connectDatabase
-import com.carinaschoppe.skylife.economy.KitUnlockTable
 import com.carinaschoppe.skylife.economy.PlayerEconomyTable
 import com.carinaschoppe.skylife.guild.GuildMembers
 import com.carinaschoppe.skylife.guild.Guilds
@@ -10,6 +9,8 @@ import com.carinaschoppe.skylife.skills.PlayerSkills
 import com.carinaschoppe.skylife.skills.SkillUnlockTable
 import com.carinaschoppe.skylife.utility.messages.Messages
 import com.carinaschoppe.skylife.utility.statistics.StatsPlayers
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.Bukkit
 import org.jetbrains.exposed.v1.jdbc.Database
 import org.jetbrains.exposed.v1.jdbc.SchemaUtils
@@ -54,9 +55,9 @@ object DatabaseConnector {
             if (dbType != "sqlite" && dbType != "postgresql") {
                 Bukkit.getServer().consoleSender.sendMessage(
                     Messages.PREFIX.append(
-                        net.kyori.adventure.text.Component.text(
+                        Component.text(
                             "Invalid database type '$dbType' in config! Using SQLite as fallback.",
-                            net.kyori.adventure.text.format.NamedTextColor.YELLOW
+                            NamedTextColor.YELLOW
                         )
                     )
                 )
@@ -100,7 +101,7 @@ object DatabaseConnector {
             Bukkit.getServer().consoleSender.sendMessage(Messages.DATABASE_CONNECTED)
 
             transaction {
-                SchemaUtils.create(StatsPlayers, Guilds, GuildMembers, PlayerSkills, PlayerEconomyTable, KitUnlockTable, SkillUnlockTable)
+                SchemaUtils.create(StatsPlayers, Guilds, GuildMembers, PlayerSkills, PlayerEconomyTable, SkillUnlockTable)
             }
 
             Bukkit.getServer().consoleSender.sendMessage(Messages.DATABASE_TABLES_CREATED)
@@ -108,9 +109,9 @@ object DatabaseConnector {
         } catch (e: Exception) {
             Bukkit.getServer().consoleSender.sendMessage(
                 Messages.PREFIX.append(
-                    net.kyori.adventure.text.Component.text(
+                    Component.text(
                         "Failed to connect to database: ${e.message}",
-                        net.kyori.adventure.text.format.NamedTextColor.RED
+                        NamedTextColor.RED
                     )
                 )
             )
