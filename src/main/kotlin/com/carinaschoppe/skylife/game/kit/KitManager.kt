@@ -7,6 +7,7 @@ import org.bukkit.entity.Player
 
 /**
  * A singleton object that manages all kits and player kit selections.
+ * Supports multi-kit selection with rank-based slot limits.
  */
 object KitManager {
     /** A list of all available kits. */
@@ -17,6 +18,8 @@ object KitManager {
 
     /**
      * Returns whether kits are enabled in the configuration.
+     *
+     * @return true if kits are enabled, false otherwise
      */
     fun areKitsEnabled(): Boolean {
         return Skylife.config.kitsEnabled
@@ -94,6 +97,9 @@ object KitManager {
 
     /**
      * Removes a kit from player's selection.
+     *
+     * @param player The player deselecting the kit
+     * @param kit The kit to deselect
      */
     fun deselectKit(player: Player, kit: Kit) {
         playerKits[player]?.remove(kit)
@@ -101,6 +107,9 @@ object KitManager {
 
     /**
      * Gets all selected kits for a player.
+     *
+     * @param player The player whose kits to retrieve
+     * @return Immutable list of selected kits (empty if none selected)
      */
     fun getSelectedKits(player: Player): List<Kit> {
         return playerKits[player]?.toList() ?: emptyList()

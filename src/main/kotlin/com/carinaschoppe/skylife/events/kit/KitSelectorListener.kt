@@ -141,8 +141,11 @@ class KitSelectorListener : Listener {
     }
 
     /**
-     * Finds a kit by searching through available kits.
-     * Used for locked kits displayed as barriers.
+     * Finds a kit by searching through available kits based on item lore.
+     * Used for locked kits displayed as barriers - extracts price from lore and matches to kit.
+     *
+     * @param item The barrier ItemStack representing a locked kit
+     * @return The matching Kit if found, null otherwise
      */
     private fun findKitFromItem(item: org.bukkit.inventory.ItemStack): com.carinaschoppe.skylife.game.kit.Kit? {
         val lore = item.itemMeta?.lore() ?: return null

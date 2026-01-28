@@ -9,9 +9,16 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 
 /**
  * Listener for kit purchase confirmation GUI interactions.
+ * Handles click events and inventory close events for the purchase GUI.
  */
 class KitPurchaseGuiListener : Listener {
 
+    /**
+     * Handles inventory click events in the kit purchase confirmation GUI.
+     * Prevents item movement and delegates click handling to KitPurchaseConfirmGui.
+     *
+     * @param event The inventory click event
+     */
     @EventHandler
     fun onInventoryClick(event: InventoryClickEvent) {
         val player = event.whoClicked as? Player ?: return
@@ -33,6 +40,12 @@ class KitPurchaseGuiListener : Listener {
         }
     }
 
+    /**
+     * Handles inventory close events for the purchase confirmation GUI.
+     * Cleans up pending purchase data when the GUI is closed.
+     *
+     * @param event The inventory close event
+     */
     @EventHandler
     fun onInventoryClose(event: InventoryCloseEvent) {
         val player = event.player as? Player ?: return
