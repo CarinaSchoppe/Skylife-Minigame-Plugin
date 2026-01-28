@@ -7,6 +7,7 @@ import com.carinaschoppe.skylife.hub.HubManager
 import com.carinaschoppe.skylife.skills.SkillEffectsManager
 import com.carinaschoppe.skylife.skills.SkillsManager
 import com.carinaschoppe.skylife.utility.scoreboard.ScoreboardManager
+import com.carinaschoppe.skylife.utility.ui.ExitDoorItem
 import com.carinaschoppe.skylife.utility.ui.GameOverviewItems
 import com.carinaschoppe.skylife.utility.ui.SkillsGui
 import org.bukkit.entity.Player
@@ -92,6 +93,9 @@ object GameCluster {
             game
         )
         player.teleport(lobbyInGameWorld)
+
+        // Add exit door to inventory
+        player.inventory.setItem(8, ExitDoorItem.create())
 
         game.currentState.playerJoined(player)
         ScoreboardManager.setScoreboard(player, game)

@@ -7,6 +7,7 @@ import com.carinaschoppe.skylife.game.countdown.EndingCountdown
 import com.carinaschoppe.skylife.game.managers.GameManager
 import com.carinaschoppe.skylife.utility.messages.Messages
 import com.carinaschoppe.skylife.utility.statistics.StatsUtility
+import com.carinaschoppe.skylife.utility.ui.ExitDoorItem
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.title.Title
 import org.bukkit.Color
@@ -41,6 +42,11 @@ class EndState(private val game: Game) : GameState {
         game.getAllPlayers().forEach { player ->
             player.gameMode = org.bukkit.GameMode.ADVENTURE
             player.teleport(lobbyLocation)
+
+            // Clear inventory and give exit door
+            player.inventory.clear()
+            player.inventory.armorContents = arrayOfNulls(4)
+            player.inventory.setItem(8, ExitDoorItem.create())
 
             // Make all players visible to each other (remove spectator invisibility)
             game.getAllPlayers().forEach { other ->

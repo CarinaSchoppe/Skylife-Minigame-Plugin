@@ -114,6 +114,7 @@ open class Skylife : JavaPlugin() {
         pluginManager.registerEvents(PlayerJoinsServerListener(), this)
         pluginManager.registerEvents(PlayerEntersPortalListener(), this)
         pluginManager.registerEvents(PlayerGameOverviewItemListener(), this)
+        pluginManager.registerEvents(InventoryProtectionListener(), this)
         pluginManager.registerEvents(KitSelectorListener(), this)
         pluginManager.registerEvents(PlayerSelectGameListener(), this)
         pluginManager.registerEvents(PlayerDisplayNameListener(), this)
