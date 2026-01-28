@@ -16,6 +16,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Confirmation GUI for purchasing kits.
+ * Shows kit details, player balance, and confirm/cancel buttons.
  */
 object KitPurchaseConfirmGui {
 
@@ -23,6 +24,10 @@ object KitPurchaseConfirmGui {
 
     /**
      * Opens the purchase confirmation GUI for a kit.
+     * Displays kit info, price, player balance, and confirm/cancel buttons.
+     *
+     * @param player The player viewing the confirmation
+     * @param kit The kit being considered for purchase
      */
     fun open(player: Player, kit: Kit) {
         pendingPurchases[player] = kit
@@ -112,7 +117,13 @@ object KitPurchaseConfirmGui {
     }
 
     /**
-     * Handles click in purchase confirmation GUI.
+     * Handles click events in the purchase confirmation GUI.
+     * Slot 11: Confirm purchase (deducts coins and unlocks kit)
+     * Slot 15: Cancel purchase (returns to kit selector)
+     *
+     * @param player The player clicking
+     * @param slot The inventory slot clicked
+     * @return true if the click was handled, false if not a valid action slot
      */
     fun handleClick(player: Player, slot: Int): Boolean {
         val kit = pendingPurchases[player] ?: return false
@@ -161,6 +172,10 @@ object KitPurchaseConfirmGui {
 
     /**
      * Checks if an inventory is a purchase confirmation GUI.
+     * Used by event listeners to identify which GUI is open.
+     *
+     * @param inventory The inventory to check
+     * @return true if this is a purchase confirmation GUI, false otherwise
      */
     fun isPurchaseGui(inventory: Inventory): Boolean {
         val title = inventory.viewers.firstOrNull()?.openInventory?.title() ?: return false
@@ -169,7 +184,10 @@ object KitPurchaseConfirmGui {
     }
 
     /**
-     * Cleans up pending purchase when player closes inventory.
+     * Cleans up pending purchase data when player closes the GUI.
+     * Should be called from inventory close event handler.
+     *
+     * @param player The player whose data should be cleaned up
      */
     fun cleanup(player: Player) {
         pendingPurchases.remove(player)

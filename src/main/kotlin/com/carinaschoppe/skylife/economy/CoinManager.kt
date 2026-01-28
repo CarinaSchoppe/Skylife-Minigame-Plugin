@@ -7,6 +7,14 @@ import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Manages player coins and transactions.
+ * Provides thread-safe operations with database-first persistence.
+ *
+ * Base coin rewards:
+ * - Playing a game: 10 coins
+ * - Getting a kill: 25 coins
+ * - Winning a game: 100 coins
+ *
+ * These base amounts are multiplied by player rank multipliers (1x/2x/4x).
  */
 object CoinManager {
 
@@ -19,7 +27,8 @@ object CoinManager {
     const val COINS_PER_WIN = 100
 
     /**
-     * Loads coins from database into cache.
+     * Loads all player coin balances from the database into memory cache.
+     * Should be called during plugin initialization.
      */
     fun loadCoins() {
         transaction {
@@ -30,7 +39,11 @@ object CoinManager {
     }
 
     /**
-     * Gets a player's coin balance.
+     * Gets a player's current coin balance.
+     * Returns from cache if available, otherwise queries database.
+     *
+     * @param player The player's UUID
+     * @return The player's coin balance (defaults to 0 if player not found)
      */
     fun getCoins(player: UUID): Int {
         return coinCache.getOrPut(player) {
@@ -43,10 +56,12 @@ object CoinManager {
 
     /**
      * Adds coins to a player's balance.
-     * Database-first approach: writes to DB then updates cache for safety.
-     * @param player The player UUID
-     * @param amount The amount to add (can be negative)
-     * @param multiplier Rank multiplier (1.0 for User, 2.0 for VIP, 4.0 for VIP+)
+     * Uses database-first approach: writes to database before updating cache for crash safety.
+     * Balance cannot go below 0.
+     *
+     * @param player The player's UUID
+     * @param amount The base amount to add (can be negative for deductions)
+     * @param multiplier Rank multiplier to apply (1.0 for User, 2.0 for VIP, 4.0 for VIP+)
      */
     fun addCoins(player: UUID, amount: Int, multiplier: Double = 1.0) {
         val finalAmount = (amount * multiplier).toInt()
@@ -72,7 +87,11 @@ object CoinManager {
 
     /**
      * Removes coins from a player's balance.
-     * @return true if successful (had enough coins), false if insufficient funds (removed all remaining coins)
+     * If player has insufficient coins, removes all remaining coins instead.
+     *
+     * @param player The player's UUID
+     * @param amount The amount of coins to remove
+     * @return true if player had enough coins (full amount removed), false if insufficient (all coins removed)
      */
     fun removeCoins(player: UUID, amount: Int): Boolean {
         val currentCoins = getCoins(player)
@@ -89,7 +108,11 @@ object CoinManager {
     }
 
     /**
-     * Checks if a player can afford something.
+     * Checks if a player has enough coins to afford a purchase.
+     *
+     * @param player The player's UUID
+     * @param amount The price to check
+     * @return true if player has at least the specified amount, false otherwise
      */
     fun canAfford(player: UUID, amount: Int): Boolean {
         return getCoins(player) >= amount
@@ -97,7 +120,11 @@ object CoinManager {
 
     /**
      * Awards coins for playing a game.
-     * @return the actual amount of coins earned (with multiplier applied)
+     * Base reward: 10 coins, multiplied by player's rank multiplier.
+     *
+     * @param player The player's UUID
+     * @param rank The player's rank (determines multiplier)
+     * @return The actual amount of coins earned (with rank multiplier applied)
      */
     fun awardGameCoins(player: UUID, rank: PlayerRank): Int {
         val amount = (COINS_PER_GAME * rank.coinMultiplier).toInt()
@@ -106,8 +133,12 @@ object CoinManager {
     }
 
     /**
-     * Awards coins for a kill.
-     * @return the actual amount of coins earned (with multiplier applied)
+     * Awards coins for getting a kill in game.
+     * Base reward: 25 coins, multiplied by player's rank multiplier.
+     *
+     * @param player The player's UUID
+     * @param rank The player's rank (determines multiplier)
+     * @return The actual amount of coins earned (with rank multiplier applied)
      */
     fun awardKillCoins(player: UUID, rank: PlayerRank): Int {
         val amount = (COINS_PER_KILL * rank.coinMultiplier).toInt()
@@ -116,8 +147,12 @@ object CoinManager {
     }
 
     /**
-     * Awards coins for winning.
-     * @return the actual amount of coins earned (with multiplier applied)
+     * Awards coins for winning a game.
+     * Base reward: 100 coins, multiplied by player's rank multiplier.
+     *
+     * @param player The player's UUID
+     * @param rank The player's rank (determines multiplier)
+     * @return The actual amount of coins earned (with rank multiplier applied)
      */
     fun awardWinCoins(player: UUID, rank: PlayerRank): Int {
         val amount = (COINS_PER_WIN * rank.coinMultiplier).toInt()

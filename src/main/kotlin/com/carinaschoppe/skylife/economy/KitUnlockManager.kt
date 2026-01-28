@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Manages kit unlocks and purchases.
+ * Provides thread-safe operations for checking, unlocking, and purchasing kits.
  */
 object KitUnlockManager {
 
@@ -16,7 +17,8 @@ object KitUnlockManager {
     private val unlockedKitsCache = ConcurrentHashMap<UUID, MutableSet<String>>()
 
     /**
-     * Loads kit unlocks from database into cache.
+     * Loads all kit unlocks from the database into memory cache.
+     * Should be called during plugin initialization.
      */
     fun loadUnlocks() {
         transaction {
@@ -28,8 +30,12 @@ object KitUnlockManager {
     }
 
     /**
-     * Checks if a player has unlocked a kit.
-     * COMMON kits are always unlocked.
+     * Checks if a player has unlocked a specific kit.
+     * COMMON rarity kits are always considered unlocked.
+     *
+     * @param player The player's UUID
+     * @param kit The kit to check
+     * @return true if the kit is unlocked or is COMMON rarity, false otherwise
      */
     fun hasUnlocked(player: UUID, kit: Kit): Boolean {
         // Common kits are always unlocked
@@ -41,7 +47,11 @@ object KitUnlockManager {
     }
 
     /**
-     * Unlocks a kit for a player (admin command or purchase).
+     * Unlocks a kit for a player.
+     * Updates both cache and database. Used after successful purchases or admin grants.
+     *
+     * @param player The player's UUID
+     * @param kit The kit to unlock
      */
     fun unlockKit(player: UUID, kit: Kit) {
         // Add to cache
@@ -64,8 +74,12 @@ object KitUnlockManager {
 
     /**
      * Attempts to purchase a kit for a player.
-     * Thread-safe transaction that checks funds and unlocks atomically.
-     * @return Result.success if successful, Result.failure with error message otherwise
+     * Performs thread-safe transaction that checks funds, deducts coins, and unlocks the kit.
+     * COMMON rarity kits (price 0) are unlocked for free.
+     *
+     * @param player The player's UUID
+     * @param kit The kit to purchase
+     * @return Result.success if purchase succeeded, Result.failure with error message if failed
      */
     fun purchaseKit(player: UUID, kit: Kit): Result<Unit> {
         // Check if already unlocked
@@ -101,7 +115,10 @@ object KitUnlockManager {
     }
 
     /**
-     * Gets all unlocked kits for a player.
+     * Gets all unlocked kit names for a player.
+     *
+     * @param player The player's UUID
+     * @return Immutable set of unlocked kit names (does not include COMMON kits automatically)
      */
     fun getUnlockedKits(player: UUID): Set<String> {
         return unlockedKitsCache.getOrPut(player) { mutableSetOf() }.toSet()
