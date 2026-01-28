@@ -71,39 +71,29 @@ class SetIngameLocationCommand : CommandExecutor, TabCompleter {
             }
         }
 
+        // Check permission once for all location types
+        if (!sender.hasPermission("skylife.admin.setlocation")) {
+            sender.sendMessage(Messages.ERROR_PERMISSION)
+            return true
+        }
+
         when (type) {
             "lobby" -> {
-                if (!sender.hasPermission("skylife.setlocation.lobby")) {
-                    sender.sendMessage(Messages.ERROR_PERMISSION)
-                    return true
-                }
                 game.gameLocationManager.lobbyLocation = GameLocationManager.locationToSkylifeLocationConverter(sender.location)
                 sender.sendMessage(Messages.LOCATION_ADDED("lobby", game.mapName))
             }
 
             "spawn" -> {
-                if (!sender.hasPermission("skylife.setlocation.spawn")) {
-                    sender.sendMessage(Messages.ERROR_PERMISSION)
-                    return true
-                }
                 game.gameLocationManager.spawnLocations.add(GameLocationManager.locationToSkylifeLocationConverter(sender.location))
                 sender.sendMessage(Messages.LOCATION_ADDED("spawn", game.mapName, game.gameLocationManager.spawnLocations.size))
             }
 
             "spectator" -> {
-                if (!sender.hasPermission("skylife.setlocation.spectator")) {
-                    sender.sendMessage(Messages.ERROR_PERMISSION)
-                    return true
-                }
                 game.gameLocationManager.spectatorLocation = GameLocationManager.locationToSkylifeLocationConverter(sender.location)
                 sender.sendMessage(Messages.LOCATION_ADDED("spectator", game.mapName))
             }
 
             "main" -> {
-                if (!sender.hasPermission("skylife.setlocation.main")) {
-                    sender.sendMessage(Messages.ERROR_PERMISSION)
-                    return true
-                }
                 game.gameLocationManager.mainLocation = GameLocationManager.locationToSkylifeLocationConverter(sender.location)
                 sender.sendMessage(Messages.LOCATION_ADDED("main", game.mapName))
             }

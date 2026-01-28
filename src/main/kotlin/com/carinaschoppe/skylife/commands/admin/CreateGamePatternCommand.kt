@@ -48,7 +48,7 @@ class CreateGamePatternCommand : CommandExecutor, TabCompleter {
 
         when (action) {
             "create" -> {
-                if (!sender.hasPermission("skylife.create")) {
+                if (!sender.hasPermission("skylife.admin.create")) {
                     sender.sendMessage(Messages.ERROR_PERMISSION)
                     return true
                 }
@@ -73,7 +73,7 @@ class CreateGamePatternCommand : CommandExecutor, TabCompleter {
             }
 
             "save" -> {
-                if (!sender.hasPermission("skylife.save")) {
+                if (!sender.hasPermission("skylife.admin.save")) {
                     sender.sendMessage(Messages.ERROR_PERMISSION)
                     return true
                 }
@@ -112,7 +112,7 @@ class CreateGamePatternCommand : CommandExecutor, TabCompleter {
             }
 
             "delete" -> {
-                if (!sender.hasPermission("skylife.delete")) {
+                if (!sender.hasPermission("skylife.admin.delete")) {
                     sender.sendMessage(Messages.ERROR_PERMISSION)
                     return true
                 }

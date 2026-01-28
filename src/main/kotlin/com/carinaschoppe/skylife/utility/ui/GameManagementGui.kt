@@ -180,6 +180,78 @@ object GameManagementGui {
                 .build()
         )
 
+        // Locations section
+        val lobbySet = gamePattern.gameLocationManager.lobbyLocation != null
+        inventory.setItem(
+            36,
+            ItemBuilder(if (lobbySet) Material.LIME_CONCRETE else Material.RED_CONCRETE)
+                .addName(Component.text("Lobby Location", NamedTextColor.YELLOW, TextDecoration.BOLD))
+                .addLore(
+                    if (lobbySet) Component.text("✓ Location set!", NamedTextColor.GREEN)
+                    else Component.text("✗ Not set", NamedTextColor.RED),
+                    Component.empty(),
+                    Component.text("Click to set to your", NamedTextColor.GRAY),
+                    Component.text("current location", NamedTextColor.GRAY)
+                )
+                .modifyMeta { meta ->
+                    meta.persistentDataContainer[KEY_ACTION, PersistentDataType.STRING] = "set_lobby"
+                }
+                .build()
+        )
+
+        val spectatorSet = gamePattern.gameLocationManager.spectatorLocation != null
+        inventory.setItem(
+            37,
+            ItemBuilder(if (spectatorSet) Material.LIME_CONCRETE else Material.RED_CONCRETE)
+                .addName(Component.text("Spectator Location", NamedTextColor.YELLOW, TextDecoration.BOLD))
+                .addLore(
+                    if (spectatorSet) Component.text("✓ Location set!", NamedTextColor.GREEN)
+                    else Component.text("✗ Not set", NamedTextColor.RED),
+                    Component.empty(),
+                    Component.text("Click to set to your", NamedTextColor.GRAY),
+                    Component.text("current location", NamedTextColor.GRAY)
+                )
+                .modifyMeta { meta ->
+                    meta.persistentDataContainer[KEY_ACTION, PersistentDataType.STRING] = "set_spectator"
+                }
+                .build()
+        )
+
+        val mainSet = gamePattern.gameLocationManager.mainLocation != null
+        inventory.setItem(
+            38,
+            ItemBuilder(if (mainSet) Material.LIME_CONCRETE else Material.RED_CONCRETE)
+                .addName(Component.text("Main Location", NamedTextColor.YELLOW, TextDecoration.BOLD))
+                .addLore(
+                    if (mainSet) Component.text("✓ Location set!", NamedTextColor.GREEN)
+                    else Component.text("✗ Not set", NamedTextColor.RED),
+                    Component.empty(),
+                    Component.text("Click to set to your", NamedTextColor.GRAY),
+                    Component.text("current location", NamedTextColor.GRAY)
+                )
+                .modifyMeta { meta ->
+                    meta.persistentDataContainer[KEY_ACTION, PersistentDataType.STRING] = "set_main"
+                }
+                .build()
+        )
+
+        // Spawn locations button
+        inventory.setItem(
+            39,
+            ItemBuilder(Material.END_PORTAL_FRAME)
+                .addName(Component.text("Spawn Locations", NamedTextColor.AQUA, TextDecoration.BOLD))
+                .addLore(
+                    Component.text("Current spawns: ${gamePattern.gameLocationManager.spawnLocations.size}", NamedTextColor.WHITE),
+                    Component.empty(),
+                    Component.text("Click to manage spawns", NamedTextColor.GREEN)
+                )
+                .addAmount(maxOf(1, gamePattern.gameLocationManager.spawnLocations.size))
+                .modifyMeta { meta ->
+                    meta.persistentDataContainer[KEY_ACTION, PersistentDataType.STRING] = "manage_spawns"
+                }
+                .build()
+        )
+
         // Save button
         inventory.setItem(
             49,

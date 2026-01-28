@@ -64,6 +64,10 @@ class GameSetupGuiListener : Listener {
             GameSetupGui.MAX_PLAYERS_DECREASE -> {
                 if (gamePattern.maxPlayers > gamePattern.minPlayers) {
                     gamePattern.maxPlayers--
+                    // Ensure minPlayersToStart doesn't exceed maxPlayers
+                    if (gamePattern.minPlayersToStart > gamePattern.maxPlayers) {
+                        gamePattern.minPlayersToStart = gamePattern.maxPlayers
+                    }
                     player.sendMessage(
                         Messages.PREFIX
                             .append(Component.text("Max Players decreased to ", Messages.MESSAGE_COLOR))
@@ -75,12 +79,47 @@ class GameSetupGuiListener : Listener {
 
             GameSetupGui.MAX_PLAYERS_INCREASE -> {
                 gamePattern.maxPlayers++
+                // Ensure minPlayersToStart doesn't exceed maxPlayers
+                if (gamePattern.minPlayersToStart > gamePattern.maxPlayers) {
+                    gamePattern.minPlayersToStart = gamePattern.maxPlayers
+                }
                 player.sendMessage(
                     Messages.PREFIX
                         .append(Component.text("Max Players increased to ", Messages.MESSAGE_COLOR))
                         .append(Component.text(gamePattern.maxPlayers.toString(), Messages.NAME_COLOR))
                 )
                 (holder as? GameSetupGui)?.updateInventory()
+            }
+
+            GameSetupGui.MIN_TO_START_DECREASE -> {
+                if (gamePattern.minPlayersToStart > 1) {
+                    gamePattern.minPlayersToStart--
+                    player.sendMessage(
+                        Messages.PREFIX
+                            .append(Component.text("Min Players to Start decreased to ", Messages.MESSAGE_COLOR))
+                            .append(Component.text(gamePattern.minPlayersToStart.toString(), Messages.NAME_COLOR))
+                    )
+                    (holder as? GameSetupGui)?.updateInventory()
+                }
+            }
+
+            GameSetupGui.MIN_TO_START_INCREASE -> {
+                if (gamePattern.minPlayersToStart < gamePattern.maxPlayers) {
+                    gamePattern.minPlayersToStart++
+                    player.sendMessage(
+                        Messages.PREFIX
+                            .append(Component.text("Min Players to Start increased to ", Messages.MESSAGE_COLOR))
+                            .append(Component.text(gamePattern.minPlayersToStart.toString(), Messages.NAME_COLOR))
+                    )
+                    (holder as? GameSetupGui)?.updateInventory()
+                } else {
+                    player.sendMessage(
+                        Messages.PREFIX
+                            .append(Component.text("Min Players to Start cannot exceed Max Players (", Messages.ERROR_COLOR))
+                            .append(Component.text(gamePattern.maxPlayers.toString(), Messages.NAME_COLOR))
+                            .append(Component.text(")!", Messages.ERROR_COLOR))
+                    )
+                }
             }
 
             // Location setters

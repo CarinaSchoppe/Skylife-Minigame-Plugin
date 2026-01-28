@@ -19,6 +19,12 @@ class RemoveSpawnCommand : CommandExecutor {
             return true
         }
 
+        // Check permission
+        if (!sender.hasPermission("skylife.admin.removespawn")) {
+            sender.sendMessage(Messages.ERROR_PERMISSION)
+            return true
+        }
+
         // Check if player has active setup
         val gamePattern = GameSetupCommand.activeSetups[sender]
         if (gamePattern == null) {

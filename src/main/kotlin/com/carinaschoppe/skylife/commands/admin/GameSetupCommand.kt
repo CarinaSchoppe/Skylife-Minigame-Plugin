@@ -28,7 +28,7 @@ class GameSetupCommand : CommandExecutor {
         }
 
         // Check permission
-        if (!sender.hasPermission("skylife.gamesetup")) {
+        if (!sender.hasPermission("skylife.admin.gamesetup")) {
             sender.sendMessage(Messages.ERROR_PERMISSION)
             return true
         }

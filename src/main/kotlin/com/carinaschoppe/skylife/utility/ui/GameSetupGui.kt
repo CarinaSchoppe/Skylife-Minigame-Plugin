@@ -23,6 +23,10 @@ class GameSetupGui(override val player: Player, override val gamePattern: GamePa
         const val MAX_PLAYERS_DECREASE = 18
         const val MAX_PLAYERS_INCREASE = 20
 
+        const val MIN_TO_START_DISPLAY = 13
+        const val MIN_TO_START_DECREASE = 12
+        const val MIN_TO_START_INCREASE = 14
+
         const val LOBBY_LOCATION = 28
         const val SPECTATOR_LOCATION = 29
         const val MAIN_LOCATION = 30
@@ -98,6 +102,36 @@ class GameSetupGui(override val player: Player, override val gamePattern: GamePa
             MAX_PLAYERS_INCREASE,
             ItemBuilder(Material.LIME_WOOL)
                 .addName(Component.text("Increase Max Players", NamedTextColor.GREEN, TextDecoration.BOLD))
+                .addLore(Component.text("Click to increase", NamedTextColor.GRAY))
+                .build()
+        )
+
+        // Min Players to Start controls
+        builder.setItem(
+            MIN_TO_START_DECREASE,
+            ItemBuilder(Material.RED_WOOL)
+                .addName(Component.text("Decrease Min to Start", NamedTextColor.RED, TextDecoration.BOLD))
+                .addLore(Component.text("Click to decrease", NamedTextColor.GRAY))
+                .build()
+        )
+
+        builder.setItem(
+            MIN_TO_START_DISPLAY,
+            ItemBuilder(Material.CLOCK)
+                .addName(Component.text("Min Players to Start", NamedTextColor.YELLOW, TextDecoration.BOLD))
+                .addLore(
+                    Component.text("Current: ${gamePattern.minPlayersToStart}", NamedTextColor.WHITE),
+                    Component.text("Players needed to start countdown", NamedTextColor.GRAY),
+                    Component.text("(Min: 1, Max: ${gamePattern.maxPlayers})", NamedTextColor.GRAY)
+                )
+                .addAmount(maxOf(1, gamePattern.minPlayersToStart))
+                .build()
+        )
+
+        builder.setItem(
+            MIN_TO_START_INCREASE,
+            ItemBuilder(Material.LIME_WOOL)
+                .addName(Component.text("Increase Min to Start", NamedTextColor.GREEN, TextDecoration.BOLD))
                 .addLore(Component.text("Click to increase", NamedTextColor.GRAY))
                 .build()
         )

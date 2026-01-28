@@ -93,16 +93,18 @@ permissions:
       skylife.party: true
       skylife.leaderboard: true
   skylife.admin.*:
-    description: Gives access to all admin commands
+    description: Gives access to all admin commands (for admins and devs)
     default: op
     children:
-      skylife.game: true
-      skylife.setlocation: true
-      skylife.playeramount: true
-      skylife.sethub: true
-      skylife.gamesetup: true
-      skylife.removespawn: true
-      skylife.savemessages: true
+      skylife.admin.create: true
+      skylife.admin.save: true
+      skylife.admin.delete: true
+      skylife.admin.setlocation: true
+      skylife.admin.playeramount: true
+      skylife.admin.sethub: true
+      skylife.admin.gamesetup: true
+      skylife.admin.removespawn: true
+      skylife.admin.savemessages: true
       skylife.admin.givecoins: true
       skylife.admin.removecoins: true
       skylife.admin.deletegame: true
@@ -157,6 +159,33 @@ permissions:
     default: op
   skylife.admin.managegames:
     description: Allows managing game patterns via GUI
+    default: op
+  skylife.admin.create:
+    description: Allows creating game patterns (DEV/ADMIN only)
+    default: op
+  skylife.admin.save:
+    description: Allows saving game patterns (DEV/ADMIN only)
+    default: op
+  skylife.admin.delete:
+    description: Allows deleting game patterns via /game command (DEV/ADMIN only)
+    default: op
+  skylife.admin.setlocation:
+    description: Allows setting game locations (DEV/ADMIN only)
+    default: op
+  skylife.admin.playeramount:
+    description: Allows setting player amounts (DEV/ADMIN only)
+    default: op
+  skylife.admin.sethub:
+    description: Allows setting hub spawn (DEV/ADMIN only)
+    default: op
+  skylife.admin.gamesetup:
+    description: Allows opening game setup GUI (DEV/ADMIN only)
+    default: op
+  skylife.admin.removespawn:
+    description: Allows removing spawn locations (DEV/ADMIN only)
+    default: op
+  skylife.admin.savemessages:
+    description: Allows exporting messages (DEV/ADMIN only)
     default: op
   skylife.rank.user:
     description: User rank (default)

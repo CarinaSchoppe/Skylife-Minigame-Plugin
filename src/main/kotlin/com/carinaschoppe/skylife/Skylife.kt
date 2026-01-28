@@ -158,6 +158,7 @@ open class Skylife : JavaPlugin() {
         pluginManager.registerEvents(SkillsGuiListener(), this)
         pluginManager.registerEvents(GameSetupGuiListener(), this)
         pluginManager.registerEvents(com.carinaschoppe.skylife.events.ui.GameManagementGuiListener(), this)
+        pluginManager.registerEvents(com.carinaschoppe.skylife.events.ui.SpawnManagementGuiListener(), this)
         pluginManager.registerEvents(PlayerSkillsItemListener(), this)
         pluginManager.registerEvents(SkillJumboListener(), this)
         pluginManager.registerEvents(SkillFeatherfallListener(), this)

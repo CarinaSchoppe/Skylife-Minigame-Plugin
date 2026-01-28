@@ -77,12 +77,14 @@ class PlayerAmountCommand : CommandExecutor, TabCompleter {
             return true
         }
 
+        // Check permission once for all player amount operations
+        if (!sender.hasPermission("skylife.admin.playeramount")) {
+            sender.sendMessage(Messages.ERROR_PERMISSION)
+            return true
+        }
+
         when (type) {
             "min" -> {
-                if (!sender.hasPermission("skylife.playeramount.min")) {
-                    sender.sendMessage(Messages.ERROR_PERMISSION)
-                    return true
-                }
                 game.minPlayers = amount
                 if (game.maxPlayers < game.minPlayers) {
                     game.maxPlayers = game.minPlayers
@@ -91,10 +93,6 @@ class PlayerAmountCommand : CommandExecutor, TabCompleter {
             }
 
             "max" -> {
-                if (!sender.hasPermission("skylife.playeramount.max")) {
-                    sender.sendMessage(Messages.ERROR_PERMISSION)
-                    return true
-                }
                 if (amount < game.minPlayers) {
                     sender.sendMessage(Messages.PREFIX.append(net.kyori.adventure.text.Component.text("Max players must be >= min players (${game.minPlayers})!", Messages.ERROR_COLOR)))
                     return true
