@@ -58,7 +58,7 @@ class PlayersStatsCommand : CommandExecutor, TabCompleter {
                 val player = allStats.firstOrNull { it.name.equals(targetName, ignoreCase = true) }
 
                 if (player == null) {
-                    sender.sendMessage(Messages.ERROR_PLAYER_NOT_FOUND())
+                    sender.sendMessage(Messages.ERROR_PLAYER_NOT_FOUND)
                     return@transaction null
                 }
 
@@ -82,7 +82,7 @@ class PlayersStatsCommand : CommandExecutor, TabCompleter {
                 )
             )
         } catch (e: Exception) {
-            sender.sendMessage(Messages.ERROR_COMMAND())
+            sender.sendMessage(Messages.ERROR_COMMAND)
             e.printStackTrace() // Log the error for debugging
         }
 

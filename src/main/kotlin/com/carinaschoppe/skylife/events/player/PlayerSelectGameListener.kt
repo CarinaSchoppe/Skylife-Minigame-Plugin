@@ -64,7 +64,7 @@ class PlayerSelectGameListener : Listener {
         if (GameCluster.addPlayerToGame(player, gameName)) {
             player.closeInventory()
         } else {
-            player.sendMessage(com.carinaschoppe.skylife.utility.messages.Messages.ERROR_GAME_FULL_OR_STARTED())
+            player.sendMessage(com.carinaschoppe.skylife.utility.messages.Messages.ERROR_GAME_FULL_OR_STARTED)
         }
     }
 }

@@ -53,7 +53,7 @@ object GameManager {
             if (game.livingPlayers.size == 1) {
                 player.sendMessage(Messages.PLAYER_WON(player.name))
             }
-            player.sendMessage(Messages.GAME_OVER())
+            player.sendMessage(Messages.GAME_OVER)
         }
 
         // Send messages to spectators
@@ -61,7 +61,7 @@ object GameManager {
             if (game.livingPlayers.size == 1) {
                 spectator.sendMessage(Messages.PLAYER_WON(game.livingPlayers[0].name))
             }
-            spectator.sendMessage(Messages.GAME_OVER())
+            spectator.sendMessage(Messages.GAME_OVER)
         }
     }
 }

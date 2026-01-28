@@ -20,7 +20,7 @@ class MessageCommand : CommandExecutor, TabCompleter {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender !is Player) {
-            sender.sendMessage(Messages.ERROR_NOTPLAYER())
+            sender.sendMessage(Messages.ERROR_NOTPLAYER)
             return true
         }
 
@@ -38,7 +38,7 @@ class MessageCommand : CommandExecutor, TabCompleter {
         val target = Bukkit.getPlayerExact(targetName)
 
         if (target == null) {
-            sender.sendMessage(Messages.ERROR_PLAYER_NOT_FOUND())
+            sender.sendMessage(Messages.ERROR_PLAYER_NOT_FOUND)
             return true
         }
 

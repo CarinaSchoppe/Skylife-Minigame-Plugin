@@ -24,7 +24,7 @@ class PartyCommand : TabExecutor {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender !is Player) {
-            sender.sendMessage(Messages.ERROR_NOTPLAYER())
+            sender.sendMessage(Messages.ERROR_NOTPLAYER)
             return true
         }
 

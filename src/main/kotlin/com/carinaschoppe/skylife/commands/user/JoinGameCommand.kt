@@ -112,7 +112,7 @@ class JoinGameCommand : CommandExecutor, TabCompleter {
             } else {
                 // Normal single player join
                 if (!GameCluster.addPlayerToGame(sender, mapToJoin)) {
-                    sender.sendMessage(Messages.ERROR_GAME_FULL_OR_STARTED())
+                    sender.sendMessage(Messages.ERROR_GAME_FULL_OR_STARTED)
                 }
             }
         }

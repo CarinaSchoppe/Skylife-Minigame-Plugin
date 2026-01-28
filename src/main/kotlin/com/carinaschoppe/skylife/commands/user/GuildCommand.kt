@@ -28,7 +28,7 @@ class GuildCommand : CommandExecutor, TabCompleter {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender !is Player) {
-            sender.sendMessage(Messages.ERROR_NOTPLAYER())
+            sender.sendMessage(Messages.ERROR_NOTPLAYER)
             return true
         }
 
@@ -92,7 +92,7 @@ class GuildCommand : CommandExecutor, TabCompleter {
 
         val target = Bukkit.getPlayerExact(args[1])
         if (target == null) {
-            player.sendMessage(Messages.ERROR_PLAYER_NOT_FOUND())
+            player.sendMessage(Messages.ERROR_PLAYER_NOT_FOUND)
             return
         }
 
@@ -132,7 +132,7 @@ class GuildCommand : CommandExecutor, TabCompleter {
 
         val target = Bukkit.getPlayerExact(args[1])
         if (target == null) {
-            player.sendMessage(Messages.ERROR_PLAYER_NOT_FOUND())
+            player.sendMessage(Messages.ERROR_PLAYER_NOT_FOUND)
             return
         }
 
@@ -171,7 +171,7 @@ class GuildCommand : CommandExecutor, TabCompleter {
 
         val target = Bukkit.getPlayerExact(args[1])
         if (target == null) {
-            player.sendMessage(Messages.ERROR_PLAYER_NOT_FOUND())
+            player.sendMessage(Messages.ERROR_PLAYER_NOT_FOUND)
             return
         }
 
