@@ -6,6 +6,7 @@ import com.carinaschoppe.skylife.utility.messages.Messages
 import com.carinaschoppe.skylife.utility.scoreboard.LobbyScoreboardManager
 import com.carinaschoppe.skylife.utility.statistics.StatsUtility
 import com.carinaschoppe.skylife.utility.ui.GameOverviewItems
+import com.carinaschoppe.skylife.utility.ui.SkillsGui
 import org.bukkit.GameMode
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -43,9 +44,13 @@ class PlayerJoinsServerListener : Listener {
         player.inventory.clear()
         player.inventory.armorContents = arrayOfNulls(4) // Empty armor array (4 slots: boots, leggings, chestplate, helmet)
 
+        // Give hub items
         if (player.hasPermission("skylife.overview")) {
             player.inventory.setItem(0, GameOverviewItems.createMenuItem())
         }
+
+        // Give skills selection item to all players
+        player.inventory.setItem(4, SkillsGui.createSkillsMenuItem())
 
         // Clear all active effects
         player.activePotionEffects.forEach { player.removePotionEffect(it.type) }

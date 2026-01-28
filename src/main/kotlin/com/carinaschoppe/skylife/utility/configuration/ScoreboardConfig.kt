@@ -19,7 +19,7 @@ data class ScoreboardConfig(
         "<aqua>Map</aqua><gray>: </gray><white>{map}</white>",
         "<aqua>Alive</aqua><gray>: </gray><green>{alive}</green><gray>/</gray><green>{max}</green>",
         "<aqua>Kills</aqua><gray>: </gray><red>{kills}</red>",
-        "<aqua>Kit</aqua><gray>: </gray><yellow>{kit}</yellow>",
+        "<aqua>Guild</aqua><gray>: </gray><light_purple>{guild}</light_purple>",
         "<aqua>Rank</aqua><gray>: </gray><gold>#{rank}</gold>",
         "<dark_gray><strikethrough>----------------</strikethrough></dark_gray>"
     ),

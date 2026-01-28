@@ -22,6 +22,11 @@ class PlayerGameOverviewItemListener : Listener {
             return
         }
 
+        // Trigger on any right-click, not just on blocks
+        if (!event.action.name.contains("RIGHT")) {
+            return
+        }
+
         event.isCancelled = true
         val player = event.player
         if (!player.hasPermission("skylife.overview")) {

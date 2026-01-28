@@ -132,15 +132,19 @@ open class Skylife : JavaPlugin() {
     }
 
     private fun createGameMapsFolder() {
-        val worldContainer = runCatching { Bukkit.getServer().worldContainer }
-            .getOrElse { Bukkit.getServer().pluginsFolder }
-        val folder = File(worldContainer, "game_maps")
-        if (!folder.exists()) {
-            folder.mkdir()
+        // Create maps folder in plugin directory
+        val mapsFolder = File(dataFolder, "maps")
+        if (!mapsFolder.exists()) {
+            mapsFolder.mkdirs()
+            Bukkit.getLogger().info("Created maps folder at: ${mapsFolder.absolutePath}")
+            Bukkit.getLogger().info("Place your map templates in this folder!")
         }
     }
 
     override fun onDisable() {
+        // Cleanup all game worlds before shutdown
+        com.carinaschoppe.skylife.game.managers.MapManager.cleanupAllWorlds()
+
         SkillPassiveItemsTask.stop()
         com.carinaschoppe.skylife.utility.scoreboard.LobbyScoreboardUpdateTask.stop()
         Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text("Skylife has been stopped!", Messages.ERROR_COLOR)))

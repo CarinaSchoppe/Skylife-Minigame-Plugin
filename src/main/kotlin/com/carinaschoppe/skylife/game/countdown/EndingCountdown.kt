@@ -2,7 +2,6 @@ package com.carinaschoppe.skylife.game.countdown
 
 import com.carinaschoppe.skylife.Skylife
 import com.carinaschoppe.skylife.game.Game
-import com.carinaschoppe.skylife.game.GameCluster
 import org.bukkit.scheduler.BukkitRunnable
 
 /**
@@ -25,7 +24,9 @@ class EndingCountdown(private val game: Game) : Countdown() {
         task = object : BukkitRunnable() {
             override fun run() {
                 if (!isRunning || seconds <= 0) {
-                    GameCluster.stopGame(game) // Fully stop and reset the game
+                    // Trigger game.stop() which calls EndState.stop()
+                    // EndState.stop() will handle world cleanup and then call GameCluster.stopGame()
+                    game.stop()
                     stop()
                     return
                 }

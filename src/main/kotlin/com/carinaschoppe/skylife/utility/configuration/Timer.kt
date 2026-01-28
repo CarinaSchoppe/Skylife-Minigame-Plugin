@@ -22,14 +22,14 @@ class Timer {
     }
 
     /** Duration (in seconds) for the lobby countdown before the game starts. */
-    val LOBBY_TIMER = 60
+    var LOBBY_TIMER = 60
 
     /** Maximum duration (in seconds) for an active game session. */
-    val INGAME_TIMER = 60 * 15  // 15 minutes
+    var INGAME_TIMER = 60 * 15  // 15 minutes
 
     /** Duration (in seconds) for the end-game phase before returning to lobby. */
-    val END_TIMER = 10
+    var END_TIMER = 10
 
-    /** Duration (in seconds) of spawn protection after joining a game. */
-    val PROTECTION_TIMER = 10
+    /** Duration (in seconds) of spawn protection after game starts (PvP cooldown phase). */
+    var PROTECTION_TIMER = 15
 }

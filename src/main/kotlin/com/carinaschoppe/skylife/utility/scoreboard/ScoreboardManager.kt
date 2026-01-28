@@ -1,7 +1,7 @@
 ﻿package com.carinaschoppe.skylife.utility.scoreboard
 
 import com.carinaschoppe.skylife.game.Game
-import com.carinaschoppe.skylife.game.kit.KitManager
+import com.carinaschoppe.skylife.guild.GuildManager
 import com.carinaschoppe.skylife.utility.configuration.ConfigurationLoader
 import com.carinaschoppe.skylife.utility.messages.Messages
 import com.carinaschoppe.skylife.utility.statistics.StatsUtility
@@ -98,7 +98,9 @@ object ScoreboardManager {
     private fun buildScoreboardLines(player: Player, game: Game): List<String> {
         val scoreboardConfig = ConfigurationLoader.config.scoreboard
         val rank = StatsUtility.getPlayerRank(player)
-        val kit = KitManager.getSelectedKit(player)?.name ?: "None"
+        val guild = GuildManager.getPlayerGuild(player.uniqueId)
+        val guildName = guild?.name ?: "None"
+        val guildTag = guild?.tag ?: ""
 
         val placeholders = mapOf(
             "{server}" to scoreboardConfig.serverName,
@@ -107,10 +109,11 @@ object ScoreboardManager {
             "{max}" to game.maxPlayers.toString(),
             "{kills}" to game.gameKills.getOrDefault(player.uniqueId, 0).toString(),
             "{kills_total}" to game.gameKills.values.sum().toString(),
-            "{kit}" to kit,
             "{rank}" to rank.toString(),
             "{player}" to player.name,
-            "{state}" to game.state.name
+            "{state}" to game.state.name,
+            "{guild}" to guildName,
+            "{guild_tag}" to guildTag
         )
 
         val templateLines = scoreboardConfig.lines.ifEmpty { defaultLines }
@@ -124,7 +127,7 @@ object ScoreboardManager {
         "<aqua>Map</aqua><gray>: </gray><white>{map}</white>",
         "<aqua>Alive</aqua><gray>: </gray><green>{alive}</green><gray>/</gray><green>{max}</green>",
         "<aqua>Kills</aqua><gray>: </gray><red>{kills}</red>",
-        "<aqua>Kit</aqua><gray>: </gray><yellow>{kit}</yellow>",
+        "<aqua>Guild</aqua><gray>: </gray><light_purple>{guild}</light_purple>",
         "<aqua>Rank</aqua><gray>: </gray><gold>#{rank}</gold>",
         "<dark_gray><strikethrough>----------------</strikethrough></dark_gray>"
     )

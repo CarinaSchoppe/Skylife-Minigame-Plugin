@@ -1,14 +1,13 @@
 package com.carinaschoppe.skylife.game
 
 import com.carinaschoppe.skylife.game.gamestates.GameState
-import com.carinaschoppe.skylife.game.gamestates.LobbyState
-import com.carinaschoppe.skylife.game.kit.KitManager
 import com.carinaschoppe.skylife.game.managers.GameLocationManager
 import com.carinaschoppe.skylife.hub.HubManager
 import com.carinaschoppe.skylife.skills.SkillEffectsManager
 import com.carinaschoppe.skylife.skills.SkillsManager
 import com.carinaschoppe.skylife.utility.scoreboard.ScoreboardManager
 import com.carinaschoppe.skylife.utility.ui.GameOverviewItems
+import com.carinaschoppe.skylife.utility.ui.SkillsGui
 import org.bukkit.entity.Player
 
 /**
@@ -56,6 +55,12 @@ object GameCluster {
             mapName = pattern.mapName,
             pattern = pattern
         )
+
+        // Load dedicated world for this game using the pattern's map name
+        if (!game.loadGameWorld(pattern.mapName)) {
+            org.bukkit.Bukkit.getLogger().warning("Failed to load world for game ${game.name} (${game.gameID}) - Map '${pattern.mapName}' not found in maps folder")
+        }
+
         lobbyGames.add(game)
         return game
     }
@@ -79,7 +84,14 @@ object GameCluster {
         player.inventory.clear()
         player.inventory.armorContents = arrayOfNulls(4)
         game.livingPlayers.add(player)
-        player.teleport(game.lobbyLocation)
+
+        // Teleport to lobby in the game's dedicated world
+        val lobbyInGameWorld = com.carinaschoppe.skylife.game.managers.MapManager.locationWorldConverter(
+            game.lobbyLocation,
+            game
+        )
+        player.teleport(lobbyInGameWorld)
+
         game.currentState.playerJoined(player)
         ScoreboardManager.setScoreboard(player, game)
         game.getAllPlayers().forEach { ScoreboardManager.updateScoreboard(it, game) }
@@ -97,7 +109,6 @@ object GameCluster {
         game.spectators.remove(player)
         game.currentState.playerLeft(player)
         ScoreboardManager.removeScoreboard(player)
-        KitManager.removePlayer(player)
         game.getAllPlayers().forEach { ScoreboardManager.updateScoreboard(it, game) }
 
         // Reset player for hub
@@ -106,6 +117,8 @@ object GameCluster {
         if (player.hasPermission("skylife.overview")) {
             player.inventory.setItem(0, GameOverviewItems.createMenuItem())
         }
+        // Give skills item
+        player.inventory.setItem(4, SkillsGui.createSkillsMenuItem())
 
         // Teleport to hub
         HubManager.teleportToHub(player)
@@ -137,7 +150,7 @@ object GameCluster {
     }
 
     /**
-     * Stops a game, moving it back to the lobby list and resetting it.
+     * Stops a game, removes it from active games, and creates a fresh game instance.
      * Teleports all players back to the hub and resets their state.
      *
      * @param game The game to stop.
@@ -145,7 +158,6 @@ object GameCluster {
     fun stopGame(game: Game) {
         game.getAllPlayers().forEach { player ->
             ScoreboardManager.removeScoreboard(player)
-            KitManager.removePlayer(player)
 
             // Deactivate skills
             SkillsManager.deactivateSkills(player)
@@ -157,6 +169,8 @@ object GameCluster {
             if (player.hasPermission("skylife.overview")) {
                 player.inventory.setItem(0, GameOverviewItems.createMenuItem())
             }
+            // Give skills item
+            player.inventory.setItem(4, SkillsGui.createSkillsMenuItem())
 
             // Teleport to hub
             HubManager.teleportToHub(player)
@@ -164,10 +178,11 @@ object GameCluster {
         game.livingPlayers.clear()
         game.spectators.clear()
 
-        game.state = GameState.States.LOBBY
+        // Remove the game completely (world will be cleaned up by EndState)
         activeGames.remove(game)
-        lobbyGames.add(game)
-        game.currentState = LobbyState(game) // Reset to a fresh lobby state
+
+        // Create a fresh game instance for the next round with a new world
+        createGameFromPattern(game.pattern)
     }
 
     /**

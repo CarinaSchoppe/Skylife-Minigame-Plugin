@@ -8,6 +8,8 @@ import net.kyori.adventure.text.minimessage.MiniMessage
 object Messages {
 
     val NAME_COLOR: NamedTextColor = NamedTextColor.GOLD
+
+    val SUCCESS_COLOR: NamedTextColor = NamedTextColor.GOLD
     val MESSAGE_COLOR: NamedTextColor = NamedTextColor.GREEN
     val ERROR_COLOR: NamedTextColor = NamedTextColor.RED
     val GRAY_COLOR: NamedTextColor = NamedTextColor.GRAY

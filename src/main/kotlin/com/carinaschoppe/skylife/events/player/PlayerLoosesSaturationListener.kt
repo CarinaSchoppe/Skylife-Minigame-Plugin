@@ -23,6 +23,7 @@ class PlayerLoosesSaturationListener : Listener {
         val game = GameCluster.getGame(player)
         if (game == null || game.currentState !is IngameState) {
             event.isCancelled = true
+            player.foodLevel = 20 // Keep food level at maximum
         }
     }
 }

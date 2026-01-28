@@ -1,14 +1,10 @@
 ﻿package com.carinaschoppe.skylife.game.gamestates
 
-import com.carinaschoppe.skylife.events.kit.KitSelectorListener
 import com.carinaschoppe.skylife.game.Game
 import com.carinaschoppe.skylife.game.countdown.LobbyCountdown
-import com.carinaschoppe.skylife.game.kit.KitManager
 import com.carinaschoppe.skylife.utility.messages.Messages
 import com.carinaschoppe.skylife.utility.ui.SkillsGui
-import org.bukkit.Material
 import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
 
 /**
  * Represents the lobby state of a game, where players gather before the match starts.
@@ -46,16 +42,13 @@ class LobbyState(private val game: Game) : GameState {
      */
     override fun playerJoined(player: Player) {
         player.inventory.clear()
+        player.inventory.armorContents = arrayOfNulls(4)
 
-        // Kit selector in middle
-        val kitSelector = ItemStack(Material.CHEST)
-        val meta = kitSelector.itemMeta
-        meta.displayName(Messages.parse(KitSelectorListener.KIT_SELECTOR_ITEM_NAME))
-        kitSelector.itemMeta = meta
-        player.inventory.setItem(4, kitSelector) // Place in the middle of the hotbar
+        // Set adventure mode in lobby
+        player.gameMode = org.bukkit.GameMode.ADVENTURE
 
-        // Skills selector on the right
-        player.inventory.setItem(8, SkillsGui.createSkillsMenuItem())
+        // Skills selector in middle
+        player.inventory.setItem(4, SkillsGui.createSkillsMenuItem())
 
         if (game.livingPlayers.size >= game.minPlayers && !countdown.isRunning) {
             countdown.start()
@@ -70,13 +63,12 @@ class LobbyState(private val game: Game) : GameState {
     }
 
     /**
-     * Handles a player leaving the lobby. Removes their kit selection and stops
+     * Handles a player leaving the lobby and stops
      * the countdown if the player count drops below the minimum.
      *
      * @param player The player who left.
      */
     override fun playerLeft(player: Player) {
-        KitManager.removePlayer(player)
         if (game.livingPlayers.size < game.minPlayers && countdown.isRunning) {
             countdown.stop()
             game.livingPlayers.forEach { p ->

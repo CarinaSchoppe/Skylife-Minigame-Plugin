@@ -7,6 +7,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.event.entity.EntityDamageEvent
 
 /**
  * Listener to manage damage between entities, specifically involving players.
@@ -71,6 +72,16 @@ class PlayerDamagesListener : Listener {
         }
     }
 
+    @EventHandler(ignoreCancelled = true)
+    fun onEntityDamage(event: EntityDamageEvent) {
+        val victim = event.entity
+
+        // Protect all players who are not in an active game
+        if (victim is Player && isProtected(victim)) {
+            event.isCancelled = true
+        }
+    }
+
     /**
      * Checks if a player is protected from dealing or receiving damage.
      *
@@ -78,6 +89,7 @@ class PlayerDamagesListener : Listener {
      * 1. They are not in a game (i.e., they are in the hub).
      * 2. They are in a game that is not currently in the `IngameState`.
      * 3. They are a spectator.
+     * 4. They are in the protection phase (cooldown before PvP starts).
      *
      * @param player The player to check.
      * @return `true` if the player is protected, `false` otherwise.
@@ -90,7 +102,18 @@ class PlayerDamagesListener : Listener {
             return true
         }
 
-        // Players are protected if the game is not in progress or if they are spectators.
-        return game.currentState !is IngameState || game.spectators.contains(player)
+        // Players are protected if they are spectators
+        if (game.spectators.contains(player)) {
+            return true
+        }
+
+        // Check if game is in IngameState
+        val state = game.currentState
+        if (state !is IngameState) {
+            return true
+        }
+
+        // Check if protection phase is active
+        return state.protectionActive
     }
 }

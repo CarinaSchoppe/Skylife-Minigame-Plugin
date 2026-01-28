@@ -41,6 +41,13 @@ class Game(
     val gameID: UUID = UUID.randomUUID()
 
     /**
+     * The dedicated world for this game instance.
+     * Loaded when the game is created and cleaned up when it ends.
+     */
+    var gameWorld: org.bukkit.World? = null
+        private set
+
+    /**
      * List of players who are currently spectating this game.
      *
      * Spectators can observe the game but cannot participate until they join as active players.
@@ -138,4 +145,26 @@ class Game(
     fun broadcast(message: Component) {
         getAllPlayers().forEach { it.sendMessage(message) }
     }
+
+    /**
+     * Loads a dedicated world for this game instance.
+     *
+     * @param templateMapName Optional specific map template to use
+     * @return true if world was loaded successfully, false otherwise
+     */
+    fun loadGameWorld(templateMapName: String? = null): Boolean {
+        if (gameWorld != null) {
+            return true // Already loaded
+        }
+
+        gameWorld = com.carinaschoppe.skylife.game.managers.MapManager.loadMapForGame(gameID, templateMapName)
+        return gameWorld != null
+    }
+
+    /**
+     * Alias for gameWorld for backward compatibility.
+     * Returns the game's dedicated world, or the lobby location's world as fallback.
+     */
+    val world: org.bukkit.World
+        get() = gameWorld ?: lobbyLocation.world
 }

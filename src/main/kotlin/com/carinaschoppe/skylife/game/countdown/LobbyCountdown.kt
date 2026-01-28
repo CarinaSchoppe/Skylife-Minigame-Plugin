@@ -4,6 +4,7 @@ import com.carinaschoppe.skylife.Skylife
 import com.carinaschoppe.skylife.game.Game
 import com.carinaschoppe.skylife.game.GameCluster
 import com.carinaschoppe.skylife.utility.messages.Messages
+import org.bukkit.Sound
 import org.bukkit.scheduler.BukkitRunnable
 
 /**
@@ -36,7 +37,13 @@ class LobbyCountdown(private val game: Game) : Countdown() {
                 return
             }
 
-            if (seconds <= 5 || seconds % 5 == 0) {
+            if (seconds <= 5) {
+                game.livingPlayers.forEach { player ->
+                    player.sendMessage(Messages.COUNTDOWN(seconds))
+                    player.level = seconds
+                    player.playSound(player.location, Sound.BLOCK_NOTE_BLOCK_PLING, 1.0f, 1.0f)
+                }
+            } else if (seconds % 5 == 0) {
                 game.livingPlayers.forEach { player ->
                     player.sendMessage(Messages.COUNTDOWN(seconds))
                     player.level = seconds
