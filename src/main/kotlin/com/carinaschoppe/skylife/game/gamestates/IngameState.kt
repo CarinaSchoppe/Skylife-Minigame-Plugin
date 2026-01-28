@@ -56,6 +56,11 @@ class IngameState(private val game: Game) : GameState {
             // Set survival mode
             player.gameMode = GameMode.SURVIVAL
 
+            // Give kit items if kits are enabled
+            if (com.carinaschoppe.skylife.game.kit.KitManager.areKitsEnabled()) {
+                com.carinaschoppe.skylife.game.kit.KitManager.giveKitItems(player)
+            }
+
             // Activate skills and give their items
             SkillsManager.activateSkills(player)
             SkillEffectsManager.applySkillEffects(player)

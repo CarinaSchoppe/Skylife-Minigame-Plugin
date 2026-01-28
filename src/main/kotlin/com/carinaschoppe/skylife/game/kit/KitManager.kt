@@ -82,14 +82,46 @@ object KitManager {
 
     /**
      * Clears the player's inventory and gives them the items from their selected kit.
+     * If no kit is selected, gives the first available kit as default.
      *
      * @param player The player to give the kit items to.
      */
     fun giveKitItems(player: Player) {
-        val kit = getSelectedKit(player) ?: return
-        player.inventory.clear()
+        var kit = getSelectedKit(player)
+
+        // If no kit selected, use first kit as default
+        if (kit == null && kits.isNotEmpty()) {
+            kit = kits.first()
+            selectKit(player, kit)
+        }
+
+        if (kit == null) return
+
+        // Don't clear inventory here - it's already cleared in IngameState
         kit.items.forEach { kitItem ->
-            player.inventory.addItem(kitItem.toItemStack())
+            val itemStack = kitItem.toItemStack()
+            // Add armor to armor slots, rest to inventory
+            when (itemStack.type.toString()) {
+                "LEATHER_HELMET", "CHAINMAIL_HELMET", "IRON_HELMET", "GOLDEN_HELMET", "DIAMOND_HELMET", "NETHERITE_HELMET" -> {
+                    player.inventory.helmet = itemStack
+                }
+
+                "LEATHER_CHESTPLATE", "CHAINMAIL_CHESTPLATE", "IRON_CHESTPLATE", "GOLDEN_CHESTPLATE", "DIAMOND_CHESTPLATE", "NETHERITE_CHESTPLATE" -> {
+                    player.inventory.chestplate = itemStack
+                }
+
+                "LEATHER_LEGGINGS", "CHAINMAIL_LEGGINGS", "IRON_LEGGINGS", "GOLDEN_LEGGINGS", "DIAMOND_LEGGINGS", "NETHERITE_LEGGINGS" -> {
+                    player.inventory.leggings = itemStack
+                }
+
+                "LEATHER_BOOTS", "CHAINMAIL_BOOTS", "IRON_BOOTS", "GOLDEN_BOOTS", "DIAMOND_BOOTS", "NETHERITE_BOOTS" -> {
+                    player.inventory.boots = itemStack
+                }
+
+                else -> {
+                    player.inventory.addItem(itemStack)
+                }
+            }
         }
     }
 

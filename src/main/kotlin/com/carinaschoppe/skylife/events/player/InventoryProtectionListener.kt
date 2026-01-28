@@ -26,7 +26,8 @@ class InventoryProtectionListener : Listener {
 
         if (GameOverviewItems.isMenuItem(item) ||
             isSkillsItem(item) ||
-            ExitDoorItem.isExitDoor(item)
+            ExitDoorItem.isExitDoor(item) ||
+            isKitSelectorItem(item)
         ) {
             event.isCancelled = true
         }
@@ -45,7 +46,9 @@ class InventoryProtectionListener : Listener {
             isSkillsItem(currentItem) ||
             isSkillsItem(cursor) ||
             ExitDoorItem.isExitDoor(currentItem) ||
-            ExitDoorItem.isExitDoor(cursor)
+            ExitDoorItem.isExitDoor(cursor) ||
+            isKitSelectorItem(currentItem) ||
+            isKitSelectorItem(cursor)
         ) {
             event.isCancelled = true
         }
@@ -60,7 +63,8 @@ class InventoryProtectionListener : Listener {
 
         if (GameOverviewItems.isMenuItem(item) ||
             isSkillsItem(item) ||
-            ExitDoorItem.isExitDoor(item)
+            ExitDoorItem.isExitDoor(item) ||
+            isKitSelectorItem(item)
         ) {
             event.isCancelled = true
         }
@@ -68,6 +72,7 @@ class InventoryProtectionListener : Listener {
 
     /**
      * Handles clicking the exit door to teleport to hub.
+     * Only works in Lobby, End, and Hub states - not during active gameplay.
      */
     @EventHandler(ignoreCancelled = false)
     fun onPlayerInteract(event: PlayerInteractEvent) {
@@ -78,6 +83,17 @@ class InventoryProtectionListener : Listener {
 
         event.isCancelled = true
         val player = event.player
+
+        // Check if player is in a game
+        val game = GameCluster.getGamePlayerIsIn(player)
+
+        // Only allow exit door in Lobby/End states, or when not in a game (Hub)
+        if (game != null && game.currentState !is com.carinaschoppe.skylife.game.gamestates.LobbyState
+            && game.currentState !is com.carinaschoppe.skylife.game.gamestates.EndState
+        ) {
+            // Player is in InGame state - don't allow leaving
+            return
+        }
 
         // Remove player from game if they're in one
         GameCluster.removePlayerFromGame(player)
@@ -92,5 +108,16 @@ class InventoryProtectionListener : Listener {
         val displayName = meta.displayName() ?: return false
         val plainText = net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer.plainText().serialize(displayName)
         return plainText.contains("Skills", ignoreCase = true)
+    }
+
+    /**
+     * Checks if an item is the kit selector item (chest).
+     */
+    private fun isKitSelectorItem(item: org.bukkit.inventory.ItemStack?): Boolean {
+        if (item == null || item.type != Material.CHEST) return false
+        val meta = item.itemMeta ?: return false
+        val displayName = meta.displayName() ?: return false
+        val plainText = net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer.plainText().serialize(displayName)
+        return plainText.contains("Kit Selector", ignoreCase = true)
     }
 }

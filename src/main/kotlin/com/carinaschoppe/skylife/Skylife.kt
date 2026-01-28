@@ -68,6 +68,13 @@ open class Skylife : JavaPlugin() {
         DatabaseConnector.connectDatabase()
         com.carinaschoppe.skylife.utility.location.LocationManager.loadLocations()
         HubManager.loadHubSpawn()
+
+        // Verify hub is set before allowing server to continue
+        if (!HubManager.isHubSpawnSet()) {
+            Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text("WARNING: Hub spawn is not set! Use /sethub to configure it.", Messages.ERROR_COLOR)))
+            Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text("Players will be teleported to world spawn as fallback.", Messages.ERROR_COLOR)))
+        }
+
         KitManager.initializeKits()
         GameLoader.findAllGames().forEach { GameLoader.loadGameFromFile(it) }
         registerCommands()
