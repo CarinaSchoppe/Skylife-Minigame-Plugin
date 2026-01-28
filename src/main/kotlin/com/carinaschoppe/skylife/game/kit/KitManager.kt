@@ -12,8 +12,8 @@ object KitManager {
     /** A list of all available kits. */
     val kits = mutableListOf<Kit>()
 
-    /** A map tracking which [Kit] each [Player] has selected. */
-    val playerKits = mutableMapOf<Player, Kit>()
+    /** A map tracking which Kits each Player has selected (multi-kit support). */
+    val playerKits = mutableMapOf<Player, MutableList<Kit>>()
 
     /**
      * Returns whether kits are enabled in the configuration.
@@ -62,12 +62,12 @@ object KitManager {
     }
 
     /**
-     * Assigns a selected kit to a player.
-     * Checks if the player has unlocked the kit first.
+     * Adds a kit to player's selection.
+     * Checks unlock status and slot limit based on rank.
      *
      * @param player The player selecting the kit.
      * @param kit The kit being selected.
-     * @return true if successful, false if kit is locked
+     * @return true if successful, false if kit is locked or slot limit reached
      */
     fun selectKit(player: Player, kit: Kit): Boolean {
         // Check if player has unlocked this kit
@@ -75,60 +75,102 @@ object KitManager {
             return false
         }
 
-        playerKits[player] = kit
+        val rank = com.carinaschoppe.skylife.economy.PlayerRank.getRank(player)
+        val selectedKits = playerKits.getOrPut(player) { mutableListOf() }
+
+        // Check if already selected
+        if (selectedKits.contains(kit)) {
+            return false
+        }
+
+        // Check slot limit
+        if (selectedKits.size >= rank.maxKitSlots) {
+            return false
+        }
+
+        selectedKits.add(kit)
         return true
     }
 
     /**
+     * Removes a kit from player's selection.
+     */
+    fun deselectKit(player: Player, kit: Kit) {
+        playerKits[player]?.remove(kit)
+    }
+
+    /**
+     * Gets all selected kits for a player.
+     */
+    fun getSelectedKits(player: Player): List<Kit> {
+        return playerKits[player]?.toList() ?: emptyList()
+    }
+
+    /**
      * Retrieves the kit currently selected by a player.
+     * @deprecated Use getSelectedKits() for multi-kit support
      *
      * @param player The player whose selected kit is to be retrieved.
      * @return The selected [Kit], or null if no kit is selected.
      */
+    @Deprecated("Use getSelectedKits() for multi-kit support")
     fun getSelectedKit(player: Player): Kit? {
-        return playerKits[player]
+        return playerKits[player]?.firstOrNull()
     }
 
     /**
-     * Clears the player's inventory and gives them the items from their selected kit.
-     * If no kit is selected, gives the first available kit as default.
+     * Clears the player's inventory and gives them the items from all their selected kits.
+     * If no kits are selected, gives the first available kit as default.
      *
      * @param player The player to give the kit items to.
      */
     fun giveKitItems(player: Player) {
-        var kit = getSelectedKit(player)
+        var selectedKits = getSelectedKits(player)
 
-        // If no kit selected, use first kit as default
-        if (kit == null && kits.isNotEmpty()) {
-            kit = kits.first()
-            selectKit(player, kit)
+        // If no kits selected, use first kit as default
+        if (selectedKits.isEmpty() && kits.isNotEmpty()) {
+            val defaultKit = kits.first()
+            selectKit(player, defaultKit)
+            selectedKits = listOf(defaultKit)
         }
 
-        if (kit == null) return
+        if (selectedKits.isEmpty()) return
 
         // Don't clear inventory here - it's already cleared in IngameState
-        kit.items.forEach { kitItem ->
-            val itemStack = kitItem.toItemStack()
-            // Add armor to armor slots, rest to inventory
-            when (itemStack.type.toString()) {
-                "LEATHER_HELMET", "CHAINMAIL_HELMET", "IRON_HELMET", "GOLDEN_HELMET", "DIAMOND_HELMET", "NETHERITE_HELMET" -> {
-                    player.inventory.helmet = itemStack
-                }
+        // Give items from all selected kits
+        selectedKits.forEach { kit ->
+            kit.items.forEach { kitItem ->
+                val itemStack = kitItem.toItemStack()
+                // Add armor to armor slots, rest to inventory
+                when (itemStack.type.toString()) {
+                    "LEATHER_HELMET", "CHAINMAIL_HELMET", "IRON_HELMET", "GOLDEN_HELMET", "DIAMOND_HELMET", "NETHERITE_HELMET" -> {
+                        // Only set if slot is empty, priority to last kit
+                        if (player.inventory.helmet == null || player.inventory.helmet?.type == Material.AIR) {
+                            player.inventory.helmet = itemStack
+                        }
+                    }
 
-                "LEATHER_CHESTPLATE", "CHAINMAIL_CHESTPLATE", "IRON_CHESTPLATE", "GOLDEN_CHESTPLATE", "DIAMOND_CHESTPLATE", "NETHERITE_CHESTPLATE" -> {
-                    player.inventory.chestplate = itemStack
-                }
+                    "LEATHER_CHESTPLATE", "CHAINMAIL_CHESTPLATE", "IRON_CHESTPLATE", "GOLDEN_CHESTPLATE", "DIAMOND_CHESTPLATE", "NETHERITE_CHESTPLATE" -> {
+                        if (player.inventory.chestplate == null || player.inventory.chestplate?.type == Material.AIR) {
+                            player.inventory.chestplate = itemStack
+                        }
+                    }
 
-                "LEATHER_LEGGINGS", "CHAINMAIL_LEGGINGS", "IRON_LEGGINGS", "GOLDEN_LEGGINGS", "DIAMOND_LEGGINGS", "NETHERITE_LEGGINGS" -> {
-                    player.inventory.leggings = itemStack
-                }
+                    "LEATHER_LEGGINGS", "CHAINMAIL_LEGGINGS", "IRON_LEGGINGS", "GOLDEN_LEGGINGS", "DIAMOND_LEGGINGS", "NETHERITE_LEGGINGS" -> {
+                        if (player.inventory.leggings == null || player.inventory.leggings?.type == Material.AIR) {
+                            player.inventory.leggings = itemStack
+                        }
+                    }
 
-                "LEATHER_BOOTS", "CHAINMAIL_BOOTS", "IRON_BOOTS", "GOLDEN_BOOTS", "DIAMOND_BOOTS", "NETHERITE_BOOTS" -> {
-                    player.inventory.boots = itemStack
-                }
+                    "LEATHER_BOOTS", "CHAINMAIL_BOOTS", "IRON_BOOTS", "GOLDEN_BOOTS", "DIAMOND_BOOTS", "NETHERITE_BOOTS" -> {
+                        if (player.inventory.boots == null || player.inventory.boots?.type == Material.AIR) {
+                            player.inventory.boots = itemStack
+                        }
+                    }
 
-                else -> {
-                    player.inventory.addItem(itemStack)
+                    else -> {
+                        player.inventory.addItem(itemStack)
+                    }
                 }
             }
         }

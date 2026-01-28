@@ -74,7 +74,8 @@ class PlayerDeathListener : Listener {
 
             // Award kill coins
             val killerRank = com.carinaschoppe.skylife.economy.PlayerRank.getRank(killer)
-            com.carinaschoppe.skylife.economy.CoinManager.awardKillCoins(killer.uniqueId, killerRank)
+            val killCoins = com.carinaschoppe.skylife.economy.CoinManager.awardKillCoins(killer.uniqueId, killerRank)
+            killer.sendMessage(Messages.COINS_EARNED_KILL(killCoins))
 
             game.broadcast(Messages.PLAYER_KILLED(player.name, killer.name))
         } else {

@@ -54,8 +54,7 @@ class KitSelectorListener : Listener {
 
     /**
      * Handles a player's click inside the kit selector GUI.
-     * If a valid kit icon is clicked, it selects the kit for the player, sends a confirmation message,
-     * updates the scoreboard, and closes the inventory.
+     * Handles purchase flow, selection, and deselection based on kit state.
      *
      * @param event The event triggered by a click in an inventory.
      */
@@ -75,30 +74,93 @@ class KitSelectorListener : Listener {
         val clickedItem = event.currentItem ?: return
         val player = event.whoClicked as? Player ?: return
 
-        // Skip glass panes
-        if (clickedItem.type == Material.GRAY_STAINED_GLASS_PANE) return
+        // Skip glass panes and info items
+        if (clickedItem.type == Material.GRAY_STAINED_GLASS_PANE || clickedItem.type == Material.PAPER) return
 
-        // Find matching kit by comparing display names
+        // Handle locked kits (BARRIER)
+        if (clickedItem.type == Material.BARRIER) {
+            // Find kit by searching lore for price
+            val kit = findKitFromItem(clickedItem)
+            if (kit != null) {
+                // Open purchase confirmation GUI
+                com.carinaschoppe.skylife.utility.ui.KitPurchaseConfirmGui.open(player, kit)
+            }
+            return
+        }
+
+        // Find matching kit by comparing base display names (strip selection indicator)
         val clickedDisplayName = clickedItem.itemMeta?.displayName()
         if (clickedDisplayName == null) return
 
         val kit = KitManager.kits.find { kit ->
             val kitIconName = kit.icon.toItemStack().itemMeta?.displayName()
-            kitIconName == clickedDisplayName
+            val strippedClickedName = plainText.serialize(clickedDisplayName).replace("✓ ", "")
+            val strippedKitName = plainText.serialize(kitIconName ?: net.kyori.adventure.text.Component.empty())
+            strippedClickedName.equals(strippedKitName, ignoreCase = true)
         }
 
         if (kit != null) {
-            KitManager.selectKit(player, kit)
-            player.sendMessage(Messages.KIT_SELECTED(kit.name))
+            val isUnlocked = com.carinaschoppe.skylife.economy.KitUnlockManager.hasUnlocked(player.uniqueId, kit)
+            val isSelected = KitManager.getSelectedKits(player).contains(kit)
 
-            // Update scoreboard
-            val game = GameCluster.getGamePlayerIsIn(player)
-            if (game != null) {
-                ScoreboardManager.updateScoreboard(player, game)
+            if (!isUnlocked && kit.rarity.price > 0) {
+                // Open purchase GUI
+                com.carinaschoppe.skylife.utility.ui.KitPurchaseConfirmGui.open(player, kit)
+            } else if (isSelected) {
+                // Deselect kit
+                KitManager.deselectKit(player, kit)
+                player.sendMessage(Messages.KIT_DESELECTED(kit.name))
+
+                // Update scoreboard
+                val game = GameCluster.getGamePlayerIsIn(player)
+                if (game != null) {
+                    ScoreboardManager.updateScoreboard(player, game)
+                }
+
+                // Reopen GUI to refresh
+                KitSelectorGui.open(player)
+            } else {
+                // Select kit
+                val success = KitManager.selectKit(player, kit)
+                if (success) {
+                    player.sendMessage(Messages.KIT_SELECTED(kit.name))
+
+                    // Update scoreboard
+                    val game = GameCluster.getGamePlayerIsIn(player)
+                    if (game != null) {
+                        ScoreboardManager.updateScoreboard(player, game)
+                    }
+
+                    // Reopen GUI to refresh
+                    KitSelectorGui.open(player)
+                } else {
+                    player.sendMessage(Messages.KIT_SELECTION_FAILED_SLOTS_FULL)
+                }
             }
-
-            player.closeInventory()
         }
+    }
+
+    /**
+     * Finds a kit by searching through available kits.
+     * Used for locked kits displayed as barriers.
+     */
+    private fun findKitFromItem(item: org.bukkit.inventory.ItemStack): com.carinaschoppe.skylife.game.kit.Kit? {
+        val lore = item.itemMeta?.lore() ?: return null
+        val plainText = net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer.plainText()
+
+        // Look for price in lore
+        for (line in lore) {
+            val lineText = plainText.serialize(line)
+            if (lineText.contains("Price:", ignoreCase = true)) {
+                val priceStr = lineText.replace("Price:", "").replace("Coins", "").trim()
+                val price = priceStr.toIntOrNull() ?: continue
+
+                // Find kit with matching price
+                return KitManager.kits.find { it.rarity.price == price }
+            }
+        }
+
+        return null
     }
 }
 

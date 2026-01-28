@@ -90,22 +90,31 @@ object CoinManager {
 
     /**
      * Awards coins for playing a game.
+     * @return the actual amount of coins earned (with multiplier applied)
      */
-    fun awardGameCoins(player: UUID, rank: PlayerRank) {
+    fun awardGameCoins(player: UUID, rank: PlayerRank): Int {
+        val amount = (COINS_PER_GAME * rank.coinMultiplier).toInt()
         addCoins(player, COINS_PER_GAME, rank.coinMultiplier)
+        return amount
     }
 
     /**
      * Awards coins for a kill.
+     * @return the actual amount of coins earned (with multiplier applied)
      */
-    fun awardKillCoins(player: UUID, rank: PlayerRank) {
+    fun awardKillCoins(player: UUID, rank: PlayerRank): Int {
+        val amount = (COINS_PER_KILL * rank.coinMultiplier).toInt()
         addCoins(player, COINS_PER_KILL, rank.coinMultiplier)
+        return amount
     }
 
     /**
      * Awards coins for winning.
+     * @return the actual amount of coins earned (with multiplier applied)
      */
-    fun awardWinCoins(player: UUID, rank: PlayerRank) {
+    fun awardWinCoins(player: UUID, rank: PlayerRank): Int {
+        val amount = (COINS_PER_WIN * rank.coinMultiplier).toInt()
         addCoins(player, COINS_PER_WIN, rank.coinMultiplier)
+        return amount
     }
 }

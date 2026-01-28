@@ -61,6 +61,15 @@ data class Templates(
     // Kit messages
     var kit: String = "<prefix><green><bold>Player uses kit </bold></green><gold><bold><kit></bold></gold>",
     var kitSelected: String = "<prefix><green>You have selected the </green><aqua><bold><kit></bold></aqua><green> kit!</green>",
+    var kitDeselected: String = "<prefix><green>You have deselected the </green><aqua><bold><kit></bold></aqua><green> kit.</green>",
+    var kitSelectionFailedSlotsFull: String = "<prefix><red>You have reached your maximum kit slots! Deselect a kit first.</red>",
+
+    // Economy messages
+    var coinsEarnedGame: String = "<prefix><green>You earned </green><gold><bold><amount> coins</bold></gold><green> for playing!</green>",
+    var coinsEarnedKill: String = "<prefix><green>+</green><gold><bold><amount> coins</bold></gold><green> for a kill!</green>",
+    var coinsEarnedWin: String = "<prefix><green>You earned </green><gold><bold><amount> coins</bold></gold><green> for winning!</green>",
+    var kitPurchased: String = "<prefix><green>You have purchased the </green><aqua><bold><kit></bold></aqua><green> kit!</green>",
+    var kitPurchaseFailed: String = "<prefix><red>Failed to purchase kit: </red><gold><error></gold>",
 
     // Stats message
     var statsHeader: String = "<green>--- Stats of </green><aqua><bold><name></bold></aqua><green> ---</green>",

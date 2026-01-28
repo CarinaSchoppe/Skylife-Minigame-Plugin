@@ -1,5 +1,7 @@
 package com.carinaschoppe.skylife.economy
 
+import net.kyori.adventure.text.format.NamedTextColor
+
 /**
  * Player rank enum with multipliers and kit slots.
  */
@@ -13,6 +15,17 @@ enum class PlayerRank(
     USER("User", "", 1.0, 2, "skylife.rank.user"),
     VIP("VIP", "[VIP] ", 2.0, 3, "skylife.rank.vip"),
     VIP_PLUS("VIP+", "[VIP+] ", 4.0, 4, "skylife.rank.vipplus");
+
+    /**
+     * Gets the color for this rank.
+     */
+    fun getColor(): NamedTextColor {
+        return when (this) {
+            USER -> NamedTextColor.GRAY
+            VIP -> NamedTextColor.GREEN
+            VIP_PLUS -> NamedTextColor.AQUA
+        }
+    }
 
     companion object {
         /**

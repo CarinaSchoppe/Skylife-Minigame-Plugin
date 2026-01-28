@@ -61,7 +61,8 @@ class EndState(private val game: Game) : GameState {
         // Award coins for playing to all players
         game.getAllPlayers().forEach { player ->
             val rank = com.carinaschoppe.skylife.economy.PlayerRank.getRank(player)
-            com.carinaschoppe.skylife.economy.CoinManager.awardGameCoins(player.uniqueId, rank)
+            val coinsEarned = com.carinaschoppe.skylife.economy.CoinManager.awardGameCoins(player.uniqueId, rank)
+            player.sendMessage(Messages.COINS_EARNED_GAME(coinsEarned))
         }
 
         // Handle winner
@@ -71,7 +72,8 @@ class EndState(private val game: Game) : GameState {
 
             // Award win coins
             val winnerRank = com.carinaschoppe.skylife.economy.PlayerRank.getRank(winner)
-            com.carinaschoppe.skylife.economy.CoinManager.awardWinCoins(winner.uniqueId, winnerRank)
+            val winCoins = com.carinaschoppe.skylife.economy.CoinManager.awardWinCoins(winner.uniqueId, winnerRank)
+            winner.sendMessage(Messages.COINS_EARNED_WIN(winCoins))
 
             // Launch fireworks above winner's head
             launchFireworks(winner)

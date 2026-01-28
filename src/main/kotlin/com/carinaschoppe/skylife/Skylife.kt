@@ -150,6 +150,7 @@ open class Skylife : JavaPlugin() {
         pluginManager.registerEvents(SkillFeatherfallListener(), this)
         pluginManager.registerEvents(SkillInvisibleStalkerListener(), this)
         pluginManager.registerEvents(SkillLuckyBirdListener(), this)
+        pluginManager.registerEvents(com.carinaschoppe.skylife.events.ui.KitPurchaseGuiListener(), this)
     }
 
     private fun createGameMapsFolder() {

@@ -1,9 +1,9 @@
 package com.carinaschoppe.skylife.economy
 
-import org.jetbrains.exposed.v1.core.dao.IntEntity
-import org.jetbrains.exposed.v1.core.dao.IntEntityClass
 import org.jetbrains.exposed.v1.core.dao.id.EntityID
 import org.jetbrains.exposed.v1.core.dao.id.IntIdTable
+import org.jetbrains.exposed.v1.dao.Entity
+import org.jetbrains.exposed.v1.dao.EntityClass
 
 /**
  * Database table for tracking which kits players have unlocked.
@@ -20,8 +20,8 @@ object KitUnlockTable : IntIdTable("kit_unlocks") {
 /**
  * Entity class for KitUnlock.
  */
-class KitUnlock(id: EntityID<Int>) : IntEntity(id) {
-    companion object : IntEntityClass<KitUnlock>(KitUnlockTable)
+class KitUnlock(id: EntityID<Int>) : Entity<Int>(id) {
+    companion object : EntityClass<Int, KitUnlock>(KitUnlockTable)
 
     var playerUUID by KitUnlockTable.playerUUID
     var kitName by KitUnlockTable.kitName

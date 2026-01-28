@@ -9,7 +9,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 
 /**
- * Listener to update player display names with guild tags.
+ * Listener to update player display names with rank and guild tags.
  */
 class PlayerDisplayNameListener : Listener {
 
@@ -20,14 +20,37 @@ class PlayerDisplayNameListener : Listener {
 
     companion object {
         /**
-         * Updates a player's display name to include their guild tag if they're in a guild.
+         * Updates a player's display name to include rank tag and guild tag.
+         * Format: [RANK] [GUILD] PlayerName
          */
         fun updatePlayerDisplayName(player: org.bukkit.entity.Player) {
-            val tag = GuildManager.getFormattedTag(player.uniqueId)
-            if (tag != null) {
-                player.displayName(Component.text(tag, Messages.ACCENT_COLOR).append(Component.text(" ${player.name}", NamedTextColor.WHITE)))
-            } else {
-                player.displayName(Component.text(player.name, NamedTextColor.WHITE))
+            val rank = com.carinaschoppe.skylife.economy.PlayerRank.getRank(player)
+            val guildTag = GuildManager.getFormattedTag(player.uniqueId)
+
+            // Build display name with rank tag
+            var displayName = Component.empty()
+
+            // Add rank tag if not USER
+            if (rank != com.carinaschoppe.skylife.economy.PlayerRank.USER && rank.tag.isNotEmpty()) {
+                displayName = displayName.append(Component.text(rank.tag, getRankColor(rank)))
+            }
+
+            // Add guild tag if in guild
+            if (guildTag != null) {
+                displayName = displayName.append(Component.text(guildTag, Messages.ACCENT_COLOR).append(Component.text(" ")))
+            }
+
+            // Add player name
+            displayName = displayName.append(Component.text(player.name, NamedTextColor.WHITE))
+
+            player.displayName(displayName)
+        }
+
+        private fun getRankColor(rank: com.carinaschoppe.skylife.economy.PlayerRank): NamedTextColor {
+            return when (rank) {
+                com.carinaschoppe.skylife.economy.PlayerRank.VIP -> NamedTextColor.GREEN
+                com.carinaschoppe.skylife.economy.PlayerRank.VIP_PLUS -> NamedTextColor.GOLD
+                else -> NamedTextColor.GRAY
             }
         }
     }
