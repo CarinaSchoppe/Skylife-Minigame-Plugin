@@ -66,6 +66,9 @@ class IngameState(private val game: Game) : GameState {
             SkillsManager.activateSkills(player)
             SkillEffectsManager.applySkillEffects(player)
 
+            // Reset GOD skill counter for this player
+            com.carinaschoppe.skylife.skills.SkillPassiveItemsTask.resetGodCounter(player.uniqueId)
+
             // Show game start title
             player.showTitle(
                 Title.title(

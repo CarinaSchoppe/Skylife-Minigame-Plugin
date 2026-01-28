@@ -63,6 +63,9 @@ class QuickstartGameCommand : CommandExecutor {
             countdown.reduceTo(5)
             // Broadcast the speed-up message to all players in the game
             game.broadcast(Messages.ROUND_SPEED_ALL)
+        } else {
+            // Countdown is already at 5 seconds or less
+            sender.sendMessage(Messages.ROUND_SPEED_LOW)
         }
 
         return true

@@ -35,6 +35,21 @@ class PlayerDeathListener : Listener {
         val player = event.player
         val game = GameCluster.getGame(player) ?: return // Exit if the player is not in a managed game
 
+        // --- Lightning and Thunder Effect ---
+        // Strike lightning at death location (visual only, no damage)
+        player.world.strikeLightningEffect(player.location)
+        // Play thunder sound to all players in the game
+        game.getAllPlayers().forEach { p ->
+            p.playSound(player.location, org.bukkit.Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 1.0f, 1.0f)
+        }
+
+        // --- Remove Skill Items from Drops ---
+        // Remove Pilot Wings and Ninja Cloak from death drops
+        event.drops.removeIf { item ->
+            val itemName = item.itemMeta?.displayName()?.toString() ?: ""
+            itemName.contains("Pilot Wings") || itemName.contains("Ninja Cloak")
+        }
+
         // --- Player State Transition ---
         game.livingPlayers.remove(player)
         game.spectators.add(player)

@@ -54,14 +54,15 @@ object SkillPassiveItemsTask {
 
                         Skill.GOD -> {
                             // Track counter for 90 second intervals
-                            val counter = godSkillCounters.getOrDefault(player.uniqueId, 0)
-                            godSkillCounters[player.uniqueId] = counter + 1
+                            val counter = godSkillCounters.getOrDefault(player.uniqueId, 0) + 1
 
                             // 90 seconds / 10 seconds = 9 cycles
                             if (counter >= 9) {
                                 val goldenApple = ItemStack(Material.GOLDEN_APPLE, 1)
                                 player.inventory.addItem(goldenApple)
                                 godSkillCounters[player.uniqueId] = 0
+                            } else {
+                                godSkillCounters[player.uniqueId] = counter
                             }
                         }
 
@@ -80,6 +81,22 @@ object SkillPassiveItemsTask {
             Bukkit.getScheduler().cancelTask(taskId)
             taskId = -1
         }
+        godSkillCounters.clear()
+    }
+
+    /**
+     * Resets the GOD skill counter for a specific player.
+     * Should be called when a game starts.
+     */
+    fun resetGodCounter(playerUUID: java.util.UUID) {
+        godSkillCounters.remove(playerUUID)
+    }
+
+    /**
+     * Resets all GOD skill counters.
+     * Should be called when games end.
+     */
+    fun resetAllGodCounters() {
         godSkillCounters.clear()
     }
 

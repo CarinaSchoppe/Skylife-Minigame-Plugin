@@ -153,6 +153,7 @@ open class Skylife : JavaPlugin() {
         pluginManager.registerEvents(PlayerDisplayNameListener(), this)
         pluginManager.registerEvents(PlayerDisconnectsPartyListener(), this)
         pluginManager.registerEvents(com.carinaschoppe.skylife.events.VanishListener(), this)
+        pluginManager.registerEvents(SkillItemProtectionListener(), this)
         registerSkillListeners(pluginManager)
     }
 
