@@ -1,6 +1,6 @@
 package com.carinaschoppe.skylife.utility.statistics
 
-import com.carinaschoppe.skylife.game.gamestates.GameState
+import com.carinaschoppe.skylife.game.gamestates.GameStateType
 import com.carinaschoppe.skylife.utility.messages.Messages
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
@@ -28,7 +28,7 @@ object StatsUtility {
         transaction {
             val statsPlayer = statsPlayers.firstOrNull { it.uuid == player.uniqueId.toString() } ?: return@transaction
             // Check if the game was in INGAME state when the player left
-            if (game.state == GameState.States.INGAME) {
+            if (game.state == GameStateType.INGAME) {
                 statsPlayer.deaths++
             }
         }

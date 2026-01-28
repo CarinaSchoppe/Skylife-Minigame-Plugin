@@ -7,25 +7,6 @@ import org.bukkit.entity.Player
  */
 interface GameState {
 
-
-    /**
-     * An enumeration of the possible game states, used for identification.
-     * This is a legacy enum and might be replaced by the GameState interface's own State enum.
-     *
-     * @property id The numeric identifier for the game state.
-     */
-    enum class States(val id: Int) {
-        LOBBY(0),
-        INGAME(1),
-        END(2)
-    }
-
-
-    /**
-     * An enumeration of the possible high-level states a game can be in.
-     */
-
-
     /**
      * Called when this state becomes the active state.
      */

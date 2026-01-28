@@ -2,7 +2,7 @@ package com.carinaschoppe.skylife.game.managers
 
 import com.carinaschoppe.skylife.game.Game
 import com.carinaschoppe.skylife.game.gamestates.EndState
-import com.carinaschoppe.skylife.game.gamestates.GameState
+import com.carinaschoppe.skylife.game.gamestates.GameStateType
 import com.carinaschoppe.skylife.game.gamestates.IngameState
 import com.carinaschoppe.skylife.utility.messages.Messages
 import net.kyori.adventure.text.Component
@@ -35,7 +35,7 @@ object GameManager {
 
         // Transition to end state
         game.currentState.stop()
-        game.state = GameState.States.END
+        game.state = GameStateType.END
         game.currentState = EndState(game)
         game.currentState.start()
         

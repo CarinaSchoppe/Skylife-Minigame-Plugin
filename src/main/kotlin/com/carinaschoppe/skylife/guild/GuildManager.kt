@@ -28,14 +28,7 @@ object GuildManager {
     /**
      * In-memory representation of a guild with all its members.
      */
-    data class GuildInfo(
-        val id: Int,
-        val name: String,
-        val tag: String,
-        val leaderUUID: UUID,
-        val members: MutableMap<UUID, GuildRole>,
-        var friendlyFireEnabled: Boolean
-    )
+
 
     /**
      * Loads all guilds from database into cache.

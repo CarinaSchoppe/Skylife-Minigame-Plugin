@@ -1,6 +1,7 @@
 package com.carinaschoppe.skylife.game
 
 import com.carinaschoppe.skylife.game.gamestates.GameState
+import com.carinaschoppe.skylife.game.gamestates.GameStateType
 import com.carinaschoppe.skylife.game.gamestates.LobbyState
 import com.carinaschoppe.skylife.utility.messages.Messages
 import net.kyori.adventure.text.Component
@@ -88,7 +89,7 @@ class Game(
      * - END: The game is finishing up
      * - PROTECT: A protected state (e.g., grace period)
      */
-    var state: GameState.States = GameState.States.LOBBY
+    var state: GameStateType = GameStateType.LOBBY
 
     /**
      * Starts the game by initializing the current state.

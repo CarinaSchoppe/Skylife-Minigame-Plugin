@@ -12,8 +12,6 @@ import org.bukkit.persistence.PersistentDataType
  */
 object GameOverviewItems {
 
-    enum class NavAction { NEXT, PREVIOUS }
-
     private const val MENU_NAME = "Spieleübersicht"
     private const val NEXT_NAME = "Nächste Seite"
     private const val PREVIOUS_NAME = "Vorherige Seite"

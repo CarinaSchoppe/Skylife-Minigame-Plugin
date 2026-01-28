@@ -1,6 +1,6 @@
 package com.carinaschoppe.skylife.game
 
-import com.carinaschoppe.skylife.game.gamestates.GameState
+import com.carinaschoppe.skylife.game.gamestates.GameStateType
 import com.carinaschoppe.skylife.game.kit.KitManager
 import com.carinaschoppe.skylife.game.managers.GameLocationManager
 import com.carinaschoppe.skylife.hub.HubManager
@@ -99,7 +99,7 @@ object GameCluster {
             return false
         }
 
-        if (game.state != GameState.States.LOBBY) {
+        if (game.state != GameStateType.LOBBY) {
             player.sendMessage(com.carinaschoppe.skylife.utility.messages.Messages.ERROR_GAME_FULL_OR_STARTED)
             return false
         }
@@ -157,7 +157,7 @@ object GameCluster {
         // Restore lobby scoreboard AFTER hub teleport
         com.carinaschoppe.skylife.utility.scoreboard.LobbyScoreboardManager.setLobbyScoreboard(player)
 
-        if (game.state == GameState.States.INGAME && game.livingPlayers.size <= 1) {
+        if (game.state == GameStateType.INGAME && game.livingPlayers.size <= 1) {
             game.stop()
         }
     }
@@ -172,7 +172,7 @@ object GameCluster {
         game.currentState.stop()
 
         // Transition to ingame state
-        game.state = GameState.States.INGAME
+        game.state = GameStateType.INGAME
         game.currentState = com.carinaschoppe.skylife.game.gamestates.IngameState(game)
 
         lobbyGames.remove(game)
