@@ -4,7 +4,6 @@ import com.carinaschoppe.skylife.Skylife
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
 import java.io.File
 
@@ -18,16 +17,15 @@ import java.io.File
 object MessageLoader {
 
     /**
-     * Saves all messages from the [Messages] object to a JSON configuration file.
+     * Saves all message templates to messages.json configuration file.
      *
      * This method:
      * 1. Creates the messages.json file if it doesn't exist
-     * 2. Only saves simple Component properties (not functions or methods)
-     * 3. Serializes Components to MiniMessage format
-     * 4. Writes the JSON to the file
-     * 5. Sends a confirmation message to the console
+     * 2. Serializes the Templates data class to JSON
+     * 3. Writes the JSON to the file with pretty printing
+     * 4. Sends a confirmation message to the console
      *
-     * @see ComponentTypeAdapter
+     * @see Templates
      * @see Messages
      */
     fun saveMessages() {
@@ -42,26 +40,9 @@ object MessageLoader {
         }
 
         val gson: Gson = GsonBuilder().setPrettyPrinting().create()
-        val miniMessage = MiniMessage.miniMessage()
 
-        // Extract only the serializable Component properties
-        val messagesMap = mutableMapOf<String, String>()
-
-        Messages::class.java.declaredFields.forEach { field ->
-            try {
-                field.isAccessible = true
-                val value = field.get(Messages)
-
-                // Only save Component properties that are not functions
-                if (value is Component && field.type == Component::class.java) {
-                    messagesMap[field.name] = miniMessage.serialize(value)
-                }
-            } catch (e: Exception) {
-                // Skip fields that can't be accessed or serialized
-            }
-        }
-
-        val json: String = gson.toJson(messagesMap)
+        // Serialize the Templates object
+        val json: String = gson.toJson(Messages.TEMPLATES)
         file.writeText(json)
         Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text("Messages saved!", Messages.MESSAGE_COLOR)))
 
@@ -69,57 +50,40 @@ object MessageLoader {
 
 
     /**
-     * Loads messages from the JSON configuration file into the [Messages] object.
+     * Loads message templates from messages.json into the Messages.TEMPLATES object.
      *
      * This method:
      * 1. Checks if messages.json exists, creates it with default values if not
-     * 2. Configures Gson with a custom ComponentTypeAdapter for MiniMessage support
-     * 3. Deserializes the JSON and updates the Messages object properties
+     * 2. Deserializes the JSON into a Templates object
+     * 3. Updates the Messages.TEMPLATES property
      * 4. Sends a confirmation message to the console
      *
-     * @see ComponentTypeAdapter
+     * @see Templates
      * @see Messages
      */
     fun loadMessages() {
         val file = File(Bukkit.getServer().pluginsFolder, Skylife.folderLocation + "messages.json")
-
 
         if (!file.exists()) {
             saveMessages()
             return
         }
 
-
-        val gson: Gson = GsonBuilder().setPrettyPrinting()
-            .registerTypeAdapter(Component::class.java, ComponentTypeAdapter(MiniMessage.miniMessage()))
-            .create()
+        val gson: Gson = GsonBuilder().setPrettyPrinting().create()
 
         val json: String = file.readText()
 
-        // Deserialize into a map of property names to values
-        @Suppress("UNCHECKED_CAST")
-        val messagesMap = gson.fromJson(json, Map::class.java) as? Map<String, Any> ?: return
-
-        // Update Messages object properties using reflection
-        Messages::class.java.declaredFields.forEach { field ->
-            if (messagesMap.containsKey(field.name)) {
-                try {
-                    field.isAccessible = true
-                    val value = messagesMap[field.name]
-
-                    // Convert the value if it's a Component (stored as String in JSON)
-                    if (field.type == Component::class.java && value is String) {
-                        field.set(Messages, MiniMessage.miniMessage().deserialize(value))
-                    } else {
-                        field.set(Messages, value)
-                    }
-                } catch (e: Exception) {
-                    Bukkit.getLogger().warning("Failed to load message field: ${field.name} - ${e.message}")
-                }
+        try {
+            // Deserialize JSON into Templates object
+            val templates = gson.fromJson(json, Templates::class.java)
+            if (templates != null) {
+                Messages.TEMPLATES = templates
+                Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text("Messages loaded!", Messages.MESSAGE_COLOR)))
             }
+        } catch (e: Exception) {
+            Bukkit.getLogger().warning("Failed to load messages from messages.json: ${e.message}")
+            Bukkit.getLogger().warning("Using default messages instead.")
         }
-
-        Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text("Messages loaded!", Messages.MESSAGE_COLOR)))
     }
 
 }

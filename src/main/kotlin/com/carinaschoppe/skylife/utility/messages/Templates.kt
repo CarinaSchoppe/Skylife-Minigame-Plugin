@@ -1,0 +1,133 @@
+package com.carinaschoppe.skylife.utility.messages
+
+/**
+ * Message templates that can be serialized to and loaded from messages.json.
+ * Templates use MiniMessage format with placeholders: <player>, <game>, <count>, etc.
+ *
+ * Example: "<gray>[<aqua><bold>Skylife</bold></aqua>] <green>Welcome <gold><bold><player></bold></gold> to the server!"
+ */
+data class Templates(
+    // Prefix
+    var prefix: String = "<gray><bold>[</bold></gray><aqua><bold>Skylife</bold></aqua><gray><bold>] </bold></gray>",
+
+    // Database messages
+    var databaseConnected: String = "<prefix><green><bold>The Database was successfully connected!</bold></green>",
+    var databaseTablesCreated: String = "<prefix><green><bold>The Database tables where successfully created!</bold></green>",
+
+    // Game setup messages
+    var playerAmountSet: String = "<prefix><green><bold>Player amount set</bold></green>",
+    var gameCreated: String = "<prefix><green><bold>Game </bold></green><gold><bold><game></bold></gold><green> created</green>",
+    var gameSaved: String = "<prefix><green><bold>Game saved</bold></green>",
+    var gameDeleted: String = "<prefix><green><bold>Game deleted</bold></green>",
+    var locationAdded: String = "<prefix><green><bold>Location to game </bold></green><gold><bold><game></bold></gold><green><bold> and type </bold></green><gold><bold><type></bold></gold><green><bold> has been added</bold></green>",
+    var locationAddedWithAmount: String = "<prefix><green><bold>Location to game </bold></green><gold><bold><game></bold></gold><green><bold> and type </bold></green><gold><bold><type></bold></gold><green><bold> has been added Amount: </bold></green><gold><bold><amount></bold></gold>",
+
+    // Game state messages
+    var ingameStart: String = "<prefix><green><bold>Game started</bold></green>",
+    var gameOver: String = "<prefix><green><bold>The game is over</bold></green>",
+    var countdownStopped: String = "<prefix><green><bold>Countdown stopped</bold></green>",
+    var countdown: String = "<prefix><green>Game starting in </green><gold><bold><seconds></bold></gold><green> seconds</green>",
+    var protectionEnded: String = "<prefix><green><bold>Protection has ended!</bold></green>",
+    var protectionEnding: String = "<prefix><green>Protection ending in </green><gold><bold><seconds></bold></gold><green> seconds!</green>",
+    var protectionEnds: String = "<prefix><green><bold>PROTECTION TIME IS OVER, FIGHT!!</bold></green>",
+    var gameEndTimer: String = "<prefix><green><bold>Game will end in </bold></green><gold><bold><timer></bold></gold><green> seconds</green>",
+    var roundSpeedAll: String = "<prefix><green><bold>The Round has been sped up</bold></green>",
+    var roundSpeedLow: String = "<prefix><green><bold>You canÂ´t speed up the round cause its allready speeded up</bold></green>",
+
+    // Player join/leave messages
+    var playerJoinsServer: String = "<prefix><green><bold>Welcome </bold></green><gold><bold><underlined><player></underlined></bold></gold><green> to the Skylife Server!</green>",
+    var playerJoinsGame: String = "<prefix><green>you joined the game </green><gold><bold><underlined><game></underlined></bold></gold>",
+    var playerJoined: String = "<prefix><gold><bold><underlined><player></underlined></bold></gold><green> joined </green><gold><bold><underlined>(<playerCount>/<maxPlayers>)</underlined></bold></gold>",
+    var playerLeftGame: String = "<prefix><gold><bold><underlined><player></underlined></bold></gold><green> left the game!</green>",
+    var playerLeftGameBroadcast: String = "<prefix><gold><bold><player></bold></gold><green> has left the game</green>",
+    var ownPlayerLeft: String = "<prefix><green>you left the game!</green>",
+
+    // Player death messages
+    var playerDied: String = "<prefix><gold><bold><underlined><player></underlined></bold></gold><green> died</green>",
+    var playerKilled: String = "<prefix><gold><bold><underlined><player></underlined></bold></gold><green> was killed by</green><gold><bold><underlined><killer></underlined></bold></gold>",
+    var playerWon: String = "<prefix><gold><bold><underlined><player></underlined></bold></gold><green> WON THE ROUND</green>",
+
+    // Player count messages
+    var playerMissing: String = "<prefix><green><bold>Missing </bold></green><gold><bold><underlined><missing></underlined></bold></gold><green> out of the </green><gold><bold><underlined><required></underlined></bold></gold><green> Players required</green>",
+    var playersOnline: String = "<prefix><green><bold>Players online: </bold></green><gold><bold><count></bold></gold>",
+    var playersRemaining: String = "<prefix><green><bold>Players remaining: </bold></green><gold><bold><count></bold></gold>",
+
+    // Game info messages
+    var mapName: String = "<prefix><green><bold>Map: </bold></green><gold><bold><map></bold></gold>",
+    var teleport: String = "<prefix><green><bold>Teleporting all players</bold></green>",
+    var lobbyTimer: String = "<prefix><green><bold>Round starts in </bold></green><gold><bold><time></bold></gold><green> seconds</green>",
+    var protectionTime: String = "<prefix><green><bold>Protection time ends in </bold></green><gold><bold><time></bold></gold><green> seconds</green>",
+
+    // Kit messages
+    var kit: String = "<prefix><green><bold>Player uses kit </bold></green><gold><bold><kit></bold></gold>",
+    var kitSelected: String = "<prefix><green>You have selected the </green><aqua><bold><kit></bold></aqua><green> kit!</green>",
+
+    // Stats message
+    var statsHeader: String = "<green>--- Stats of </green><aqua><bold><name></bold></aqua><green> ---</green>",
+    var statsRank: String = "<green>Rank: </green><aqua>#<rank></aqua>",
+    var statsPoints: String = "<green>Points: </green><aqua><points></aqua>",
+    var statsKills: String = "<green>Kills: </green><aqua><kills></aqua>",
+    var statsDeaths: String = "<green>Deaths: </green><aqua><deaths></aqua>",
+    var statsWins: String = "<green>Wins: </green><aqua><wins></aqua>",
+    var statsGames: String = "<green>Games: </green><aqua><games></aqua>",
+
+    // Error messages - game related
+    var notIngame: String = "<prefix><red>ERROR: you must be in a game!</red>",
+    var alreadyInGame: String = "<prefix><red>ERROR: You are allready in a game!</red>",
+    var cantBreakBlock: String = "<prefix><red>ERROR: You cant break a block while not beeing in a live game!</red>",
+    var cantPlaceBlock: String = "<prefix><red>ERROR: You cant place a block while not beeing in a live game!</red>",
+    var cantDamage: String = "<prefix><red>ERROR: You cant cause any damage while not beeing in a live game!</red>",
+    var errorGameFullOrStarted: String = "<prefix><red><bold>Spiel nicht gefunden, voll oder bereits gestartet!</bold></red>",
+    var gameNotExists: String = "<prefix><red><bold>ERROR: The Game: </bold></red><gold><bold><game></bold></gold><red><bold> does not exist</bold></red>",
+    var gamePatternNotFullyDone: String = "<prefix><red><bold>ERROR: the Game </bold></red><gold><bold><game></bold></gold><red><bold> is not fully instantiated</bold></red>",
+    var errorNoGame: String = "<prefix><red><bold>ERROR: No game found</bold></red>",
+    var errorNoPattern: String = "<prefix><red><bold>ERROR: No game pattern found</bold></red>",
+    var errorPattern: String = "<prefix><red><bold>ERROR: Game pattern already exists</bold></red>",
+
+    // Error messages - permission/command related
+    var errorPermission: String = "<prefix><red><bold>ERROR: You don't have permission to use this command</bold></red>",
+    var errorNotPlayer: String = "<prefix><red><bold>ERROR: Command must be executed by a player</bold></red>",
+    var errorArgument: String = "<prefix><red><bold>ERROR: Invalid argument</bold></red>",
+    var errorPlayerNotFound: String = "<prefix><red><bold>ERROR: Player not found</bold></red>",
+    var errorCommand: String = "<prefix><red><bold>ERROR: Command failed</bold></red>",
+    var playerNotOnline: String = "<prefix><red>Player </red><gold><player></gold><red> is not online!</red>",
+
+    // Party messages
+    var partyCreated: String = "<prefix><green>Party created! You are now the party leader.</green>",
+    var partyAlreadyInParty: String = "<prefix><red>You are already in a party!</red>",
+    var partyNotInParty: String = "<prefix><red>You are not in a party!</red>",
+    var partyInviteUsage: String = "<prefix><red>Usage: /party invite <player></red>",
+    var partyAcceptUsage: String = "<prefix><red>Usage: /party accept <player></red>",
+    var partyKickUsage: String = "<prefix><red>Usage: /party kick <player></red>",
+    var partyPromoteUsage: String = "<prefix><red>Usage: /party promote <player></red>",
+    var partyCannotInviteSelf: String = "<prefix><red>You cannot invite yourself!</red>",
+    var partyInviteSent: String = "<prefix><green>Party invite sent to </green><aqua><player></aqua><green>!</green>",
+    var partyInviteReceived: String = "<prefix><aqua><bold><inviter></bold></aqua><green> has invited you to their party!\nType </green><aqua>/party accept <inviter></aqua><green> to join!</green>",
+    var partyJoined: String = "<prefix><green>You have joined </green><aqua><inviter></aqua><green>'s party!</green>",
+    var partyMemberJoined: String = "<prefix><aqua><player></aqua><green> has joined the party!</green>",
+    var partyLeft: String = "<prefix><green>You have left the party.</green>",
+    var partyMemberLeft: String = "<prefix><aqua><player></aqua><green> has left the party.</green>",
+    var partyPromotedToLeader: String = "<prefix><green><bold>You are now the party leader!</bold></green>",
+    var partyPromoted: String = "<prefix><green>You have promoted </green><aqua><player></aqua><green> to party leader!</green>",
+    var partyNewLeader: String = "<prefix><aqua><player></aqua><green> is now the party leader!</green>",
+    var partyKicked: String = "<prefix><green>You have kicked </green><aqua><player></aqua><green> from the party!</green>",
+    var partyKickedByLeader: String = "<prefix><red>You have been kicked from the party!</red>",
+    var partyMemberKicked: String = "<prefix><aqua><player></aqua><green> has been kicked from the party!</green>",
+    var partyListHeader: String = "<prefix><aqua><bold>=== Party Members ===</bold></aqua>",
+    var partyListLeader: String = "  <gold><bold>★ </bold></gold><aqua><bold><leader></bold></aqua><gray> (Leader)</gray>",
+    var partyListMember: String = "  <gray>• <status> <member></gray>",
+    var partyListFooter: String = "<gray>Total: </gray><aqua><size></aqua><gray> members</gray>",
+    var partyNoInvites: String = "<prefix><green>You have no pending party invites.</green>",
+    var partyInvitesHeader: String = "<prefix><aqua><bold>=== Pending Party Invites ===</bold></aqua>",
+    var partyInviteEntry: String = "  <gray>• </gray><aqua><inviter></aqua><gray> (expires in </gray><green><seconds>s</green><gray>)</gray>",
+    var partyOnlyLeaderCanJoin: String = "<prefix><red>Only the party leader can join games! The whole party will join together.</red>",
+    var partyHelpHeader: String = "<prefix><aqua><bold>=== Party Commands ===</bold></aqua>",
+    var partyHelpCreate: String = "  <aqua>/party create</aqua><gray> - Create a new party</gray>",
+    var partyHelpInvite: String = "  <aqua>/party invite <player></aqua><gray> - Invite a player to your party</gray>",
+    var partyHelpAccept: String = "  <aqua>/party accept <player></aqua><gray> - Accept a party invite</gray>",
+    var partyHelpLeave: String = "  <aqua>/party leave</aqua><gray> - Leave your current party</gray>",
+    var partyHelpKick: String = "  <aqua>/party kick <player></aqua><gray> - Kick a player from your party (leader only)</gray>",
+    var partyHelpPromote: String = "  <aqua>/party promote <player></aqua><gray> - Promote a player to party leader</gray>",
+    var partyHelpList: String = "  <aqua>/party list</aqua><gray> - List all party members</gray>",
+    var partyHelpInvites: String = "  <aqua>/party invites</aqua><gray> - List all pending invites</gray>"
+)
