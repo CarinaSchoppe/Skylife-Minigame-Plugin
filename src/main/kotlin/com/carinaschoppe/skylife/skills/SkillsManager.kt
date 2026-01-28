@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap
  * Database table for player skill selections.
  * Supports up to 4 skill slots (for VIP+ players and admins).
  */
-object PlayerSkills : IntIdTable() {
+object PlayerSkills : IntIdTable("player_skills") {
     val playerUUID = varchar("player_uuid", 36).uniqueIndex()
     val skill1 = enumerationByName("skill1", 30, Skill::class).nullable()
     val skill2 = enumerationByName("skill2", 30, Skill::class).nullable()

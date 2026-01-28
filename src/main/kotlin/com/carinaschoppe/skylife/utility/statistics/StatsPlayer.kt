@@ -7,9 +7,7 @@ import org.jetbrains.exposed.v1.dao.Entity
 import org.jetbrains.exposed.v1.dao.EntityClass
 
 
-object StatsPlayers : IdTable<String>() {
-
-
+object StatsPlayers : IdTable<String>("stats_players") {
     val uuid = varchar("uuid", 36)
     val kills = integer("kills")
     val deaths = integer("deaths")

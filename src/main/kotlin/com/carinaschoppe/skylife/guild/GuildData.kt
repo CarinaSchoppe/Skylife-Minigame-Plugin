@@ -9,7 +9,7 @@ import org.jetbrains.exposed.v1.dao.EntityClass
  * Database table for guilds.
  * Stores guild information including name, tag, leader, and friendly fire setting.
  */
-object Guilds : IntIdTable() {
+object Guilds : IntIdTable("guilds") {
     val name = varchar("name", 24).uniqueIndex()
     val tag = varchar("tag", 5).uniqueIndex()
     val leaderUUID = varchar("leader_uuid", 36)
@@ -32,7 +32,7 @@ class Guild(id: EntityID<Int>) : Entity<Int>(id) {
  * Database table for guild members.
  * Stores the relationship between players and guilds, including their role.
  */
-object GuildMembers : IntIdTable() {
+object GuildMembers : IntIdTable("guild_members") {
     val playerUUID = varchar("player_uuid", 36).uniqueIndex()
     val guildId = reference("guild_id", Guilds)
     val role = enumerationByName("role", 6, GuildRole::class)
