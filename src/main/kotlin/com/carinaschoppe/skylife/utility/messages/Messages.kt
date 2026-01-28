@@ -152,6 +152,16 @@ object Messages {
     fun KIT_PURCHASED(kitName: String): Component = parseTemplate(TEMPLATES.kitPurchased, "kit" to kitName)
     fun KIT_PURCHASE_FAILED(error: String): Component = parseTemplate(TEMPLATES.kitPurchaseFailed, "error" to error)
 
+    // Admin coin commands
+    val COINS_GIVE_USAGE: Component get() = parseTemplate(TEMPLATES.coinsGiveUsage)
+    val COINS_REMOVE_USAGE: Component get() = parseTemplate(TEMPLATES.coinsRemoveUsage)
+    val COINS_INVALID_AMOUNT: Component get() = parseTemplate(TEMPLATES.coinsInvalidAmount)
+    fun COINS_GIVEN(player: String, amount: Int, balance: Int): Component = parseTemplate(TEMPLATES.coinsGiven, "player" to player, "amount" to amount, "balance" to balance)
+    fun COINS_REMOVED(player: String, amount: Int, balance: Int): Component = parseTemplate(TEMPLATES.coinsRemoved, "player" to player, "amount" to amount, "balance" to balance)
+    fun COINS_RECEIVED(amount: Int): Component = parseTemplate(TEMPLATES.coinsReceived, "amount" to amount)
+    fun COINS_DEDUCTED(amount: Int): Component = parseTemplate(TEMPLATES.coinsDeducted, "amount" to amount)
+    fun COINS_INSUFFICIENT(player: String, current: Int, amount: Int): Component = parseTemplate(TEMPLATES.coinsInsufficient, "player" to player, "current" to current, "amount" to amount)
+
     // Stats messages
     fun STATS(own: Boolean, name: String, kills: Int, deaths: Int, wins: Int, games: Int, points: Int, rank: Int): Component {
         val displayName = if (own) "You" else name

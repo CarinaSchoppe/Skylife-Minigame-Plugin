@@ -50,7 +50,7 @@ object CoinManager {
     fun addCoins(player: UUID, amount: Int, multiplier: Double = 1.0) {
         val finalAmount = (amount * multiplier).toInt()
         val currentCoins = getCoins(player)
-        val newBalance = currentCoins + finalAmount
+        val newBalance = maxOf(0, currentCoins + finalAmount) // Cannot go below 0
 
         coinCache[player] = newBalance
 

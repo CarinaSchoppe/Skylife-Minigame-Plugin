@@ -120,6 +120,15 @@ open class Skylife : JavaPlugin() {
         val leaderboardCommand = LeaderboardCommand()
         getCommand("leaderboard")?.setExecutor(leaderboardCommand)
         getCommand("leaderboard")?.tabCompleter = leaderboardCommand
+
+        // Economy commands
+        val giveCoinsCommand = com.carinaschoppe.skylife.commands.economy.GiveCoinsCommand()
+        getCommand("givecoins")?.setExecutor(giveCoinsCommand)
+        getCommand("givecoins")?.tabCompleter = giveCoinsCommand
+
+        val removeCoinsCommand = com.carinaschoppe.skylife.commands.economy.RemoveCoinsCommand()
+        getCommand("removecoins")?.setExecutor(removeCoinsCommand)
+        getCommand("removecoins")?.tabCompleter = removeCoinsCommand
     }
 
     private fun registerEventListeners(pluginManager: PluginManager) {

@@ -71,6 +71,16 @@ data class Templates(
     var kitPurchased: String = "<prefix><green>You have purchased the </green><aqua><bold><kit></bold></aqua><green> kit!</green>",
     var kitPurchaseFailed: String = "<prefix><red>Failed to purchase kit: </red><gold><error></gold>",
 
+    // Admin coin commands
+    var coinsGiveUsage: String = "<prefix><red>Usage: /givecoins <player> <amount></red>",
+    var coinsRemoveUsage: String = "<prefix><red>Usage: /removecoins <player> <amount></red>",
+    var coinsInvalidAmount: String = "<prefix><red>Invalid amount! Please enter a positive number.</red>",
+    var coinsGiven: String = "<prefix><green>Gave </green><gold><bold><amount> coins</bold></gold><green> to </green><aqua><player></aqua><green>. New balance: </green><gold><balance></gold>",
+    var coinsRemoved: String = "<prefix><green>Removed </green><gold><bold><amount> coins</bold></gold><green> from </green><aqua><player></aqua><green>. New balance: </green><gold><balance></gold>",
+    var coinsReceived: String = "<prefix><green>You received </green><gold><bold><amount> coins</bold></gold><green> from an admin!</green>",
+    var coinsDeducted: String = "<prefix><red>An admin removed </red><gold><bold><amount> coins</bold></gold><red> from your account.</red>",
+    var coinsInsufficient: String = "<prefix><red><player> only has </red><gold><current> coins</gold><red>, cannot remove </red><gold><amount> coins</gold><red>. Removed all coins instead.</red>",
+
     // Stats message
     var statsHeader: String = "<green>--- Stats of </green><aqua><bold><name></bold></aqua><green> ---</green>",
     var statsRank: String = "<green>Rank: </green><aqua>#<rank></aqua>",

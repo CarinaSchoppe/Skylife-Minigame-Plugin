@@ -56,6 +56,12 @@ commands:
   leaderboard:
     description: Shows the top 10 players for various statistics (points, kills, wins, games, kd)
     aliases: [ lb, top, ranks ]
+  givecoins:
+    description: Give coins to a player (Admin only)
+    aliases: [ addcoins, givecoins ]
+  removecoins:
+    description: Remove coins from a player (Admin only)
+    aliases: [ takecoins, removecoins ]
 permissions:
   skylife.*:
     description: Gives access to all Skylife commands
@@ -91,6 +97,8 @@ permissions:
       skylife.gamesetup: true
       skylife.removespawn: true
       skylife.savemessages: true
+      skylife.admin.givecoins: true
+      skylife.admin.removecoins: true
   skylife.join:
     description: Allows joining games
     default: true
@@ -130,3 +138,18 @@ permissions:
   skylife.leaderboard:
     description: Allows viewing leaderboards
     default: true
+  skylife.admin.givecoins:
+    description: Allows giving coins to players
+    default: op
+  skylife.admin.removecoins:
+    description: Allows removing coins from players
+    default: op
+  skylife.rank.user:
+    description: User rank (default)
+    default: true
+  skylife.rank.vip:
+    description: VIP rank (2x coins, 3 kit slots)
+    default: false
+  skylife.rank.vipplus:
+    description: VIP+ rank (4x coins, 4 kit slots)
+    default: false
