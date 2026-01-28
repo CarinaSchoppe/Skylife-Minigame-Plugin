@@ -296,8 +296,20 @@ object PartyManager {
         }
 
         // Add all party members to the target game
+        val failedJoins = mutableListOf<Player>()
         onlineMembers.forEach { member ->
-            GameCluster.addPlayerToGame(member, gameToJoin)
+            val success = GameCluster.addPlayerToGame(member, gameToJoin)
+            if (!success) {
+                failedJoins.add(member)
+            }
+        }
+
+        // If some players couldn't join, rollback all joins
+        if (failedJoins.isNotEmpty()) {
+            onlineMembers.forEach { member ->
+                GameCluster.removePlayerFromGame(member)
+            }
+            return Result.failure(Exception("Failed to add all party members to game. ${failedJoins.size} players could not join."))
         }
 
         return Result.success(Unit)

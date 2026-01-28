@@ -288,8 +288,7 @@ object GameCluster {
      */
     fun addPlayerToRandomGame(player: Player): Boolean {
         val game = findRandomAvailableGame() ?: return false
-        addPlayerToGame(player, game)
-        return true
+        return addPlayerToGame(player, game)
     }
 
     /**
@@ -302,9 +301,6 @@ object GameCluster {
      */
     fun addPlayerToGame(player: Player, mapName: String): Boolean {
         val game = getGameByName(mapName) ?: return false
-        if (game.state != GameState.States.LOBBY) return false
-        
-        addPlayerToGame(player, game)
-        return true
+        return addPlayerToGame(player, game)
     }
 }

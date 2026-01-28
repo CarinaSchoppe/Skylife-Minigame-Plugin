@@ -4,14 +4,14 @@
 
 ### Kritisch
 
-- [ ] **🔴 KITS WERDEN NICHT VERGEBEN**: `IngameState.kt:61` - KitManager.giveKitItems(player) fehlt komplett! Spieler starten ohne Kit-Items
-- [ ] **Kit Selector Item nicht geschützt**: Kit Selector (Chest) kann gedroppt/bewegt werden - muss zu InventoryProtectionListener hinzugefügt werden
-- [ ] **World Cleanup bei Server Crash**: Was passiert wenn Server abstürzt während Games laufen? Alte World-Ordner könnten nicht gelöscht werden
-- [ ] **Player Inventory bei Disconnect**: Prüfen ob Inventory korrekt cleared wird wenn Spieler während Game disconnectet
-- [ ] **Memory Leak Check**: MapManager.activeWorlds könnte bei Fehlern nie gecleart werden
-- [ ] **Race Condition**: Mehrere Spieler joinen gleichzeitig → könnte maxPlayers überschreiten
-- [ ] **Skill Items Duplication**: Prüfen ob Skills-Items gedupliziert werden können (z.B. durch Drop-Exploit)
-- [ ] **Default Kit Selection**: Was passiert wenn Spieler kein Kit auswählt? Sollte Default-Kit geben
+- [X ] **🔴 KITS WERDEN NICHT VERGEBEN**: `IngameState.kt:61` - KitManager.giveKitItems(player) fehlt komplett! Spieler starten ohne Kit-Items
+- [X ] **Kit Selector Item nicht geschützt**: Kit Selector (Chest) kann gedroppt/bewegt werden - muss zu InventoryProtectionListener hinzugefügt werden
+- [X ] **World Cleanup bei Server Crash**: Was passiert wenn Server abstürzt während Games laufen? Alte World-Ordner könnten nicht gelöscht werden
+- [X ] **Player Inventory bei Disconnect**: Prüfen ob Inventory korrekt cleared wird wenn Spieler während Game disconnectet
+- [X ] **Memory Leak Check**: MapManager.activeWorlds könnte bei Fehlern nie gecleart werden
+- [X ] **Race Condition**: Mehrere Spieler joinen gleichzeitig → könnte maxPlayers überschreiten
+- [X ] **Skill Items Duplication**: Prüfen ob Skills-Items gedupliziert werden können (z.B. durch Drop-Exploit)
+- [X ] **Default Kit Selection**: Was passiert wenn Spieler kein Kit auswählt? Sollte Default-Kit geben
 
 ### Mittel
 
