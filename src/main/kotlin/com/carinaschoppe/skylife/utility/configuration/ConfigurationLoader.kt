@@ -120,9 +120,20 @@ object ConfigurationLoader {
             }
 
             val lobbyLines = if (scoreboardObject.has("lobby_lines") && scoreboardObject.get("lobby_lines").isJsonArray) {
-                gson.fromJson(scoreboardObject.get("lobby_lines"), Array<String>::class.java)
+                val lines = gson.fromJson(scoreboardObject.get("lobby_lines"), Array<String>::class.java)
                     ?.map { migrateLegacy(it, migration) }
                     ?: scoreboardDefaults.lobbyLines
+
+                // Check if lobby_lines need updating (missing {coins} or {guild} placeholders)
+                val hasCoinsPlaceholder = lines.any { it.contains("{coins}") }
+                val hasGuildPlaceholder = lines.any { it.contains("{guild}") }
+
+                if (!hasCoinsPlaceholder || !hasGuildPlaceholder) {
+                    migration.migrated = true
+                    scoreboardDefaults.lobbyLines
+                } else {
+                    lines
+                }
             } else {
                 scoreboardDefaults.lobbyLines
             }

@@ -1,5 +1,6 @@
 package com.carinaschoppe.skylife.utility.scoreboard
 
+import com.carinaschoppe.skylife.guild.GuildManager
 import com.carinaschoppe.skylife.utility.configuration.ConfigurationLoader
 import com.carinaschoppe.skylife.utility.messages.Messages
 import com.carinaschoppe.skylife.utility.statistics.StatsUtility
@@ -99,6 +100,10 @@ object LobbyScoreboardManager {
         // Get player coins
         val coins = com.carinaschoppe.skylife.economy.CoinManager.getCoins(player.uniqueId)
 
+        // Get player guild
+        val guild = GuildManager.getPlayerGuild(player.uniqueId)
+        val guildName = guild?.name ?: "None"
+
         val placeholders = mapOf(
             "{server}" to scoreboardConfig.serverName,
             "{rank}" to rank.displayName,
@@ -114,7 +119,8 @@ object LobbyScoreboardManager {
             "{player_rank}" to StatsUtility.getPlayerRank(player).toString(),
             "{skill1}" to skill1Name,
             "{skill2}" to skill2Name,
-            "{coins}" to coins.toString()
+            "{coins}" to coins.toString(),
+            "{guild}" to guildName
         )
 
         val templateLines = scoreboardConfig.lobbyLines.ifEmpty { defaultLobbyLines }
@@ -143,6 +149,7 @@ object LobbyScoreboardManager {
         "<aqua>Server</aqua><gray>: </gray><white>{server}</white>",
         "",
         "<aqua>Rank</aqua><gray>: </gray>{rank_color}{rank}",
+        "<aqua>Guild</aqua><gray>: </gray><light_purple>{guild}</light_purple>",
         "<aqua>Stats Rank</aqua><gray>: </gray><gold>#{player_rank}</gold>",
         "<aqua>Coins</aqua><gray>: </gray><gold>{coins}</gold>",
         "",
