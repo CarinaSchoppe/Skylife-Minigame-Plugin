@@ -24,8 +24,8 @@ object GameManager {
         // Only check for game over if we're in the ingame state
         if (game.currentState !is IngameState) return false
 
-        // Game continues if there are more than 2 players
-        if (game.livingPlayers.size > 2) {
+        // Game continues if there are more than 1 player
+        if (game.livingPlayers.size > 1) {
             return false
         }
 

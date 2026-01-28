@@ -58,11 +58,8 @@ object MessageLoader {
      * This method:
      * 1. Checks if messages.json exists, creates it with default values if not
      * 2. Configures Gson with a custom ComponentTypeAdapter for MiniMessage support
-     * 3. Deserializes the JSON into the Messages object
+     * 3. Deserializes the JSON and updates the Messages object properties
      * 4. Sends a confirmation message to the console
-     *
-     * Note: This method is currently not in use in the codebase. Consider whether
-     * it should be used to load message customizations on plugin startup.
      *
      * @see ComponentTypeAdapter
      * @see Messages
@@ -82,8 +79,29 @@ object MessageLoader {
             .create()
 
         val json: String = file.readText()
-        gson.fromJson(json, Messages::class.java)
 
+        // Deserialize into a map of property names to values
+        @Suppress("UNCHECKED_CAST")
+        val messagesMap = gson.fromJson(json, Map::class.java) as? Map<String, Any> ?: return
+
+        // Update Messages object properties using reflection
+        Messages::class.java.declaredFields.forEach { field ->
+            if (messagesMap.containsKey(field.name)) {
+                try {
+                    field.isAccessible = true
+                    val value = messagesMap[field.name]
+
+                    // Convert the value if it's a Component (stored as String in JSON)
+                    if (field.type == Component::class.java && value is String) {
+                        field.set(Messages, MiniMessage.miniMessage().deserialize(value))
+                    } else {
+                        field.set(Messages, value)
+                    }
+                } catch (e: Exception) {
+                    Bukkit.getLogger().warning("Failed to load message field: ${field.name} - ${e.message}")
+                }
+            }
+        }
 
         Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text("Messages loaded!", Messages.MESSAGE_COLOR)))
     }

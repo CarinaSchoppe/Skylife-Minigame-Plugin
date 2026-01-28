@@ -34,12 +34,6 @@ class IngameState(private val game: Game) : GameState {
      * gives them their skill items, and starts the ingame countdown.
      */
     override fun start() {
-        // Check if only one player is alive before starting
-        if (game.livingPlayers.size <= 1) {
-            GameCluster.stopGame(game)
-            return
-        }
-
         // Set protection active
         protectionActive = true
 

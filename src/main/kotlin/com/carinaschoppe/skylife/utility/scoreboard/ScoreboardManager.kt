@@ -102,6 +102,11 @@ object ScoreboardManager {
         val guildName = guild?.name ?: "None"
         val guildTag = guild?.tag ?: ""
 
+        // Get selected skills for display
+        val selectedSkills = com.carinaschoppe.skylife.skills.SkillsManager.getSelectedSkills(player).toList()
+        val skill1Name = selectedSkills.getOrNull(0)?.displayName ?: "None"
+        val skill2Name = selectedSkills.getOrNull(1)?.displayName ?: "None"
+
         val placeholders = mapOf(
             "{server}" to scoreboardConfig.serverName,
             "{map}" to game.mapName,
@@ -113,7 +118,10 @@ object ScoreboardManager {
             "{player}" to player.name,
             "{state}" to game.state.name,
             "{guild}" to guildName,
-            "{guild_tag}" to guildTag
+            "{guild_tag}" to guildTag,
+            "{skill1}" to skill1Name,
+            "{skill2}" to skill2Name,
+            "{kit}" to "$skill1Name, $skill2Name"  // Legacy placeholder
         )
 
         val templateLines = scoreboardConfig.lines.ifEmpty { defaultLines }
