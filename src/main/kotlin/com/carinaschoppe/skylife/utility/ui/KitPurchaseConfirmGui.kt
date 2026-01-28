@@ -12,13 +12,14 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Confirmation GUI for purchasing kits.
  */
 object KitPurchaseConfirmGui {
 
-    private val pendingPurchases = mutableMapOf<Player, Kit>()
+    private val pendingPurchases = ConcurrentHashMap<Player, Kit>()
 
     /**
      * Opens the purchase confirmation GUI for a kit.
@@ -127,19 +128,30 @@ object KitPurchaseConfirmGui {
                                 .append(Component.text("${CoinManager.getCoins(player.uniqueId)} Coins", NamedTextColor.GOLD))
                         )
                     )
+                    // Reopen kit selector to show the unlocked kit
+                    player.closeInventory()
+                    pendingPurchases.remove(player)
+                    // Schedule on next tick to avoid GUI issues
+                    Bukkit.getScheduler().runTask(com.carinaschoppe.skylife.Skylife.instance, Runnable {
+                        com.carinaschoppe.skylife.game.kit.KitSelectorGui.open(player)
+                    })
                 } else {
                     val errorMessage = result.exceptionOrNull()?.message ?: "Purchase failed!"
                     player.sendMessage(Messages.KIT_PURCHASE_FAILED(errorMessage))
+                    player.closeInventory()
+                    pendingPurchases.remove(player)
                 }
-                player.closeInventory()
-                pendingPurchases.remove(player)
                 return true
             }
 
             15 -> { // Cancel
                 player.sendMessage(Messages.PREFIX.append(Component.text("Purchase cancelled", NamedTextColor.YELLOW)))
-                player.closeInventory()
                 pendingPurchases.remove(player)
+                // Reopen kit selector
+                player.closeInventory()
+                Bukkit.getScheduler().runTask(com.carinaschoppe.skylife.Skylife.instance, Runnable {
+                    com.carinaschoppe.skylife.game.kit.KitSelectorGui.open(player)
+                })
                 return true
             }
         }

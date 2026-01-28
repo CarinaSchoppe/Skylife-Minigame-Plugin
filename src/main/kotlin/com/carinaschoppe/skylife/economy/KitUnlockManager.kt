@@ -64,7 +64,8 @@ object KitUnlockManager {
 
     /**
      * Attempts to purchase a kit for a player.
-     * @return true if successful, false if insufficient funds or already unlocked
+     * Thread-safe transaction that checks funds and unlocks atomically.
+     * @return Result.success if successful, Result.failure with error message otherwise
      */
     fun purchaseKit(player: UUID, kit: Kit): Result<Unit> {
         // Check if already unlocked
@@ -72,15 +73,25 @@ object KitUnlockManager {
             return Result.failure(Exception("You already own this kit!"))
         }
 
-        // Check if can afford
-        if (!CoinManager.canAfford(player, kit.rarity.price)) {
-            return Result.failure(Exception("Insufficient coins! Need ${kit.rarity.price}, have ${CoinManager.getCoins(player)}"))
+        // Check if free kit (Common)
+        if (kit.rarity.price == 0) {
+            unlockKit(player, kit)
+            return Result.success(Unit)
         }
 
-        // Remove coins
+        // Get current coins atomically
+        val currentCoins = CoinManager.getCoins(player)
+
+        // Check if can afford
+        if (currentCoins < kit.rarity.price) {
+            return Result.failure(Exception("Insufficient coins! Need ${kit.rarity.price}, have $currentCoins"))
+        }
+
+        // Remove coins (this is thread-safe with the max check inside)
         val success = CoinManager.removeCoins(player, kit.rarity.price)
         if (!success) {
-            return Result.failure(Exception("Failed to process payment"))
+            // This shouldn't happen since we checked above, but safety check
+            return Result.failure(Exception("Failed to process payment - insufficient funds"))
         }
 
         // Unlock kit

@@ -43,6 +43,7 @@ object CoinManager {
 
     /**
      * Adds coins to a player's balance.
+     * Database-first approach: writes to DB then updates cache for safety.
      * @param player The player UUID
      * @param amount The amount to add (can be negative)
      * @param multiplier Rank multiplier (1.0 for User, 2.0 for VIP, 4.0 for VIP+)
@@ -52,8 +53,7 @@ object CoinManager {
         val currentCoins = getCoins(player)
         val newBalance = maxOf(0, currentCoins + finalAmount) // Cannot go below 0
 
-        coinCache[player] = newBalance
-
+        // Write to database first for safety (in case of crash)
         transaction {
             val economy = PlayerEconomy.find { PlayerEconomyTable.playerUUID eq player.toString() }.firstOrNull()
             if (economy != null) {
@@ -65,15 +65,22 @@ object CoinManager {
                 }
             }
         }
+
+        // Update cache after successful DB write
+        coinCache[player] = newBalance
     }
 
     /**
      * Removes coins from a player's balance.
-     * @return true if successful, false if insufficient funds
+     * @return true if successful (had enough coins), false if insufficient funds (removed all remaining coins)
      */
     fun removeCoins(player: UUID, amount: Int): Boolean {
         val currentCoins = getCoins(player)
         if (currentCoins < amount) {
+            // Remove all coins if not enough
+            if (currentCoins > 0) {
+                addCoins(player, -currentCoins, 1.0)
+            }
             return false
         }
 
