@@ -26,6 +26,14 @@ class GameManagementGuiListener : Listener {
         when (holder) {
             is GameManagementGui.GameListHolder -> {
                 event.isCancelled = true
+
+                // Check permission
+                if (!player.hasPermission("skylife.admin.managegames")) {
+                    player.sendMessage(Messages.ERROR_PERMISSION)
+                    player.closeInventory()
+                    return
+                }
+
                 val gameName = GameManagementGui.getGameName(event.currentItem) ?: return
                 val gamePattern = GameCluster.gamePatterns.firstOrNull { it.mapName == gameName } ?: return
                 GameManagementGui.openEditGUI(player, gamePattern)
@@ -33,6 +41,14 @@ class GameManagementGuiListener : Listener {
 
             is GameManagementGui.GameEditHolder -> {
                 event.isCancelled = true
+
+                // Check permission
+                if (!player.hasPermission("skylife.admin.managegames")) {
+                    player.sendMessage(Messages.ERROR_PERMISSION)
+                    player.closeInventory()
+                    return
+                }
+
                 val gamePattern = holder.gamePattern
                 val action = GameManagementGui.getAction(event.currentItem) ?: return
 

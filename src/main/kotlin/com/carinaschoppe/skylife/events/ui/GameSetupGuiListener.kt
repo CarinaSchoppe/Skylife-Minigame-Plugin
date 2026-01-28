@@ -29,6 +29,14 @@ class GameSetupGuiListener : Listener {
         event.isCancelled = true
 
         val player = event.whoClicked as? Player ?: return
+
+        // Check permission
+        if (!player.hasPermission("skylife.admin.gamesetup")) {
+            player.sendMessage(Messages.ERROR_PERMISSION)
+            player.closeInventory()
+            return
+        }
+
         val gamePattern = holder.gamePattern
         val slot = event.slot
 

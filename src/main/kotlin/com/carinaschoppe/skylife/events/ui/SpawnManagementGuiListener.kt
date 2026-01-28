@@ -24,6 +24,14 @@ class SpawnManagementGuiListener : Listener {
         event.isCancelled = true
 
         val player = event.whoClicked as? Player ?: return
+
+        // Check permission
+        if (!player.hasPermission("skylife.admin.managegames")) {
+            player.sendMessage(Messages.ERROR_PERMISSION)
+            player.closeInventory()
+            return
+        }
+
         val gamePattern = holder.gamePattern
         val clickedItem = event.currentItem ?: return
 
@@ -61,7 +69,7 @@ class SpawnManagementGuiListener : Listener {
         when (event.click) {
             ClickType.LEFT -> {
                 // Teleport to spawn
-                val spawn = gamePattern.gameLocationManager.spawnLocations.getOrNull(spawnIndex)
+                val spawn = gamePattern.gameLocationManager.spawnLocations.elementAtOrNull(spawnIndex)
                 if (spawn != null) {
                     val location = GameLocationManager.skylifeLocationToLocationConverter(spawn)
                     if (location != null) {
@@ -82,8 +90,9 @@ class SpawnManagementGuiListener : Listener {
 
             ClickType.RIGHT -> {
                 // Delete spawn
-                if (spawnIndex < gamePattern.gameLocationManager.spawnLocations.size) {
-                    gamePattern.gameLocationManager.spawnLocations.removeAt(spawnIndex)
+                val spawn = gamePattern.gameLocationManager.spawnLocations.elementAtOrNull(spawnIndex)
+                if (spawn != null) {
+                    gamePattern.gameLocationManager.spawnLocations.remove(spawn)
 
                     // Save immediately
                     GameLoader.saveGameToFile(gamePattern)
