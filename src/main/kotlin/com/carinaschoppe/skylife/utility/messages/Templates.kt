@@ -277,5 +277,25 @@ data class Templates(
     var skillLuckyEggLore: String = "<gray>Throw for a random effect!</gray>",
 
     // Stats loading
-    var statsLoaded: String = "<prefix><green>Stats loaded!</green>"
+    var statsLoaded: String = "<prefix><green>Stats loaded!</green>",
+
+    // Game Overview GUI
+    var guiGameOverviewTitle: String = "Spieleübersicht",
+    var guiGameOverviewNextPage: String = "Nächste Seite",
+    var guiGameOverviewPreviousPage: String = "Vorherige Seite",
+    var guiGameOverviewOpenList: String = "Liste der Spiele öffnen",
+    var guiGameOverviewPlayers: String = "Spieler: <current>/<max>",
+
+    // Skills GUI Title
+    var guiSkillSelectorTitle: String = "Select Your Skills",
+    var guiSkillSelectionInfo: String = "Skill Selection Info",
+
+    // Other GUI titles
+    var guiSkillOverviewTitle: String = "Skill Overview",
+
+    // Items/Maps
+    var itemPaderbornName: String = "Paderborn",
+
+    // Error messages - skills
+    var skillFailedToSelect: String = "Failed to select skill"
 )
