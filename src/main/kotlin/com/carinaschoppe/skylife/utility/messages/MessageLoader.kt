@@ -22,8 +22,8 @@ object MessageLoader {
      *
      * This method:
      * 1. Creates the messages.json file if it doesn't exist
-     * 2. Configures Gson with pretty printing and a custom ComponentTypeAdapter
-     * 3. Serializes the Messages object to JSON
+     * 2. Only saves simple Component properties (not functions or methods)
+     * 3. Serializes Components to MiniMessage format
      * 4. Writes the JSON to the file
      * 5. Sends a confirmation message to the console
      *
@@ -41,11 +41,27 @@ object MessageLoader {
             file.createNewFile()
         }
 
-        val gson: Gson = GsonBuilder().setPrettyPrinting()
-            .registerTypeAdapter(Component::class.java, ComponentTypeAdapter(MiniMessage.miniMessage()))
-            .create()
+        val gson: Gson = GsonBuilder().setPrettyPrinting().create()
+        val miniMessage = MiniMessage.miniMessage()
 
-        val json: String = gson.toJson(Messages)
+        // Extract only the serializable Component properties
+        val messagesMap = mutableMapOf<String, String>()
+
+        Messages::class.java.declaredFields.forEach { field ->
+            try {
+                field.isAccessible = true
+                val value = field.get(Messages)
+
+                // Only save Component properties that are not functions
+                if (value is Component && field.type == Component::class.java) {
+                    messagesMap[field.name] = miniMessage.serialize(value)
+                }
+            } catch (e: Exception) {
+                // Skip fields that can't be accessed or serialized
+            }
+        }
+
+        val json: String = gson.toJson(messagesMap)
         file.writeText(json)
         Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text("Messages saved!", Messages.MESSAGE_COLOR)))
 

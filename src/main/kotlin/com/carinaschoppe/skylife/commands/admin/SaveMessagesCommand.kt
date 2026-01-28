@@ -10,13 +10,12 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 /**
- * Command to export current messages to messages.json for manual editing.
+ * Command to export current messages to messages.json for editing.
  * Usage: /savemessages
  *
- * Note: The messages.json file is for reference only. Due to technical limitations
- * with Kotlin objects, changes to messages.json will NOT be loaded automatically.
- * This command allows you to export the current message templates for documentation
- * or reference purposes.
+ * This command exports all static message Components to messages.json in MiniMessage format.
+ * After editing the file, restart the server or reload the plugin to load the changes.
+ * Only static Component messages are saved - dynamic message functions are not included.
  */
 class SaveMessagesCommand : CommandExecutor {
 
@@ -37,7 +36,7 @@ class SaveMessagesCommand : CommandExecutor {
         )
 
         sender.sendMessage(
-            Component.text("Note: The messages.json file is for reference only.", Messages.MESSAGE_COLOR)
+            Component.text("Restart the server to load any changes you make.", Messages.MESSAGE_COLOR)
         )
 
         return true
