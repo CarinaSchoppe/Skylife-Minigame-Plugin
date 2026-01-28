@@ -198,8 +198,8 @@ enum class Skill(
         SkillRarity.LEGENDARY
     ),
 
-    KLETTERER(
-        "Kletterer",
+    CLIMBER(
+        "Climber",
         listOf(
             "Climb up walls by looking at them",
             "and moving forward.",
@@ -276,8 +276,8 @@ enum class Skill(
         SkillRarity.COMMON
     ),
 
-    RITTER(
-        "Ritter",
+    KNIGHT(
+        "Knight",
         listOf(
             "Begin the battle with full",
             "diamond armor protection.",

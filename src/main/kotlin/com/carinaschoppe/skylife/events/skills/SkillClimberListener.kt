@@ -10,16 +10,16 @@ import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.util.Vector
 
 /**
- * Listener for the Kletterer skill.
+ * Listener for the Climber skill.
  * Allows players to climb walls when looking at them and moving forward.
  */
-class SkillKlettererListener : Listener {
+class SkillClimberListener : Listener {
 
     @EventHandler
     fun onPlayerMove(event: PlayerMoveEvent) {
         val player = event.player
 
-        if (!SkillsManager.hasSkillActive(player, Skill.KLETTERER)) return
+        if (!SkillsManager.hasSkillActive(player, Skill.CLIMBER)) return
 
         // Check if player is against a wall
         if (!isAgainstWall(player)) return

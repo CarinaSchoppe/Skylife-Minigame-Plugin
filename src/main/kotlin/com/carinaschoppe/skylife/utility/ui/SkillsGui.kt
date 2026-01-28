@@ -123,6 +123,10 @@ class SkillsGui(private val player: Player) : InventoryHolder {
      * Opens the GUI for the player.
      */
     fun open() {
+        // Reload unlocks from database to ensure cache is up-to-date
+        SkillUnlockManager.reloadPlayerUnlocks(player.uniqueId)
+        // Refresh GUI with updated data
+        refresh()
         player.openInventory(inventory)
     }
 

@@ -35,13 +35,13 @@ object SkillEffectsManager {
                 Skill.BOWMASTER -> applyBowmaster(player)
                 Skill.INVISIBLE_STALKER -> {} // Handled by listener
                 Skill.STRENGTH_CORE -> applyStrengthCore(player)
-                Skill.KLETTERER -> {} // Handled by listener
+                Skill.CLIMBER -> {} // Handled by listener
                 Skill.KANGAROO -> {} // Handled by listener
                 Skill.NINJA -> applyNinja(player)
                 Skill.PILOT -> applyPilot(player)
                 Skill.GOD -> {} // Handled by task
                 Skill.KUNG_FU_MASTER -> applyKungFuMaster(player)
-                Skill.RITTER -> applyRitter(player)
+                Skill.KNIGHT -> applyKnight(player)
             }
         }
     }
@@ -206,7 +206,7 @@ object SkillEffectsManager {
         player.inventory.addItem(stick)
     }
 
-    private fun applyRitter(player: Player) {
+    private fun applyKnight(player: Player) {
         // Give full diamond armor
         val helmet = ItemStack(Material.DIAMOND_HELMET)
         val chestplate = ItemStack(Material.DIAMOND_CHESTPLATE)
