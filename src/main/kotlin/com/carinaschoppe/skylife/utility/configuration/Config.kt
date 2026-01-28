@@ -19,7 +19,10 @@ data class Config(
     var skillPrices: SkillPriceConfig = SkillPriceConfig(),
 
     @SerializedName("max_skills")
-    var maxSkills: MaxSkillsConfig = MaxSkillsConfig()
+    var maxSkills: MaxSkillsConfig = MaxSkillsConfig(),
+
+    @SerializedName("priority_join")
+    var priorityJoin: PriorityJoinConfig = PriorityJoinConfig()
 )
 
 data class DatabaseConfig(
@@ -70,4 +73,15 @@ data class MaxSkillsConfig(
 
     @SerializedName("vip_plus")
     var vipPlus: Int = 4
+)
+
+data class PriorityJoinConfig(
+    @SerializedName("enabled_for_vip")
+    var enabledForVip: Boolean = true,
+
+    @SerializedName("enabled_for_vip_plus")
+    var enabledForVipPlus: Boolean = true,
+
+    @SerializedName("enabled_for_staff")
+    var enabledForStaff: Boolean = true
 )

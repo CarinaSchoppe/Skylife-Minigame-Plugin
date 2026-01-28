@@ -68,6 +68,9 @@ commands:
   managegames:
     description: Open the game management GUI (Admin only)
     aliases: [ mg, editgames, gamemanager ]
+  vanish:
+    description: Toggle vanish mode for yourself or another player (Admin/Mod only)
+    aliases: [ v ]
 permissions:
   skylife.*:
     description: Gives access to all Skylife commands
@@ -109,6 +112,9 @@ permissions:
       skylife.admin.removecoins: true
       skylife.admin.deletegame: true
       skylife.admin.managegames: true
+      skylife.vanish.self: true
+      skylife.vanish.others: true
+      skylife.vanish.see: true
   skylife.join:
     description: Allows joining games
     default: true
@@ -148,18 +154,6 @@ permissions:
   skylife.leaderboard:
     description: Allows viewing leaderboards
     default: true
-  skylife.admin.givecoins:
-    description: Allows giving coins to players
-    default: op
-  skylife.admin.removecoins:
-    description: Allows removing coins from players
-    default: op
-  skylife.admin.deletegame:
-    description: Allows deleting game patterns and instances
-    default: op
-  skylife.admin.managegames:
-    description: Allows managing game patterns via GUI
-    default: op
   skylife.admin.create:
     description: Allows creating game patterns (DEV/ADMIN only)
     default: op
@@ -186,6 +180,27 @@ permissions:
     default: op
   skylife.admin.savemessages:
     description: Allows exporting messages (DEV/ADMIN only)
+    default: op
+  skylife.admin.givecoins:
+    description: Allows giving coins to players (ADMIN only)
+    default: op
+  skylife.admin.removecoins:
+    description: Allows removing coins from players (ADMIN only)
+    default: op
+  skylife.admin.deletegame:
+    description: Allows deleting game patterns and instances (DEV/ADMIN only)
+    default: op
+  skylife.admin.managegames:
+    description: Allows managing game patterns via GUI (DEV/ADMIN only)
+    default: op
+  skylife.vanish.self:
+    description: Allows toggling vanish for yourself (ADMIN/MOD only)
+    default: op
+  skylife.vanish.others:
+    description: Allows toggling vanish for other players (ADMIN only)
+    default: op
+  skylife.vanish.see:
+    description: Allows seeing vanished players (ADMIN/MOD only)
     default: op
   skylife.rank.user:
     description: User rank (default)

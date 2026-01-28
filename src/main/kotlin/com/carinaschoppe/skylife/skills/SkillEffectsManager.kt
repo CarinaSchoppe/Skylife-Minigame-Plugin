@@ -35,6 +35,11 @@ object SkillEffectsManager {
                 Skill.BOWMASTER -> applyBowmaster(player)
                 Skill.INVISIBLE_STALKER -> {} // Handled by listener
                 Skill.STRENGTH_CORE -> applyStrengthCore(player)
+                Skill.KLETTERER -> {} // Handled by listener
+                Skill.KANGAROO -> {} // Handled by listener
+                Skill.NINJA -> applyNinja(player)
+                Skill.PILOT -> applyPilot(player)
+                Skill.GOD -> {} // Handled by task
             }
         }
     }
@@ -150,5 +155,35 @@ object SkillEffectsManager {
                 false
             )
         )
+    }
+
+    private fun applyNinja(player: Player) {
+        // Give gray dye as activation item
+        val ninjaItem = ItemStack(Material.GRAY_DYE, 3)
+        val meta = ninjaItem.itemMeta
+        meta.displayName(net.kyori.adventure.text.Component.text("Ninja Cloak", net.kyori.adventure.text.format.NamedTextColor.DARK_GRAY))
+        meta.lore(
+            listOf(
+                net.kyori.adventure.text.Component.text("Right-click to become invisible", net.kyori.adventure.text.format.NamedTextColor.GRAY),
+                net.kyori.adventure.text.Component.text("for 5 seconds!", net.kyori.adventure.text.format.NamedTextColor.GRAY)
+            )
+        )
+        ninjaItem.itemMeta = meta
+        player.inventory.addItem(ninjaItem)
+    }
+
+    private fun applyPilot(player: Player) {
+        // Give elytra as activation item (not wearable, just for activation)
+        val pilotItem = ItemStack(Material.ELYTRA, 1)
+        val meta = pilotItem.itemMeta
+        meta.displayName(net.kyori.adventure.text.Component.text("Pilot Wings", net.kyori.adventure.text.format.NamedTextColor.AQUA))
+        meta.lore(
+            listOf(
+                net.kyori.adventure.text.Component.text("Right-click to fly for 3 seconds,", net.kyori.adventure.text.format.NamedTextColor.GRAY),
+                net.kyori.adventure.text.Component.text("then suffer nausea!", net.kyori.adventure.text.format.NamedTextColor.GRAY)
+            )
+        )
+        pilotItem.itemMeta = meta
+        player.inventory.addItem(pilotItem)
     }
 }

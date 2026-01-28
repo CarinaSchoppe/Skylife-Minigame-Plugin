@@ -14,10 +14,12 @@ import org.bukkit.potion.PotionType
  * - Snow Spammer: 1 snowball
  * - Endermaster: 1 ender pearl
  * - Witch: 1 random potion
+ * - God: 1 golden apple every 90 seconds
  */
 object SkillPassiveItemsTask {
 
     private var taskId: Int = -1
+    private val godSkillCounters = mutableMapOf<java.util.UUID, Int>()
 
     /**
      * Starts the repeating task.
@@ -50,6 +52,19 @@ object SkillPassiveItemsTask {
                             player.inventory.addItem(potion)
                         }
 
+                        Skill.GOD -> {
+                            // Track counter for 90 second intervals
+                            val counter = godSkillCounters.getOrDefault(player.uniqueId, 0)
+                            godSkillCounters[player.uniqueId] = counter + 1
+
+                            // 90 seconds / 10 seconds = 9 cycles
+                            if (counter >= 9) {
+                                val goldenApple = ItemStack(Material.GOLDEN_APPLE, 1)
+                                player.inventory.addItem(goldenApple)
+                                godSkillCounters[player.uniqueId] = 0
+                            }
+                        }
+
                         else -> {}
                     }
                 }
@@ -65,6 +80,7 @@ object SkillPassiveItemsTask {
             Bukkit.getScheduler().cancelTask(taskId)
             taskId = -1
         }
+        godSkillCounters.clear()
     }
 
     /**

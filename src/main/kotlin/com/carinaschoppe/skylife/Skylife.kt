@@ -4,10 +4,7 @@ import com.carinaschoppe.skylife.commands.admin.*
 import com.carinaschoppe.skylife.commands.user.*
 import com.carinaschoppe.skylife.database.DatabaseConnector
 import com.carinaschoppe.skylife.events.player.*
-import com.carinaschoppe.skylife.events.skills.SkillFeatherfallListener
-import com.carinaschoppe.skylife.events.skills.SkillInvisibleStalkerListener
-import com.carinaschoppe.skylife.events.skills.SkillJumboListener
-import com.carinaschoppe.skylife.events.skills.SkillLuckyBirdListener
+import com.carinaschoppe.skylife.events.skills.*
 import com.carinaschoppe.skylife.events.ui.GameSetupGuiListener
 import com.carinaschoppe.skylife.events.ui.SkillsGuiListener
 import com.carinaschoppe.skylife.game.GameLoader
@@ -133,6 +130,10 @@ open class Skylife : JavaPlugin() {
         getCommand("deletegame")?.tabCompleter = deleteGameCommand
 
         getCommand("managegames")?.setExecutor(ManageGamesCommand())
+
+        val vanishCommand = com.carinaschoppe.skylife.commands.VanishCommand()
+        getCommand("vanish")?.setExecutor(vanishCommand)
+        getCommand("vanish")?.tabCompleter = vanishCommand
     }
 
     private fun registerEventListeners(pluginManager: PluginManager) {
@@ -151,6 +152,7 @@ open class Skylife : JavaPlugin() {
         pluginManager.registerEvents(PlayerSelectGameListener(), this)
         pluginManager.registerEvents(PlayerDisplayNameListener(), this)
         pluginManager.registerEvents(PlayerDisconnectsPartyListener(), this)
+        pluginManager.registerEvents(com.carinaschoppe.skylife.events.VanishListener(), this)
         registerSkillListeners(pluginManager)
     }
 
@@ -164,6 +166,10 @@ open class Skylife : JavaPlugin() {
         pluginManager.registerEvents(SkillFeatherfallListener(), this)
         pluginManager.registerEvents(SkillInvisibleStalkerListener(), this)
         pluginManager.registerEvents(SkillLuckyBirdListener(), this)
+        pluginManager.registerEvents(SkillKlettererListener(), this)
+        pluginManager.registerEvents(SkillKangarooListener(), this)
+        pluginManager.registerEvents(SkillNinjaListener(), this)
+        pluginManager.registerEvents(SkillPilotListener(), this)
     }
 
     private fun createGameMapsFolder() {
@@ -177,6 +183,9 @@ open class Skylife : JavaPlugin() {
     }
 
     override fun onDisable() {
+        // Unvanish all players before shutdown to prevent state issues
+        com.carinaschoppe.skylife.utility.VanishManager.unvanishAll()
+
         // Cleanup all game worlds before shutdown
         com.carinaschoppe.skylife.game.managers.MapManager.cleanupAllWorlds()
 

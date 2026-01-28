@@ -196,6 +196,71 @@ enum class Skill(
         Material.BLAZE_POWDER,
         SkillType.COMBAT,
         SkillRarity.LEGENDARY
+    ),
+
+    KLETTERER(
+        "Kletterer",
+        listOf(
+            "Climb up walls by looking at them",
+            "and moving forward.",
+            "",
+            "<gray>Type: <yellow>Mobility</yellow></gray>"
+        ),
+        Material.LADDER,
+        SkillType.MOBILITY,
+        SkillRarity.RARE
+    ),
+
+    KANGAROO(
+        "Kangaroo",
+        listOf(
+            "Perform a double jump to reach",
+            "higher places.",
+            "",
+            "<gray>Type: <yellow>Mobility</yellow></gray>"
+        ),
+        Material.RABBIT_FOOT,
+        SkillType.MOBILITY,
+        SkillRarity.EPIC
+    ),
+
+    NINJA(
+        "Ninja",
+        listOf(
+            "Become invisible for a short time.",
+            "Use strategically for ambushes.",
+            "",
+            "<gray>Type: <yellow>Stealth</yellow></gray>"
+        ),
+        Material.GRAY_DYE,
+        SkillType.UTILITY,
+        SkillRarity.EPIC
+    ),
+
+    PILOT(
+        "Pilot",
+        listOf(
+            "Fly for 3 seconds, then suffer",
+            "3 seconds of nausea.",
+            "",
+            "<gray>Type: <yellow>Mobility</yellow></gray>"
+        ),
+        Material.ELYTRA,
+        SkillType.MOBILITY,
+        SkillRarity.LEGENDARY
+    ),
+
+    GOD(
+        "God",
+        listOf(
+            "Receive a golden apple every",
+            "90 seconds for extra sustain.",
+            "",
+            "<gray>Type: <yellow>Sustain / Defense</yellow></gray>"
+        ),
+        Material.GOLDEN_APPLE,
+        SkillType.SUSTAIN,
+        SkillRarity.LEGENDARY
     );
 
     /**

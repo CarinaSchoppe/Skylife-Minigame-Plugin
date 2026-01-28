@@ -2,6 +2,7 @@ package com.carinaschoppe.skylife.commands.user
 
 import com.carinaschoppe.skylife.game.GameCluster
 import com.carinaschoppe.skylife.party.PartyManager
+import com.carinaschoppe.skylife.utility.VanishManager
 import com.carinaschoppe.skylife.utility.messages.Messages
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -40,6 +41,11 @@ class JoinGameCommand : CommandExecutor, TabCompleter {
         if (GameCluster.getGame(sender) != null) {
             sender.sendMessage(Messages.ALLREADY_IN_GAME)
             return true
+        }
+
+        // Prevent vanished players from joining games
+        if (VanishManager.isVanished(sender)) {
+            VanishManager.unvanish(sender)
         }
 
         if (!sender.hasPermission("skylife.join")) {

@@ -323,4 +323,17 @@ object Templates {
     var leaderboardEntry: String = "<prefix><gray>#<rank></gray> <gold><player></gold> <gray>-</gray> <green><value></green>"
     var leaderboardFooter: String = "<prefix><gold>═════════════════════════════</gold>"
     var leaderboardInvalidStat: String = "<prefix><red>Invalid stat type! Use: points, kills, wins, games, kd</red>"
+
+    // Priority join messages
+    var priorityJoinKicked: String = "<prefix><gold><bold><kicker></bold></gold><green> with higher priority joined the game. You have been moved to the lobby.</green>"
+    var priorityJoinFull: String = "<prefix><red>Game is full and no players with lower priority could be found!</red>"
+
+    // Vanish messages
+    var vanishEnabled: String = "<prefix><green><bold>Vanish enabled!</bold></green><gray> You are now invisible.</gray>"
+    var vanishDisabled: String = "<prefix><green><bold>Vanish disabled!</bold></green><gray> You are now visible.</gray>"
+    var vanishEnabledOther: String = "<prefix><green><bold>Vanish enabled for </bold></green><gold><bold><player></bold></gold>"
+    var vanishDisabledOther: String = "<prefix><green><bold>Vanish disabled for </bold></green><gold><bold><player></bold></gold>"
+    var vanishUsage: String = "<prefix><red>Usage: /vanish [player]</red>"
+    var onlyPlayers: String = "<prefix><red>This command can only be used by players!</red>"
+    var noPermission: String = "<prefix><red>You don't have permission to use this command!</red>"
 }

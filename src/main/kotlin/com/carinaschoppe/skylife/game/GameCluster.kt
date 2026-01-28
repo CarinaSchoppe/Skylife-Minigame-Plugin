@@ -92,15 +92,48 @@ object GameCluster {
      */
     @Synchronized
     fun addPlayerToGame(player: Player, game: Game): Boolean {
-        // Check if game is full or already started
-        if (game.livingPlayers.size >= game.maxPlayers) {
+        // Check if game already started
+        if (game.state != GameStateType.LOBBY) {
             player.sendMessage(com.carinaschoppe.skylife.utility.messages.Messages.ERROR_GAME_FULL_OR_STARTED)
             return false
         }
 
-        if (game.state != GameStateType.LOBBY) {
-            player.sendMessage(com.carinaschoppe.skylife.utility.messages.Messages.ERROR_GAME_FULL_OR_STARTED)
-            return false
+        // Check if game is full
+        if (game.livingPlayers.size >= game.maxPlayers) {
+            // Try priority join if enabled
+            val config = com.carinaschoppe.skylife.utility.configuration.ConfigurationLoader.config
+            val joiningPriority = com.carinaschoppe.skylife.utility.PlayerPriority.getPlayerPriority(player)
+
+            // Check if priority join is enabled for this player's rank
+            val priorityEnabled = when (joiningPriority) {
+                com.carinaschoppe.skylife.utility.PlayerPriority.VIP -> config.priorityJoin.enabledForVip
+                com.carinaschoppe.skylife.utility.PlayerPriority.VIP_PLUS -> config.priorityJoin.enabledForVipPlus
+                com.carinaschoppe.skylife.utility.PlayerPriority.STAFF -> config.priorityJoin.enabledForStaff
+                else -> false
+            }
+
+            if (!priorityEnabled) {
+                player.sendMessage(com.carinaschoppe.skylife.utility.messages.Messages.ERROR_GAME_FULL_OR_STARTED)
+                return false
+            }
+
+            // Find a player to kick
+            val playerToKick = com.carinaschoppe.skylife.utility.PlayerPriority.findPlayerToKick(
+                game.livingPlayers.toList(),
+                player
+            )
+
+            if (playerToKick == null) {
+                // No suitable player found to kick
+                player.sendMessage(com.carinaschoppe.skylife.utility.messages.Messages.PRIORITY_JOIN_FULL)
+                return false
+            }
+
+            // Kick the player
+            playerToKick.sendMessage(
+                com.carinaschoppe.skylife.utility.messages.Messages.PRIORITY_JOIN_KICKED(player.name)
+            )
+            removePlayerFromGame(playerToKick)
         }
 
         player.inventory.clear()

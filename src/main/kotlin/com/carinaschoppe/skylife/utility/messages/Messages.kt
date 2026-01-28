@@ -253,6 +253,21 @@ object Messages {
 
     val LEADERBOARD_FOOTER: Component get() = parseTemplate(TEMPLATES.leaderboardFooter)
     val LEADERBOARD_INVALID_STAT: Component get() = parseTemplate(TEMPLATES.leaderboardInvalidStat)
+
+    // Priority join messages
+    fun PRIORITY_JOIN_KICKED(kickerName: String): Component =
+        parseTemplate(TEMPLATES.priorityJoinKicked, "kicker" to kickerName)
+
+    val PRIORITY_JOIN_FULL: Component get() = parseTemplate(TEMPLATES.priorityJoinFull)
+
+    // Vanish messages
+    val VANISH_ENABLED: Component get() = parseTemplate(TEMPLATES.vanishEnabled)
+    val VANISH_DISABLED: Component get() = parseTemplate(TEMPLATES.vanishDisabled)
+    fun VANISH_ENABLED_OTHER(playerName: String): Component = parseTemplate(TEMPLATES.vanishEnabledOther, "player" to playerName)
+    fun VANISH_DISABLED_OTHER(playerName: String): Component = parseTemplate(TEMPLATES.vanishDisabledOther, "player" to playerName)
+    val VANISH_USAGE: Component get() = parseTemplate(TEMPLATES.vanishUsage)
+    val ONLY_PLAYERS: Component get() = parseTemplate(TEMPLATES.onlyPlayers)
+    val NO_PERMISSION: Component get() = parseTemplate(TEMPLATES.noPermission)
 }
 
 
