@@ -49,7 +49,7 @@ data class PostgreSQLConfig(
 
 data class SkillPriceConfig(
     @SerializedName("common")
-    var common: Int = 0,
+    var common: Int = 150,
 
     @SerializedName("rare")
     var rare: Int = 500,

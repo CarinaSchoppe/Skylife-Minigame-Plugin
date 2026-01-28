@@ -12,15 +12,19 @@ import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Database table for player skill selections.
+ * Supports up to 4 skill slots (for VIP+ players and admins).
  */
 object PlayerSkills : IntIdTable() {
     val playerUUID = varchar("player_uuid", 36).uniqueIndex()
     val skill1 = enumerationByName("skill1", 30, Skill::class).nullable()
     val skill2 = enumerationByName("skill2", 30, Skill::class).nullable()
+    val skill3 = enumerationByName("skill3", 30, Skill::class).nullable()
+    val skill4 = enumerationByName("skill4", 30, Skill::class).nullable()
 }
 
 /**
  * Entity class for player skills database operations.
+ * Supports up to 4 skill slots.
  */
 class PlayerSkillSelection(id: EntityID<Int>) : Entity<Int>(id) {
     companion object : EntityClass<Int, PlayerSkillSelection>(PlayerSkills)
@@ -28,6 +32,8 @@ class PlayerSkillSelection(id: EntityID<Int>) : Entity<Int>(id) {
     var playerUUID by PlayerSkills.playerUUID
     var skill1 by PlayerSkills.skill1
     var skill2 by PlayerSkills.skill2
+    var skill3 by PlayerSkills.skill3
+    var skill4 by PlayerSkills.skill4
 }
 
 /**
@@ -44,10 +50,17 @@ object SkillsManager {
     /**
      * Gets the maximum number of skills a player can select based on their rank.
      * Values are loaded from config.json (default: USER=2, VIP=3, VIP+=4)
+     * Admins/OPs automatically get VIP+ benefits.
      */
     fun getMaxSkills(player: Player): Int {
-        val rank = com.carinaschoppe.skylife.economy.PlayerRank.getRank(player)
         val config = com.carinaschoppe.skylife.Skylife.config.maxSkills
+
+        // Check if player is OP or has admin wildcard permission
+        if (player.isOp || player.hasPermission("skylife.*") || player.hasPermission("*")) {
+            return config.vipPlus
+        }
+
+        val rank = com.carinaschoppe.skylife.economy.PlayerRank.getRank(player)
         return when (rank) {
             com.carinaschoppe.skylife.economy.PlayerRank.VIP -> config.vip
             com.carinaschoppe.skylife.economy.PlayerRank.VIP_PLUS -> config.vipPlus
@@ -67,6 +80,8 @@ object SkillsManager {
 
                 selection.skill1?.let { skills.add(it) }
                 selection.skill2?.let { skills.add(it) }
+                selection.skill3?.let { skills.add(it) }
+                selection.skill4?.let { skills.add(it) }
 
                 if (skills.isNotEmpty()) {
                     selectedSkills[uuid] = skills
@@ -139,6 +154,7 @@ object SkillsManager {
 
     /**
      * Saves skill selection to database.
+     * Supports up to 4 skill slots.
      */
     private fun saveSkillSelection(uuid: UUID, skills: Set<Skill>) {
         transaction {
@@ -147,15 +163,21 @@ object SkillsManager {
             val skillsList = skills.toList()
             val skill1 = skillsList.getOrNull(0)
             val skill2 = skillsList.getOrNull(1)
+            val skill3 = skillsList.getOrNull(2)
+            val skill4 = skillsList.getOrNull(3)
 
             if (existing != null) {
                 existing.skill1 = skill1
                 existing.skill2 = skill2
+                existing.skill3 = skill3
+                existing.skill4 = skill4
             } else {
                 PlayerSkillSelection.new {
                     this.playerUUID = uuid.toString()
                     this.skill1 = skill1
                     this.skill2 = skill2
+                    this.skill3 = skill3
+                    this.skill4 = skill4
                 }
             }
         }

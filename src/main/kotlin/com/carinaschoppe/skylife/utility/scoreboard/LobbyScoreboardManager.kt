@@ -88,7 +88,7 @@ object LobbyScoreboardManager {
 
     private fun buildLobbyScoreboardLines(player: Player): List<String> {
         val scoreboardConfig = ConfigurationLoader.config.scoreboard
-        val rank = getPlayerRank(player)
+        val rank = com.carinaschoppe.skylife.economy.PlayerRank.getRank(player)
         val stats = StatsUtility.statsPlayers.firstOrNull { it.uuid == player.uniqueId.toString() }
 
         // Get selected skills for display
@@ -102,7 +102,7 @@ object LobbyScoreboardManager {
         val placeholders = mapOf(
             "{server}" to scoreboardConfig.serverName,
             "{rank}" to rank.displayName,
-            "{rank_color}" to rank.color,
+            "{rank_color}" to getRankColorMiniMessage(rank),
             "{player}" to player.name,
             "{online}" to Bukkit.getOnlinePlayers().size.toString(),
             "{max_players}" to Bukkit.getMaxPlayers().toString(),
@@ -122,17 +122,18 @@ object LobbyScoreboardManager {
     }
 
     /**
-     * Determines the rank of a player based on their permissions.
-     * @param player The player to check
-     * @return The player's rank
+     * Converts a PlayerRank's color to MiniMessage format.
+     * @param rank The player rank
+     * @return MiniMessage color tag (e.g., "<red>", "<aqua>")
      */
-    private fun getPlayerRank(player: Player): PlayerRank {
-        return when {
-            player.hasPermission("skylife.rank.admin") -> PlayerRank.ADMIN
-            player.hasPermission("skylife.rank.dev") -> PlayerRank.DEV
-            player.hasPermission("skylife.rank.mod") -> PlayerRank.MOD
-            player.hasPermission("skylife.rank.premium") -> PlayerRank.PREMIUM
-            else -> PlayerRank.PLAYER
+    private fun getRankColorMiniMessage(rank: com.carinaschoppe.skylife.economy.PlayerRank): String {
+        return when (rank) {
+            com.carinaschoppe.skylife.economy.PlayerRank.USER -> "<gray>"
+            com.carinaschoppe.skylife.economy.PlayerRank.VIP -> "<green>"
+            com.carinaschoppe.skylife.economy.PlayerRank.VIP_PLUS -> "<aqua>"
+            com.carinaschoppe.skylife.economy.PlayerRank.MOD -> "<green>"
+            com.carinaschoppe.skylife.economy.PlayerRank.DEV -> "<aqua>"
+            com.carinaschoppe.skylife.economy.PlayerRank.ADMIN -> "<red>"
         }
     }
 
@@ -155,15 +156,4 @@ object LobbyScoreboardManager {
         "<dark_gray><strikethrough>----------------</strikethrough></dark_gray>"
     )
     private const val MAX_LINES = 15
-}
-
-/**
- * Represents a player rank with display name and color.
- */
-enum class PlayerRank(val displayName: String, val color: String) {
-    PLAYER("Player", "<gray>"),
-    PREMIUM("Premium", "<gold>"),
-    MOD("Mod", "<green>"),
-    DEV("Dev", "<aqua>"),
-    ADMIN("Admin", "<red>")
 }

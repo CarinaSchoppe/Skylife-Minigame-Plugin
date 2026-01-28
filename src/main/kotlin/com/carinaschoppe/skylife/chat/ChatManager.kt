@@ -217,10 +217,6 @@ object ChatManager {
      * Gets the display color for a player rank.
      */
     private fun getRankColor(rank: com.carinaschoppe.skylife.economy.PlayerRank): NamedTextColor {
-        return when (rank) {
-            com.carinaschoppe.skylife.economy.PlayerRank.VIP -> NamedTextColor.GREEN
-            com.carinaschoppe.skylife.economy.PlayerRank.VIP_PLUS -> NamedTextColor.GOLD
-            else -> NamedTextColor.GRAY
-        }
+        return rank.getColor()
     }
 }
