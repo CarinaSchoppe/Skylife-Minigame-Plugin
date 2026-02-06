@@ -1,6 +1,6 @@
 package com.carinaschoppe.skylife.skills
 
-import com.carinaschoppe.skylife.Skylife
+import com.carinaschoppe.skylife.utility.configuration.ConfigurationLoader
 import net.kyori.adventure.text.format.NamedTextColor
 
 /**
@@ -33,10 +33,10 @@ enum class SkillRarity(
      */
     val price: Int
         get() = when (this) {
-            COMMON -> Skylife.config.skillPrices.common
-            RARE -> Skylife.config.skillPrices.rare
-            EPIC -> Skylife.config.skillPrices.epic
-            LEGENDARY -> Skylife.config.skillPrices.legendary
+            COMMON -> ConfigurationLoader.config.skillPrices.common
+            RARE -> ConfigurationLoader.config.skillPrices.rare
+            EPIC -> ConfigurationLoader.config.skillPrices.epic
+            LEGENDARY -> ConfigurationLoader.config.skillPrices.legendary
         }
 
     /**

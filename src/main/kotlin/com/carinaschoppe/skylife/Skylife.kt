@@ -7,11 +7,14 @@ import com.carinaschoppe.skylife.events.player.*
 import com.carinaschoppe.skylife.events.skills.*
 import com.carinaschoppe.skylife.events.ui.GameSetupGuiListener
 import com.carinaschoppe.skylife.events.ui.SkillsGuiListener
+import com.carinaschoppe.skylife.game.GameCluster
 import com.carinaschoppe.skylife.game.GameLoader
+import com.carinaschoppe.skylife.game.services.*
 import com.carinaschoppe.skylife.guild.GuildManager
 import com.carinaschoppe.skylife.hub.HubManager
-import com.carinaschoppe.skylife.skills.SkillPassiveItemsTask
-import com.carinaschoppe.skylife.skills.SkillsManager
+import com.carinaschoppe.skylife.platform.PluginContext
+import com.carinaschoppe.skylife.skills.*
+import com.carinaschoppe.skylife.skills.persistence.ExposedPlayerSkillSelectionRepository
 import com.carinaschoppe.skylife.utility.configuration.ConfigurationLoader
 import com.carinaschoppe.skylife.utility.messages.MessageLoader
 import com.carinaschoppe.skylife.utility.messages.Messages
@@ -25,15 +28,13 @@ import java.io.File
 open class Skylife : JavaPlugin() {
 
     companion object {
-        lateinit var instance: Skylife
         val folderLocation = "Skylife/"
-        val config get() = ConfigurationLoader.config
     }
 
 
     override fun onEnable() {
         // Plugin startup logic
-        instance = this
+        PluginContext.initialize(this)
 
         // Load custom messages
         MessageLoader.loadMessages()
@@ -53,7 +54,7 @@ open class Skylife : JavaPlugin() {
         com.carinaschoppe.skylife.economy.CoinManager.loadCoins()
 
         // Load skill unlocks into cache
-        com.carinaschoppe.skylife.skills.SkillUnlockManager.loadUnlocks()
+        SkillUnlockManager.loadUnlocks()
 
         // Start passive skills task
         SkillPassiveItemsTask.start(this)
@@ -66,6 +67,25 @@ open class Skylife : JavaPlugin() {
 
     private fun initialize(pluginManager: PluginManager) {
         ConfigurationLoader.loadConfiguration()
+        SkillsManager.initialize(
+            ExposedPlayerSkillSelectionRepository(),
+            DefaultSkillsConfigProvider(),
+            DefaultPlayerRankProvider(),
+            DefaultSkillUnlockService()
+        )
+        GameCluster.initialize(
+            GameClusterService(
+                InMemoryGameRegistry(),
+                DefaultGameFactory(),
+                DefaultPlayerSessionService(),
+                DefaultGameConfigProvider(),
+                DefaultPlayerPriorityResolver(),
+                DefaultGameMessageProvider(),
+                DefaultStatsService(),
+                DefaultSkillLifecycleService(),
+                DefaultGameStateFactory()
+            )
+        )
         DatabaseConnector.connectDatabase()
         com.carinaschoppe.skylife.utility.location.LocationManager.loadLocations()
         HubManager.loadHubSpawn()

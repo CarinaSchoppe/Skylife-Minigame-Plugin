@@ -1,7 +1,7 @@
 package com.carinaschoppe.skylife.utility.ui
 
-import com.carinaschoppe.skylife.Skylife
 import com.carinaschoppe.skylife.game.GamePattern
+import com.carinaschoppe.skylife.platform.PluginContext
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
@@ -18,8 +18,8 @@ import org.bukkit.persistence.PersistentDataType
  */
 object SpawnManagementGui {
 
-    private val KEY_SPAWN_INDEX: NamespacedKey by lazy { NamespacedKey(Skylife.instance, "spawn_index") }
-    private val KEY_ACTION: NamespacedKey by lazy { NamespacedKey(Skylife.instance, "spawn_action") }
+    private val KEY_SPAWN_INDEX: NamespacedKey by lazy { NamespacedKey(PluginContext.plugin, "spawn_index") }
+    private val KEY_ACTION: NamespacedKey by lazy { NamespacedKey(PluginContext.plugin, "spawn_action") }
 
     /**
      * Opens the spawn management GUI.

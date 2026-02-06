@@ -1,6 +1,6 @@
 package com.carinaschoppe.skylife.events.skills
 
-import com.carinaschoppe.skylife.Skylife
+import com.carinaschoppe.skylife.platform.PluginContext
 import com.carinaschoppe.skylife.skills.Skill
 import com.carinaschoppe.skylife.skills.SkillsManager
 import org.bukkit.GameMode
@@ -105,8 +105,8 @@ class SkillPilotListener : Listener {
                     override fun run() {
                         activeFlyers.remove(player.uniqueId)
                     }
-                }.runTaskLater(Skylife.instance, 60L) // After 3 seconds
+                }.runTaskLater(PluginContext.plugin, 60L) // After 3 seconds
             }
-        }.runTaskLater(Skylife.instance, 60L) // After 3 seconds of flight
+        }.runTaskLater(PluginContext.plugin, 60L) // After 3 seconds of flight
     }
 }

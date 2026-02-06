@@ -1,8 +1,8 @@
 package com.carinaschoppe.skylife.utility.ui
 
-import com.carinaschoppe.skylife.Skylife
 import com.carinaschoppe.skylife.game.GameCluster
 import com.carinaschoppe.skylife.game.GamePattern
+import com.carinaschoppe.skylife.platform.PluginContext
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
@@ -20,8 +20,8 @@ import org.bukkit.persistence.PersistentDataType
  */
 object GameManagementGui {
 
-    private val KEY_GAME_NAME: NamespacedKey by lazy { NamespacedKey(Skylife.instance, "manage_game_name") }
-    private val KEY_ACTION: NamespacedKey by lazy { NamespacedKey(Skylife.instance, "manage_game_action") }
+    private val KEY_GAME_NAME: NamespacedKey by lazy { NamespacedKey(PluginContext.plugin, "manage_game_name") }
+    private val KEY_ACTION: NamespacedKey by lazy { NamespacedKey(PluginContext.plugin, "manage_game_action") }
 
     /**
      * Opens the game list GUI showing all available game patterns.

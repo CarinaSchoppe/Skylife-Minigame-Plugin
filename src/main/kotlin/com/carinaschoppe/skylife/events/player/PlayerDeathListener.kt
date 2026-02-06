@@ -1,9 +1,9 @@
 package com.carinaschoppe.skylife.events.player
 
-import com.carinaschoppe.skylife.Skylife
 import com.carinaschoppe.skylife.game.GameCluster
 import com.carinaschoppe.skylife.game.managers.GameLocationManager
 import com.carinaschoppe.skylife.game.managers.MapManager
+import com.carinaschoppe.skylife.platform.PluginContext
 import com.carinaschoppe.skylife.utility.messages.Messages
 import com.carinaschoppe.skylife.utility.scoreboard.ScoreboardManager
 import com.carinaschoppe.skylife.utility.statistics.StatsUtility
@@ -70,7 +70,7 @@ class PlayerDeathListener : Listener {
         player.setRespawnLocation(spectatorLocation, true)
 
         // Schedule the respawn and spectator mode for the next tick
-        Bukkit.getScheduler().runTaskLater(Skylife.instance, Runnable {
+        Bukkit.getScheduler().runTaskLater(PluginContext.plugin, Runnable {
             // Set spectator mode
             player.gameMode = GameMode.SPECTATOR
             // Teleport to spectator location (in case the respawn location didn't work)

@@ -1,6 +1,6 @@
 package com.carinaschoppe.skylife.utility.ui
 
-import com.carinaschoppe.skylife.Skylife
+import com.carinaschoppe.skylife.platform.PluginContext
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
@@ -15,7 +15,7 @@ import org.bukkit.persistence.PersistentDataType
  */
 object ExitDoorItem {
 
-    private val exitDoorKey: NamespacedKey by lazy { NamespacedKey(Skylife.instance, "exit_door") }
+    private val exitDoorKey: NamespacedKey by lazy { NamespacedKey(PluginContext.plugin, "exit_door") }
 
     /**
      * Creates the exit door item for player inventories.

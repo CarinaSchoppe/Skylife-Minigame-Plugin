@@ -1,12 +1,12 @@
 package com.carinaschoppe.skylife.database
 
-import com.carinaschoppe.skylife.Skylife
 import com.carinaschoppe.skylife.database.DatabaseConnector.connectDatabase
 import com.carinaschoppe.skylife.economy.PlayerEconomyTable
 import com.carinaschoppe.skylife.guild.GuildMembers
 import com.carinaschoppe.skylife.guild.Guilds
-import com.carinaschoppe.skylife.skills.PlayerSkills
 import com.carinaschoppe.skylife.skills.SkillUnlockTable
+import com.carinaschoppe.skylife.skills.persistence.PlayerSkillsTable
+import com.carinaschoppe.skylife.utility.configuration.ConfigurationLoader
 import com.carinaschoppe.skylife.utility.messages.Messages
 import com.carinaschoppe.skylife.utility.statistics.StatsPlayers
 import net.kyori.adventure.text.Component
@@ -48,7 +48,7 @@ object DatabaseConnector {
      */
     fun connectDatabase() {
         try {
-            val config = Skylife.config
+            val config = ConfigurationLoader.config
             val dbType = config.database.type.lowercase().trim()
 
             // Validate database type
@@ -77,7 +77,7 @@ object DatabaseConnector {
 
                 else -> {
                     // Default to SQLite
-                    val file = File(Bukkit.getServer().pluginsFolder, Skylife.folderLocation + "database.db")
+                    val file = File(Bukkit.getServer().pluginsFolder, com.carinaschoppe.skylife.Skylife.folderLocation + "database.db")
                     if (!file.exists()) {
                         file.parentFile.mkdirs()
                         file.createNewFile()
@@ -102,7 +102,14 @@ object DatabaseConnector {
 
             transaction {
                 // Create missing tables and add missing columns (for schema updates)
-                SchemaUtils.createMissingTablesAndColumns(StatsPlayers, Guilds, GuildMembers, PlayerSkills, PlayerEconomyTable, SkillUnlockTable)
+                SchemaUtils.createMissingTablesAndColumns(
+                    StatsPlayers,
+                    Guilds,
+                    GuildMembers,
+                    PlayerSkillsTable,
+                    PlayerEconomyTable,
+                    SkillUnlockTable
+                )
             }
 
             Bukkit.getServer().consoleSender.sendMessage(Messages.DATABASE_TABLES_CREATED)

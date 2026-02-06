@@ -1,10 +1,10 @@
 package com.carinaschoppe.skylife.game.gamestates
 
-import com.carinaschoppe.skylife.Skylife
 import com.carinaschoppe.skylife.game.Game
 import com.carinaschoppe.skylife.game.GameCluster
 import com.carinaschoppe.skylife.game.countdown.EndingCountdown
 import com.carinaschoppe.skylife.game.managers.GameManager
+import com.carinaschoppe.skylife.platform.PluginContext
 import com.carinaschoppe.skylife.utility.messages.Messages
 import com.carinaschoppe.skylife.utility.statistics.StatsUtility
 import com.carinaschoppe.skylife.utility.ui.ExitDoorItem
@@ -24,7 +24,7 @@ import java.time.Duration
  *
  * @param game The context of the game this state belongs to.
  */
-class EndState(private val game: Game) : GameState {
+class EndState(private val game: Game) : GameState<Player> {
 
     private val countdown = EndingCountdown(game)
 
@@ -50,8 +50,8 @@ class EndState(private val game: Game) : GameState {
 
             // Make all players visible to each other (remove spectator invisibility)
             game.getAllPlayers().forEach { other ->
-                player.showPlayer(Skylife.instance, other)
-                other.showPlayer(Skylife.instance, player)
+                player.showPlayer(PluginContext.plugin, other)
+                other.showPlayer(PluginContext.plugin, player)
             }
         }
 
@@ -129,7 +129,7 @@ class EndState(private val game: Game) : GameState {
 
                 count++
             }
-        }.runTaskTimer(Skylife.instance, 0L, 20L)
+        }.runTaskTimer(PluginContext.plugin, 0L, 20L)
     }
 
     /**
@@ -147,7 +147,7 @@ class EndState(private val game: Game) : GameState {
 
         // Schedule world cleanup with a small delay to ensure all players have been teleported
         // This prevents potential issues with players still being in the world during unload
-        org.bukkit.Bukkit.getScheduler().runTaskLater(Skylife.instance, Runnable {
+        org.bukkit.Bukkit.getScheduler().runTaskLater(PluginContext.plugin, Runnable {
             com.carinaschoppe.skylife.game.managers.MapManager.unloadAndDeleteWorld(game.gameID)
         }, 20L) // 1 second delay
     }

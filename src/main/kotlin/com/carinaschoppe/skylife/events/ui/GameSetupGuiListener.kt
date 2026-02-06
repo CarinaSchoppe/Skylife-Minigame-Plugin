@@ -197,7 +197,7 @@ class GameSetupGuiListener : Listener {
             GameSetupGui.FINISH_SLOT -> {
                 if (gamePattern.isComplete()) {
                     // Save the pattern
-                    GameCluster.gamePatterns.add(gamePattern)
+                    GameCluster.addGamePattern(gamePattern)
                     GameLoader.saveGameToFile(gamePattern)
 
                     // Create a game instance from the pattern

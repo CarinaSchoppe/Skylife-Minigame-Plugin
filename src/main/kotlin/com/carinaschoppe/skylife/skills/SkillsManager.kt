@@ -1,233 +1,60 @@
 package com.carinaschoppe.skylife.skills
 
+import com.carinaschoppe.skylife.skills.persistence.ExposedPlayerSkillSelectionRepository
+import com.carinaschoppe.skylife.skills.persistence.PlayerSkillSelectionRepository
 import org.bukkit.entity.Player
-import org.jetbrains.exposed.v1.core.dao.id.EntityID
-import org.jetbrains.exposed.v1.core.dao.id.IntIdTable
-import org.jetbrains.exposed.v1.core.eq
-import org.jetbrains.exposed.v1.dao.Entity
-import org.jetbrains.exposed.v1.dao.EntityClass
-import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import java.util.*
-import java.util.concurrent.ConcurrentHashMap
 
 /**
- * Database table for player skill selections.
- * Supports up to 4 skill slots (for VIP+ players and admins).
- */
-object PlayerSkills : IntIdTable("player_skills") {
-    val playerUUID = varchar("player_uuid", 36).uniqueIndex()
-    val skill1 = enumerationByName("skill1", 30, Skill::class).nullable()
-    val skill2 = enumerationByName("skill2", 30, Skill::class).nullable()
-    val skill3 = enumerationByName("skill3", 30, Skill::class).nullable()
-    val skill4 = enumerationByName("skill4", 30, Skill::class).nullable()
-}
-
-/**
- * Entity class for player skills database operations.
- * Supports up to 4 skill slots.
- */
-class PlayerSkillSelection(id: EntityID<Int>) : Entity<Int>(id) {
-    companion object : EntityClass<Int, PlayerSkillSelection>(PlayerSkills)
-
-    var playerUUID by PlayerSkills.playerUUID
-    var skill1 by PlayerSkills.skill1
-    var skill2 by PlayerSkills.skill2
-    var skill3 by PlayerSkills.skill3
-    var skill4 by PlayerSkills.skill4
-}
-
-/**
- * Manages player skill selections and activation.
+ * Facade for skill operations. Delegates to [SkillsService] so the
+ * persistence layer can be swapped for testing or future storage changes.
  */
 object SkillsManager {
 
-    // Cache: Player UUID -> Set of selected skills
-    private val selectedSkills = ConcurrentHashMap<UUID, MutableSet<Skill>>()
+    @Volatile
+    private var service: SkillsService = SkillsService(
+        ExposedPlayerSkillSelectionRepository(),
+        DefaultSkillsConfigProvider(),
+        DefaultPlayerRankProvider(),
+        DefaultSkillUnlockService()
+    )
 
-    // Cache: Player UUID -> Set of active skills (currently in use in-game)
-    private val activeSkills = ConcurrentHashMap<UUID, MutableSet<Skill>>()
-
-    /**
-     * Gets the maximum number of skills a player can select based on their rank.
-     * Values are loaded from config.json (default: USER=2, VIP=3, VIP+=4)
-     * Staff ranks (ADMIN, DEV, MOD) and VIP+ get VIP+ benefits (4 skill slots).
-     */
-    fun getMaxSkills(player: Player): Int {
-        val config = com.carinaschoppe.skylife.Skylife.config.maxSkills
-
-        val rank = com.carinaschoppe.skylife.economy.PlayerRank.getRank(player)
-        return when (rank) {
-            com.carinaschoppe.skylife.economy.PlayerRank.ADMIN,
-            com.carinaschoppe.skylife.economy.PlayerRank.DEV,
-            com.carinaschoppe.skylife.economy.PlayerRank.MOD,
-            com.carinaschoppe.skylife.economy.PlayerRank.VIP_PLUS -> config.vipPlus
-
-            com.carinaschoppe.skylife.economy.PlayerRank.VIP -> config.vip
-            com.carinaschoppe.skylife.economy.PlayerRank.USER -> config.default
-        }
+    fun initialize(
+        repository: PlayerSkillSelectionRepository = ExposedPlayerSkillSelectionRepository(),
+        configProvider: SkillsConfigProvider = DefaultSkillsConfigProvider(),
+        rankProvider: PlayerRankProvider = DefaultPlayerRankProvider(),
+        unlockService: SkillUnlockService = DefaultSkillUnlockService()
+    ) {
+        service = SkillsService(repository, configProvider, rankProvider, unlockService)
     }
 
-    /**
-     * Loads all player skill selections from database into cache.
-     * Should be called on plugin startup.
-     */
+    fun getMaxSkills(player: Player): Int = service.getMaxSkills(player)
+
     fun loadSkills() {
-        transaction {
-            PlayerSkillSelection.all().forEach { selection ->
-                val uuid = UUID.fromString(selection.playerUUID)
-                val skills = mutableSetOf<Skill>()
-
-                selection.skill1?.let { skills.add(it) }
-                selection.skill2?.let { skills.add(it) }
-                selection.skill3?.let { skills.add(it) }
-                selection.skill4?.let { skills.add(it) }
-
-                if (skills.isNotEmpty()) {
-                    selectedSkills[uuid] = skills
-                }
-            }
-        }
+        service.loadSkills()
     }
 
-    /**
-     * Gets the selected skills for a player.
-     * @param player The player
-     * @return Set of selected skills (may be empty)
-     */
-    fun getSelectedSkills(player: Player): Set<Skill> {
-        return selectedSkills[player.uniqueId]?.toSet() ?: emptySet()
-    }
+    fun getSelectedSkills(player: Player): Set<Skill> = service.getSelectedSkills(player)
 
-    /**
-     * Gets the selected skills for a player by UUID.
-     * @param uuid The player UUID
-     * @return Set of selected skills (may be empty)
-     */
-    fun getSelectedSkills(uuid: UUID): Set<Skill> {
-        return selectedSkills[uuid]?.toSet() ?: emptySet()
-    }
+    fun getSelectedSkills(uuid: UUID): Set<Skill> = service.getSelectedSkills(uuid)
 
-    /**
-     * Checks if a player has a specific skill selected.
-     * @param player The player
-     * @param skill The skill to check
-     * @return true if the skill is selected
-     */
-    fun hasSkillSelected(player: Player, skill: Skill): Boolean {
-        return selectedSkills[player.uniqueId]?.contains(skill) ?: false
-    }
+    fun hasSkillSelected(player: Player, skill: Skill): Boolean = service.hasSkillSelected(player, skill)
 
-    /**
-     * Toggles a skill selection for a player.
-     * @param player The player
-     * @param skill The skill to toggle
-     * @return Result with true if selected, false if unselected, or error message
-     */
-    fun toggleSkill(player: Player, skill: Skill): Result<Boolean> {
-        val uuid = player.uniqueId
-        val skills = selectedSkills.getOrPut(uuid) { mutableSetOf() }
+    fun toggleSkill(player: Player, skill: Skill): Result<Boolean> = service.toggleSkill(player, skill)
 
-        if (skills.contains(skill)) {
-            // Unselect skill
-            skills.remove(skill)
-            saveSkillSelection(uuid, skills)
-            return Result.success(false)
-        } else {
-            // Check if skill is unlocked
-            if (!SkillUnlockManager.hasUnlocked(uuid, skill)) {
-                return Result.failure(Exception("You must unlock this skill before you can select it!"))
-            }
-
-            // Check if player can select more skills
-            val maxSkills = getMaxSkills(player)
-            if (skills.size >= maxSkills) {
-                return Result.failure(Exception("You already have $maxSkills skills selected. Unselect one first."))
-            }
-
-            // Select skill
-            skills.add(skill)
-            saveSkillSelection(uuid, skills)
-            return Result.success(true)
-        }
-    }
-
-    /**
-     * Saves skill selection to database.
-     * Supports up to 4 skill slots.
-     */
-    private fun saveSkillSelection(uuid: UUID, skills: Set<Skill>) {
-        transaction {
-            val existing = PlayerSkillSelection.find { PlayerSkills.playerUUID eq uuid.toString() }.firstOrNull()
-
-            val skillsList = skills.toList()
-            val skill1 = skillsList.getOrNull(0)
-            val skill2 = skillsList.getOrNull(1)
-            val skill3 = skillsList.getOrNull(2)
-            val skill4 = skillsList.getOrNull(3)
-
-            if (existing != null) {
-                existing.skill1 = skill1
-                existing.skill2 = skill2
-                existing.skill3 = skill3
-                existing.skill4 = skill4
-            } else {
-                PlayerSkillSelection.new {
-                    this.playerUUID = uuid.toString()
-                    this.skill1 = skill1
-                    this.skill2 = skill2
-                    this.skill3 = skill3
-                    this.skill4 = skill4
-                }
-            }
-        }
-    }
-
-    /**
-     * Activates selected skills for a player (when game starts).
-     * @param player The player
-     */
     fun activateSkills(player: Player) {
-        val skills = selectedSkills[player.uniqueId] ?: return
-        activeSkills[player.uniqueId] = skills.toMutableSet()
+        service.activateSkills(player)
     }
 
-    /**
-     * Deactivates all skills for a player (when game ends).
-     * @param player The player
-     */
     fun deactivateSkills(player: Player) {
-        activeSkills.remove(player.uniqueId)
+        service.deactivateSkills(player)
     }
 
-    /**
-     * Gets the currently active skills for a player (in-game).
-     * @param player The player
-     * @return Set of active skills (may be empty)
-     */
-    fun getActiveSkills(player: Player): Set<Skill> {
-        return activeSkills[player.uniqueId]?.toSet() ?: emptySet()
-    }
+    fun getActiveSkills(player: Player): Set<Skill> = service.getActiveSkills(player)
 
-    /**
-     * Checks if a player has a specific skill active.
-     * @param player The player
-     * @param skill The skill to check
-     * @return true if the skill is active
-     */
-    fun hasSkillActive(player: Player, skill: Skill): Boolean {
-        return activeSkills[player.uniqueId]?.contains(skill) ?: false
-    }
+    fun hasSkillActive(player: Player, skill: Skill): Boolean = service.hasSkillActive(player, skill)
 
-    /**
-     * Clears skill selection for a player (admin command).
-     * @param uuid The player UUID
-     */
     fun clearSkills(uuid: UUID) {
-        selectedSkills.remove(uuid)
-        activeSkills.remove(uuid)
-
-        transaction {
-            PlayerSkillSelection.find { PlayerSkills.playerUUID eq uuid.toString() }.firstOrNull()?.delete()
-        }
+        service.clearSkills(uuid)
     }
 }

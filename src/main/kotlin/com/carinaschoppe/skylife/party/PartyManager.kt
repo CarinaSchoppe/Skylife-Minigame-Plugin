@@ -1,7 +1,7 @@
 package com.carinaschoppe.skylife.party
 
-import com.carinaschoppe.skylife.Skylife
 import com.carinaschoppe.skylife.game.GameCluster
+import com.carinaschoppe.skylife.platform.PluginContext
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import java.util.*
@@ -89,7 +89,7 @@ object PartyManager {
         existingInvites.add(invite)
 
         // Schedule invite expiration
-        Bukkit.getScheduler().runTaskLater(Skylife.instance, Runnable {
+        Bukkit.getScheduler().runTaskLater(PluginContext.plugin, Runnable {
             pendingInvites[invitee]?.remove(invite)
         }, PartyInvite.INVITE_TIMEOUT_MS / 50) // Convert ms to ticks
 

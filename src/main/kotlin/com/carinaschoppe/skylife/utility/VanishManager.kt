@@ -1,6 +1,6 @@
 package com.carinaschoppe.skylife.utility
 
-import com.carinaschoppe.skylife.Skylife
+import com.carinaschoppe.skylife.platform.PluginContext
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.entity.Player
@@ -112,7 +112,7 @@ object VanishManager {
         previousAllowFlightStates[player.uniqueId] = player.allowFlight
 
         // Hide player from all other players (Paper API with plugin reference)
-        val plugin = Skylife.instance
+        val plugin = PluginContext.plugin
         Bukkit.getOnlinePlayers().forEach { other ->
             if (other.uniqueId != player.uniqueId && !other.hasPermission("skylife.vanish.see")) {
                 other.hidePlayer(plugin, player)
@@ -144,7 +144,7 @@ object VanishManager {
         vanishedPlayers.remove(player.uniqueId)
 
         // Show player to all other players (Paper API with plugin reference)
-        val plugin = Skylife.instance
+        val plugin = PluginContext.plugin
         Bukkit.getOnlinePlayers().forEach { other ->
             other.showPlayer(plugin, player)
         }
@@ -200,7 +200,7 @@ object VanishManager {
      */
     fun handlePlayerJoin(player: Player) {
         // New joining player should not see vanished players
-        val plugin = Skylife.instance
+        val plugin = PluginContext.plugin
         vanishedPlayers.mapNotNull { Bukkit.getPlayer(it) }.forEach { vanished ->
             if (!player.hasPermission("skylife.vanish.see")) {
                 player.hidePlayer(plugin, vanished)
@@ -231,7 +231,7 @@ object VanishManager {
             previousAllowFlightStates.remove(uuid)
 
             // Show player to everyone (cleanup)
-            val plugin = Skylife.instance
+            val plugin = PluginContext.plugin
             Bukkit.getOnlinePlayers().forEach { other ->
                 if (other.uniqueId != uuid) {
                     other.showPlayer(plugin, player)

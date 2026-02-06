@@ -2,11 +2,7 @@ package com.carinaschoppe.skylife.game
 
 import com.carinaschoppe.skylife.game.gamestates.GameState
 import com.carinaschoppe.skylife.game.gamestates.GameStateType
-import com.carinaschoppe.skylife.game.gamestates.LobbyState
-import com.carinaschoppe.skylife.utility.messages.Messages
 import net.kyori.adventure.text.Component
-import org.bukkit.Location
-import org.bukkit.entity.Player
 import java.util.*
 
 /**
@@ -24,14 +20,16 @@ import java.util.*
  * @property mapName The display name of the map being used for this game.
  * @property pattern The [GamePattern] template this game is based on.
  */
-class Game(
+class BaseGame<P, L, W>(
     val name: String,
     val minPlayers: Int,
     val maxPlayers: Int,
-    val lobbyLocation: Location,
-    val ingameLocation: Location,
+    val lobbyLocation: L,
+    val ingameLocation: L,
     val mapName: String,
-    val pattern: GamePattern
+    val pattern: GamePattern,
+    stateFactory: (BaseGame<P, L, W>) -> GameState<P>,
+    private val messageSender: (P, Component) -> Unit
 ) {
     /**
      * A unique identifier for this game instance.
@@ -45,7 +43,7 @@ class Game(
      * The dedicated world for this game instance.
      * Loaded when the game is created and cleaned up when it ends.
      */
-    var gameWorld: org.bukkit.World? = null
+    var gameWorld: W? = null
         private set
 
     /**
@@ -53,7 +51,7 @@ class Game(
      *
      * Spectators can observe the game but cannot participate until they join as active players.
      */
-    val spectators = mutableListOf<Player>()
+    val spectators = mutableListOf<P>()
 
     /**
      * The current state handler for this game.
@@ -62,7 +60,7 @@ class Game(
      * The state determines what actions are allowed and how the game responds to events.
      * Defaults to [LobbyState] when the game is first created.
      */
-    var currentState: GameState = LobbyState(this)
+    var currentState: GameState<P> = stateFactory(this)
 
     /**
      * A list of players who are currently alive and participating in the game.
@@ -70,7 +68,7 @@ class Game(
      * This list is managed by the game's state handlers and is used to track
      * active participants. Players are removed when they are eliminated or leave.
      */
-    val livingPlayers = mutableListOf<Player>()
+    val livingPlayers = mutableListOf<P>()
 
     /**
      * Tracks the number of kills each player has achieved in the current game session.
@@ -114,28 +112,12 @@ class Game(
     }
 
     /**
-     * Broadcasts a message to all players in the game.
-     *
-     * This helper method sends a message to both living players and spectators.
-     *
-     * @param message The message to broadcast.
-     */
-    /**
      * Gets all players currently in the game, including both living players and spectators.
      *
      * @return A list containing all players in the game.
      */
-    fun getAllPlayers(): List<Player> {
+    fun getAllPlayers(): List<P> {
         return livingPlayers + spectators
-    }
-
-    /**
-     * Broadcasts a message to all players in the game, including spectators.
-     *
-     * @param message The message to broadcast.
-     */
-    fun broadcast(message: String) {
-        broadcast(Messages.parse(message))
     }
 
     /**
@@ -144,28 +126,10 @@ class Game(
      * @param message The message to broadcast. Type @see Component
      */
     fun broadcast(message: Component) {
-        getAllPlayers().forEach { it.sendMessage(message) }
+        getAllPlayers().forEach { player -> messageSender(player, message) }
     }
 
-    /**
-     * Loads a dedicated world for this game instance.
-     *
-     * @param templateMapName Optional specific map template to use
-     * @return true if world was loaded successfully, false otherwise
-     */
-    fun loadGameWorld(templateMapName: String? = null): Boolean {
-        if (gameWorld != null) {
-            return true // Already loaded
-        }
-
-        gameWorld = com.carinaschoppe.skylife.game.managers.MapManager.loadMapForGame(gameID, templateMapName)
-        return gameWorld != null
+    internal fun attachGameWorld(world: W?) {
+        gameWorld = world
     }
-
-    /**
-     * Alias for gameWorld for backward compatibility.
-     * Returns the game's dedicated world, or the lobby location's world as fallback.
-     */
-    val world: org.bukkit.World
-        get() = gameWorld ?: lobbyLocation.world
 }

@@ -1,6 +1,6 @@
 package com.carinaschoppe.skylife.utility.ui.inventoryholders
 
-import com.carinaschoppe.skylife.Skylife
+import com.carinaschoppe.skylife.platform.PluginContext
 import net.kyori.adventure.text.Component
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryHolder
@@ -35,7 +35,7 @@ abstract class InventoryHolderFactory(val inventoryName: String, val size: Int) 
      * @return This [InventoryHolderFactory] instance for method chaining
      */
     open fun initInventory(): InventoryHolderFactory {
-        internalInventory = Skylife.instance.server.createInventory(this, size, Component.text(inventoryName))
+        internalInventory = PluginContext.plugin.server.createInventory(this, size, Component.text(inventoryName))
         return this
     }
 

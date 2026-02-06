@@ -1,6 +1,6 @@
 package com.carinaschoppe.skylife.game.managers
 
-import com.carinaschoppe.skylife.Skylife
+import com.carinaschoppe.skylife.platform.PluginContext
 import org.bukkit.Bukkit
 import org.bukkit.GameRule
 import org.bukkit.World
@@ -17,7 +17,7 @@ import java.util.*
 object MapManager {
 
     private val mapsFolder: File by lazy {
-        File(Skylife.instance.dataFolder, "maps").also { it.mkdirs() }
+        File(PluginContext.plugin.dataFolder, "maps").also { it.mkdirs() }
     }
 
     private val activeWorlds = mutableMapOf<UUID, String>() // gameID -> worldName

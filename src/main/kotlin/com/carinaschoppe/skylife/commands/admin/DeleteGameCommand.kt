@@ -74,7 +74,7 @@ class DeleteGameCommand : CommandExecutor, TabCompleter {
         }
 
         // Remove the pattern from the cluster
-        GameCluster.gamePatterns.remove(gamePattern)
+        GameCluster.removeGamePattern(gamePattern)
 
         // Remove from active setups if it's there
         GameSetupCommand.activeSetups.entries.removeIf { it.value == gamePattern }

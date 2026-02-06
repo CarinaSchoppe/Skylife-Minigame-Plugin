@@ -33,7 +33,7 @@ object GameLoader {
         val gson: Gson = GsonBuilder().setPrettyPrinting().create()
         val json = file.readText()
         val gamePattern = gson.fromJson(json, GamePattern::class.java)
-        GameCluster.gamePatterns.add(gamePattern)
+        GameCluster.addGamePattern(gamePattern)
 
         // Create a game instance from the pattern if it's complete
         if (gamePattern.isComplete()) {

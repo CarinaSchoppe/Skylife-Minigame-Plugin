@@ -1,7 +1,7 @@
 package com.carinaschoppe.skylife.utility.ui
 
-import com.carinaschoppe.skylife.Skylife
 import com.carinaschoppe.skylife.game.Game
+import com.carinaschoppe.skylife.platform.PluginContext
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
@@ -16,9 +16,9 @@ object GameOverviewItems {
     private const val NEXT_NAME = "Nächste Seite"
     private const val PREVIOUS_NAME = "Vorherige Seite"
 
-    private val menuKey: NamespacedKey by lazy { NamespacedKey(Skylife.instance, "game_overview_menu") }
-    private val navKey: NamespacedKey by lazy { NamespacedKey(Skylife.instance, "game_overview_nav") }
-    private val gameKey: NamespacedKey by lazy { NamespacedKey(Skylife.instance, "game_overview_game") }
+    private val menuKey: NamespacedKey by lazy { NamespacedKey(PluginContext.plugin, "game_overview_menu") }
+    private val navKey: NamespacedKey by lazy { NamespacedKey(PluginContext.plugin, "game_overview_nav") }
+    private val gameKey: NamespacedKey by lazy { NamespacedKey(PluginContext.plugin, "game_overview_game") }
 
     fun createMenuItem(): ItemStack {
         return ItemBuilder(Material.COMPASS)

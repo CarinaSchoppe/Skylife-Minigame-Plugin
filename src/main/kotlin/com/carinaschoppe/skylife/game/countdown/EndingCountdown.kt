@@ -1,7 +1,7 @@
 package com.carinaschoppe.skylife.game.countdown
 
-import com.carinaschoppe.skylife.Skylife
 import com.carinaschoppe.skylife.game.Game
+import com.carinaschoppe.skylife.platform.PluginContext
 import org.bukkit.scheduler.BukkitRunnable
 
 /**
@@ -32,7 +32,7 @@ class EndingCountdown(private val game: Game) : Countdown() {
                 }
                 seconds--
             }
-        }.runTaskTimer(Skylife.instance, 0, 20)
+        }.runTaskTimer(PluginContext.plugin, 0, 20)
     }
 
     /**

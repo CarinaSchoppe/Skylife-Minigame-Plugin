@@ -212,7 +212,7 @@ class GameManagementGuiListener : Listener {
                         }
 
                         // Remove from cluster and delete file
-                        GameCluster.gamePatterns.remove(gamePattern)
+                        GameCluster.removeGamePattern(gamePattern)
                         GameLoader.deleteGameFile(gamePattern)
 
                         player.sendMessage(

@@ -99,7 +99,7 @@ class CreateGamePatternCommand : CommandExecutor, TabCompleter {
 
                 // Add to cluster if not already there
                 if (!GameCluster.gamePatterns.contains(game)) {
-                    GameCluster.gamePatterns.add(game)
+                    GameCluster.addGamePattern(game)
                 }
 
                 // Save to file
@@ -127,7 +127,7 @@ class CreateGamePatternCommand : CommandExecutor, TabCompleter {
                 }
 
                 // Remove from cluster if it's there
-                GameCluster.gamePatterns.remove(game)
+                GameCluster.removeGamePattern(game)
 
                 // Remove from active setups if it's there
                 GameSetupCommand.activeSetups.entries.removeIf { it.value == game }
