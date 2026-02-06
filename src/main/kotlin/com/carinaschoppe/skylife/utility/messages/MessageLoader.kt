@@ -15,6 +15,7 @@ import java.io.File
  * The messages are stored in the plugin's data folder as 'messages.json'.
  */
 object MessageLoader {
+    private const val MESSAGES_FILE_NAME = "messages.json"
 
     /**
      * Saves all message templates to messages.json configuration file.
@@ -29,7 +30,7 @@ object MessageLoader {
      * @see Messages
      */
     fun saveMessages() {
-        val file = File(Bukkit.getServer().pluginsFolder, Skylife.folderLocation + "messages.json")
+        val file = File(Bukkit.getServer().pluginsFolder, Skylife.folderLocation + MESSAGES_FILE_NAME)
 
         if (!file.parentFile.exists()) {
             file.parentFile.mkdirs()
@@ -71,7 +72,7 @@ object MessageLoader {
      * @see Messages
      */
     fun loadMessages() {
-        val file = File(Bukkit.getServer().pluginsFolder, Skylife.folderLocation + "messages.json")
+        val file = File(Bukkit.getServer().pluginsFolder, Skylife.folderLocation + MESSAGES_FILE_NAME)
 
         if (!file.exists()) {
             saveMessages()
@@ -92,13 +93,13 @@ object MessageLoader {
                     field.isAccessible = true
                     val value = jsonMap[field.name]
                     if (value != null && field.type == String::class.java) {
-                        field.set(Templates, value)
+                        field[Templates] = value
                     }
                 }
                 Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text("Messages loaded!", Messages.MESSAGE_COLOR)))
             }
         } catch (e: Exception) {
-            Bukkit.getLogger().warning("Failed to load messages from messages.json: ${e.message}")
+            Bukkit.getLogger().warning("Failed to load messages from $MESSAGES_FILE_NAME: ${e.message}")
             Bukkit.getLogger().warning("Using default messages instead.")
         }
     }

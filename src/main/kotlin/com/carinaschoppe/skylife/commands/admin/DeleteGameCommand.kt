@@ -23,6 +23,10 @@ import org.bukkit.command.TabCompleter
  */
 class DeleteGameCommand : CommandExecutor, TabCompleter {
 
+    private companion object {
+        const val GAME_PATTERN_PREFIX = "Game pattern '"
+    }
+
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (!sender.hasPermission("skylife.admin.deletegame")) {
             sender.sendMessage(Messages.ERROR_PERMISSION)
@@ -48,7 +52,7 @@ class DeleteGameCommand : CommandExecutor, TabCompleter {
         if (gamePattern == null) {
             sender.sendMessage(
                 Messages.PREFIX
-                    .append(Component.text("Game pattern '", Messages.ERROR_COLOR))
+                    .append(Component.text(GAME_PATTERN_PREFIX, Messages.ERROR_COLOR))
                     .append(Component.text(gameName, Messages.NAME_COLOR))
                     .append(Component.text("' not found!", Messages.ERROR_COLOR))
             )
@@ -84,7 +88,7 @@ class DeleteGameCommand : CommandExecutor, TabCompleter {
 
         sender.sendMessage(
             Messages.PREFIX
-                .append(Component.text("Game pattern '", Messages.MESSAGE_COLOR))
+                .append(Component.text(GAME_PATTERN_PREFIX, Messages.MESSAGE_COLOR))
                 .append(Component.text(gamePattern.mapName, Messages.NAME_COLOR))
                 .append(Component.text("' and ", Messages.MESSAGE_COLOR))
                 .append(Component.text(totalGames.toString(), Messages.NAME_COLOR))

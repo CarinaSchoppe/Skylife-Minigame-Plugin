@@ -150,7 +150,7 @@ object ScoreboardManager {
 
     private val titleColors = listOf(NamedTextColor.AQUA, NamedTextColor.BLUE, NamedTextColor.DARK_AQUA)
     private val defaultLines = listOf(
-        "<dark_gray><strikethrough>----------------</strikethrough></dark_gray>",
+        DIVIDER_LINE,
         "<aqua>Server</aqua><gray>: </gray><white>{server}</white>",
         "<aqua>Map</aqua><gray>: </gray><white>{map}</white>",
         "<aqua>Alive</aqua><gray>: </gray><green>{alive}</green><gray>/</gray><green>{max}</green>",
@@ -160,7 +160,8 @@ object ScoreboardManager {
         "",
         "<aqua>Guild</aqua><gray>: </gray><light_purple>{guild}</light_purple>",
         "<aqua>Rank</aqua><gray>: </gray><gold>#{rank}</gold>",
-        "<dark_gray><strikethrough>----------------</strikethrough></dark_gray>"
+        DIVIDER_LINE
     )
     private const val MAX_LINES = 15
+    private const val DIVIDER_LINE = "<dark_gray><strikethrough>----------------</strikethrough></dark_gray>"
 }

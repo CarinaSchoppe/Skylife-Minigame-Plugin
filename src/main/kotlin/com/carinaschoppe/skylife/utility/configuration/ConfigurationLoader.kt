@@ -15,10 +15,12 @@ object ConfigurationLoader {
 
     var config: Config = Config()
         private set
+    private const val CONFIG_FILE_NAME = "config.json"
+    private const val LOG_CONFIGURATION_LOADED = "Configuration loaded!"
 
     fun saveConfiguration() {
 
-        val file = File(Bukkit.getServer().pluginsFolder, Skylife.folderLocation + "config.json")
+        val file = File(Bukkit.getServer().pluginsFolder, Skylife.folderLocation + CONFIG_FILE_NAME)
 
         //check if path exists if not create and than check for file
 
@@ -42,12 +44,12 @@ object ConfigurationLoader {
     }
 
     fun loadConfiguration() {
-        val file = File(Bukkit.getServer().pluginsFolder, Skylife.folderLocation + "config.json")
+        val file = File(Bukkit.getServer().pluginsFolder, Skylife.folderLocation + CONFIG_FILE_NAME)
 
         if (!file.exists()) {
             config = Config()
             saveConfiguration()
-            Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text("Configuration loaded!", Messages.MESSAGE_COLOR)))
+            Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text(LOG_CONFIGURATION_LOADED, Messages.MESSAGE_COLOR)))
             return
         }
 
@@ -63,7 +65,7 @@ object ConfigurationLoader {
             saveConfiguration()
         }
 
-        Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text("Configuration loaded!", Messages.MESSAGE_COLOR)))
+        Bukkit.getServer().consoleSender.sendMessage(Messages.PREFIX.append(Component.text(LOG_CONFIGURATION_LOADED, Messages.MESSAGE_COLOR)))
     }
 
     fun parseConfigJson(json: String): Config {

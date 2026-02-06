@@ -27,13 +27,11 @@ class PlayerBreaksBlockListener : Listener {
         val game = GameCluster.getGame(player)
 
         // If the player is in a game managed by the plugin, apply custom rules.
-        if (game != null) {
-            // Players are only allowed to break blocks during the IngameState.
-            // In all other states (Lobby, Ending) or as a spectator, it's forbidden.
-            if (game.currentState !is IngameState) {
-                event.isCancelled = true
-                player.sendMessage(Messages.CANT_BREAK_BLOCK)
-            }
+        // Players are only allowed to break blocks during the IngameState.
+        // In all other states (Lobby, Ending) or as a spectator, it's forbidden.
+        if (game != null && game.currentState !is IngameState) {
+            event.isCancelled = true
+            player.sendMessage(Messages.CANT_BREAK_BLOCK)
         }
     }
 }

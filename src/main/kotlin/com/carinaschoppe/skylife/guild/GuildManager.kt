@@ -16,6 +16,7 @@ object GuildManager {
 
     private const val ERROR_GUILD_NOT_FOUND = "Guild not found"
     private const val ERROR_NOT_IN_GUILD = "You are not in this guild"
+    private const val ERROR_TARGET_NOT_IN_GUILD = "Target is not in this guild"
 
     // Cache: Player UUID -> Guild ID
     private val playerGuildCache = ConcurrentHashMap<UUID, Int>()
@@ -157,11 +158,10 @@ object GuildManager {
     fun kickPlayer(guildId: Int, kicker: UUID, target: UUID): Result<Unit> {
         val guild = guildCache[guildId] ?: return Result.failure(Exception(ERROR_GUILD_NOT_FOUND))
         val kickerRole = guild.members[kicker] ?: return Result.failure(Exception(ERROR_NOT_IN_GUILD))
-        val targetRole = guild.members[target] ?: return Result.failure(Exception("Target is not in this guild"))
+        val targetRole = guild.members[target] ?: return Result.failure(Exception(ERROR_TARGET_NOT_IN_GUILD))
 
         // Leader can kick anyone, Elder can kick members and other elders but not leader
         when (kickerRole) {
-            GuildRole.LEADER -> {} // Can kick anyone
             GuildRole.ELDER -> {
                 if (targetRole == GuildRole.LEADER) {
                     return Result.failure(Exception("Elders cannot kick the leader"))
@@ -169,6 +169,9 @@ object GuildManager {
             }
 
             GuildRole.MEMBER -> return Result.failure(Exception("Members cannot kick players"))
+            else -> {
+                return Result.success(Unit)
+            }
         }
 
         if (kicker == target) {
@@ -198,7 +201,7 @@ object GuildManager {
     fun promotePlayer(guildId: Int, promoter: UUID, target: UUID): Result<Unit> {
         val guild = guildCache[guildId] ?: return Result.failure(Exception(ERROR_GUILD_NOT_FOUND))
         val promoterRole = guild.members[promoter] ?: return Result.failure(Exception(ERROR_NOT_IN_GUILD))
-        val targetRole = guild.members[target] ?: return Result.failure(Exception("Target is not in this guild"))
+        val targetRole = guild.members[target] ?: return Result.failure(Exception(ERROR_TARGET_NOT_IN_GUILD))
 
         return when (promoterRole) {
             GuildRole.LEADER -> handleLeaderPromotion(guildId, promoter, target, targetRole, guild)

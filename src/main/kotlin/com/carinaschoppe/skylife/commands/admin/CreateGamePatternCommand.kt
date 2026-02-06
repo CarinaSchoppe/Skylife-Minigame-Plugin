@@ -112,7 +112,7 @@ class CreateGamePatternCommand : CommandExecutor, TabCompleter {
 
         val game = findPatternForSave(player, name)
         if (game == null) {
-            player.sendMessage(Messages.PREFIX.append(Component.text("Game pattern '$name' not found!", Messages.ERROR_COLOR)))
+            player.sendMessage(gamePatternNotFoundMessage(name))
             return
         }
 
@@ -141,7 +141,7 @@ class CreateGamePatternCommand : CommandExecutor, TabCompleter {
             ?: GameSetupCommand.activeSetups.values.firstOrNull { it.mapName.equals(name, ignoreCase = true) }
 
         if (game == null) {
-            player.sendMessage(Messages.PREFIX.append(Component.text("Game pattern '$name' not found!", Messages.ERROR_COLOR)))
+            player.sendMessage(gamePatternNotFoundMessage(name))
             return
         }
 
@@ -160,5 +160,9 @@ class CreateGamePatternCommand : CommandExecutor, TabCompleter {
 
         return GameCluster.gamePatterns.firstOrNull { it.mapName.equals(name, ignoreCase = true) }
             ?: GameSetupCommand.activeSetups.values.firstOrNull { it.mapName.equals(name, ignoreCase = true) }
+    }
+
+    private fun gamePatternNotFoundMessage(name: String): Component {
+        return Messages.PREFIX.append(Component.text("Game pattern '$name' not found!", Messages.ERROR_COLOR))
     }
 }

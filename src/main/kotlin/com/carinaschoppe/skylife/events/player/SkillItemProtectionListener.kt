@@ -19,6 +19,9 @@ import org.bukkit.inventory.ItemStack
  * - Swapped to offhand
  */
 class SkillItemProtectionListener : Listener {
+    private companion object {
+        const val PILOT_WINGS_NAME = "Pilot Wings"
+    }
 
     /**
      * Checks if an item is a protected skill item.
@@ -28,7 +31,7 @@ class SkillItemProtectionListener : Listener {
 
         val itemName = item.itemMeta?.displayName()?.toString() ?: return false
 
-        return itemName.contains("Pilot Wings") || itemName.contains("Ninja Cloak")
+        return itemName.contains(PILOT_WINGS_NAME) || itemName.contains("Ninja Cloak")
     }
 
     /**
@@ -103,7 +106,7 @@ class SkillItemProtectionListener : Listener {
             return false
         }
         val itemName = item.itemMeta?.displayName()?.toString() ?: ""
-        if (!itemName.contains("Pilot Wings")) {
+        if (!itemName.contains(PILOT_WINGS_NAME)) {
             return false
         }
         return event.slot == 39 || event.slot == 38

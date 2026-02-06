@@ -28,12 +28,18 @@ class PlayerDamagesListener : Listener {
         val victim = event.entity
         val damager = event.damager
 
-        if (victim is Player && damager is Player && shouldCancelPlayerDamage(victim, damager)) {
-            event.isCancelled = true
-        } else if (victim is Player && isProtected(victim)) {
-            event.isCancelled = true
-        } else if (damager is Player && isProtected(damager)) {
-            event.isCancelled = true
+        when {
+            victim is Player && damager is Player && shouldCancelPlayerDamage(victim, damager) -> {
+                event.isCancelled = true
+            }
+
+            victim is Player && isProtected(victim) -> {
+                event.isCancelled = true
+            }
+
+            damager is Player && isProtected(damager) -> {
+                event.isCancelled = true
+            }
         }
     }
 

@@ -29,10 +29,8 @@ class PlayerEntersPortalListener : Listener {
 
             // If the player is not already in a game, add them to a random one.
             // This prevents players who are already in a lobby or match from being moved.
-            if (GameCluster.getGame(player) == null) {
-                if (!GameCluster.addPlayerToRandomGame(player)) {
-                    player.sendMessage(Messages.ERROR_NO_GAME)
-                }
+            if (GameCluster.getGame(player) == null && !GameCluster.addPlayerToRandomGame(player)) {
+                player.sendMessage(Messages.ERROR_NO_GAME)
             }
         }
     }

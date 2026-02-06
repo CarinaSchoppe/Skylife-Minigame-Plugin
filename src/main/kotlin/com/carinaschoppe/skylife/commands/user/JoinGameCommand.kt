@@ -21,6 +21,9 @@ import org.bukkit.entity.Player
  */
 class JoinGameCommand : CommandExecutor, TabCompleter {
 
+    private companion object {
+        const val PARTY_JOIN_ERROR_FORMAT = "<red>%s</red>"
+    }
     /**
      * Executes the join game command.
      *
@@ -104,7 +107,7 @@ class JoinGameCommand : CommandExecutor, TabCompleter {
 
             val partyJoinResult = PartyManager.handlePartyGameJoin(player, game, null)
             partyJoinResult.onFailure { error ->
-                player.sendMessage(Messages.parse("<red>${error.message}</red>"))
+                sendPartyJoinError(player, error)
             }
             return
         }
@@ -129,7 +132,7 @@ class JoinGameCommand : CommandExecutor, TabCompleter {
         if (isPartyLeader) {
             val partyJoinResult = PartyManager.handlePartyGameJoin(player, game, mapToJoin)
             partyJoinResult.onFailure { error ->
-                player.sendMessage(Messages.parse("<red>${error.message}</red>"))
+                sendPartyJoinError(player, error)
             }
             return
         }
@@ -137,5 +140,10 @@ class JoinGameCommand : CommandExecutor, TabCompleter {
         if (!GameCluster.addPlayerToGame(player, mapToJoin)) {
             player.sendMessage(Messages.ERROR_GAME_FULL_OR_STARTED)
         }
+    }
+
+    private fun sendPartyJoinError(player: Player, error: Throwable) {
+        val message = error.message ?: "Unknown error"
+        player.sendMessage(Messages.parse(PARTY_JOIN_ERROR_FORMAT.format(message)))
     }
 }

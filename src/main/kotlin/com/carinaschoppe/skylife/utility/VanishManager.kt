@@ -27,6 +27,7 @@ import java.util.*
  * Thread-safety: This object is accessed from the main server thread only.
  */
 object VanishManager {
+    private const val PERMISSION_VANISH_SEE = "skylife.vanish.see"
 
     /**
      * Set of UUIDs of players who are currently vanished.
@@ -114,7 +115,7 @@ object VanishManager {
         // Hide player from all other players (Paper API with plugin reference)
         val plugin = PluginContext.plugin
         Bukkit.getOnlinePlayers().forEach { other ->
-            if (other.uniqueId != player.uniqueId && !other.hasPermission("skylife.vanish.see")) {
+            if (other.uniqueId != player.uniqueId && !other.hasPermission(PERMISSION_VANISH_SEE)) {
                 other.hidePlayer(plugin, player)
             }
         }
@@ -202,7 +203,7 @@ object VanishManager {
         // New joining player should not see vanished players
         val plugin = PluginContext.plugin
         vanishedPlayers.mapNotNull { Bukkit.getPlayer(it) }.forEach { vanished ->
-            if (!player.hasPermission("skylife.vanish.see")) {
+            if (!player.hasPermission(PERMISSION_VANISH_SEE)) {
                 player.hidePlayer(plugin, vanished)
             }
         }

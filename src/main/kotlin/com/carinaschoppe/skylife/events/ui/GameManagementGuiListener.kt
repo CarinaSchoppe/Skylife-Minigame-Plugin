@@ -20,6 +20,10 @@ import org.bukkit.inventory.Inventory
  */
 class GameManagementGuiListener : Listener {
 
+    private companion object {
+        const val GAME_PATTERN_PREFIX = "Game pattern '"
+    }
+
     @EventHandler
     fun onInventoryClick(event: InventoryClickEvent) {
         val player = event.whoClicked as? Player ?: return
@@ -166,7 +170,7 @@ class GameManagementGuiListener : Listener {
         GameLoader.saveGameToFile(gamePattern)
         player.sendMessage(
             Messages.PREFIX
-                .append(Component.text("Game pattern '", Messages.MESSAGE_COLOR))
+                .append(Component.text(GAME_PATTERN_PREFIX, Messages.MESSAGE_COLOR))
                 .append(Component.text(gamePattern.mapName, Messages.NAME_COLOR))
                 .append(Component.text("' saved successfully!", Messages.MESSAGE_COLOR))
         )
@@ -229,7 +233,7 @@ class GameManagementGuiListener : Listener {
 
         player.sendMessage(
             Messages.PREFIX
-                .append(Component.text("Game pattern '", Messages.MESSAGE_COLOR))
+                .append(Component.text(GAME_PATTERN_PREFIX, Messages.MESSAGE_COLOR))
                 .append(Component.text(gamePattern.mapName, Messages.NAME_COLOR))
                 .append(Component.text("' has been deleted!", Messages.MESSAGE_COLOR))
         )

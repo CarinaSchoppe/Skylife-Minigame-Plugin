@@ -17,6 +17,7 @@ object LocationManager {
     private val locationsFolder = File(Bukkit.getServer().pluginsFolder, Skylife.folderLocation + "locations/")
     private val gson: Gson = GsonBuilder().setPrettyPrinting().create()
     private val locations = mutableMapOf<String, SkylifeLocation>()
+    private const val LOCATION_FILE_SUFFIX = ".json"
 
     /**
      * Loads all locations from the locations folder.
@@ -56,7 +57,7 @@ object LocationManager {
 
         locations[name] = skylifeLocation
 
-        val file = File(locationsFolder, "$name.json")
+        val file = File(locationsFolder, "$name$LOCATION_FILE_SUFFIX")
         val json = gson.toJson(skylifeLocation)
         file.writeText(json)
     }
@@ -97,7 +98,7 @@ object LocationManager {
      */
     fun deleteLocation(name: String) {
         locations.remove(name)
-        val file = File(locationsFolder, "$name.json")
+        val file = File(locationsFolder, "$name$LOCATION_FILE_SUFFIX")
         if (file.exists()) {
             file.delete()
         }

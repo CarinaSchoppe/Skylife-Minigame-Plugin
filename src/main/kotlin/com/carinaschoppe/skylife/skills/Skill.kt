@@ -7,6 +7,8 @@ import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
 private const val MOBILITY_TYPE_LINE = "<gray>Type: <yellow>Mobility</yellow></gray>"
+private const val DEFENSE_TYPE_LINE = "<gray>Type: <yellow>Defense</yellow></gray>"
+private const val STEALTH_TYPE_LINE = "<gray>Type: <yellow>Stealth</yellow></gray>"
 
 /**
  * Represents a skill/perk that players can select and use in games.
@@ -50,7 +52,7 @@ enum class Skill(
             "Gain extra absorption hearts",
             "for increased durability.",
             "",
-            "<gray>Type: <yellow>Defense</yellow></gray>"
+            DEFENSE_TYPE_LINE
         ),
         Material.GOLDEN_APPLE,
         SkillType.DEFENSE,
@@ -180,7 +182,7 @@ enum class Skill(
             "Become invisible under the right",
             "conditions and strike unseen.",
             "",
-            "<gray>Type: <yellow>Stealth</yellow></gray>"
+            STEALTH_TYPE_LINE
         ),
         Material.FERMENTED_SPIDER_EYE,
         SkillType.UTILITY,
@@ -232,7 +234,7 @@ enum class Skill(
             "Become invisible for a short time.",
             "Use strategically for ambushes.",
             "",
-            "<gray>Type: <yellow>Stealth</yellow></gray>"
+            STEALTH_TYPE_LINE
         ),
         Material.GRAY_DYE,
         SkillType.UTILITY,
@@ -284,7 +286,7 @@ enum class Skill(
             "Begin the battle with full",
             "diamond armor protection.",
             "",
-            "<gray>Type: <yellow>Defense</yellow></gray>"
+            DEFENSE_TYPE_LINE
         ),
         Material.DIAMOND_CHESTPLATE,
         SkillType.DEFENSE,

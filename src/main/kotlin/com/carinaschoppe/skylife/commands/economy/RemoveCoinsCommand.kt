@@ -15,6 +15,10 @@ import org.bukkit.command.TabCompleter
  */
 class RemoveCoinsCommand : CommandExecutor, TabCompleter {
 
+    private companion object {
+        const val PERMISSION_REMOVE_COINS = "skylife.admin.removecoins"
+    }
+
     /**
      * Executes the removecoins command.
      * If the player has insufficient coins, all remaining coins are removed.
@@ -27,7 +31,7 @@ class RemoveCoinsCommand : CommandExecutor, TabCompleter {
      */
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         // Check permission
-        if (!sender.hasPermission("skylife.admin.removecoins")) {
+        if (!sender.hasPermission(PERMISSION_REMOVE_COINS)) {
             sender.sendMessage(Messages.ERROR_PERMISSION)
             return true
         }
@@ -90,7 +94,7 @@ class RemoveCoinsCommand : CommandExecutor, TabCompleter {
         alias: String,
         args: Array<out String>
     ): List<String> {
-        if (!sender.hasPermission("skylife.admin.removecoins")) {
+        if (!sender.hasPermission(PERMISSION_REMOVE_COINS)) {
             return emptyList()
         }
 

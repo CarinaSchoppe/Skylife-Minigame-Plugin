@@ -22,6 +22,9 @@ class SkillPurchaseConfirmGui(private val player: Player, val skill: Skill) : In
 
     companion object {
         private const val INVENTORY_SIZE = 27
+        private const val PRICE_LABEL = "Price: "
+        private const val COINS_SUFFIX = " coins"
+        private const val MINI_MESSAGE_WHITE = "<white>"
     }
 
     private val inventory: Inventory = Bukkit.createInventory(
@@ -80,8 +83,8 @@ class SkillPurchaseConfirmGui(private val player: Player, val skill: Skill) : In
         val lore = mutableListOf<Component>()
         lore.add(Component.empty())
         lore.add(
-            Component.text("Price: ", NamedTextColor.GRAY)
-                .append(Component.text("${skill.rarity.price} coins", NamedTextColor.YELLOW))
+            Component.text(PRICE_LABEL, NamedTextColor.GRAY)
+                .append(Component.text("${skill.rarity.price}$COINS_SUFFIX", NamedTextColor.YELLOW))
         )
         lore.add(
             Component.text("Your coins: ", NamedTextColor.GRAY)
@@ -133,8 +136,8 @@ class SkillPurchaseConfirmGui(private val player: Player, val skill: Skill) : In
                 Component.empty(),
                 Component.text("Rarity: ", NamedTextColor.GRAY)
                     .append(skill.rarity.getColoredName()),
-                Component.text("Price: ", NamedTextColor.GRAY)
-                    .append(Component.text("${skill.rarity.price} coins", NamedTextColor.YELLOW)),
+                Component.text(PRICE_LABEL, NamedTextColor.GRAY)
+                    .append(Component.text("${skill.rarity.price}$COINS_SUFFIX", NamedTextColor.YELLOW)),
                 Component.empty(),
                 Component.text("Unlock this skill permanently!", NamedTextColor.GOLD)
             )
@@ -165,11 +168,11 @@ class SkillPurchaseConfirmGui(private val player: Player, val skill: Skill) : In
         if (result.isSuccess) {
             // Parse template and replace placeholders
             val colorTag = when (skill.rarity.color) {
-                NamedTextColor.WHITE -> "<white>"
+                NamedTextColor.WHITE -> MINI_MESSAGE_WHITE
                 NamedTextColor.BLUE -> "<blue>"
                 NamedTextColor.DARK_PURPLE -> "<dark_purple>"
                 NamedTextColor.GOLD -> "<gold>"
-                else -> "<white>"
+                else -> MINI_MESSAGE_WHITE
             }
             val message = Messages.parse(
                 com.carinaschoppe.skylife.utility.messages.Templates.skillPurchased

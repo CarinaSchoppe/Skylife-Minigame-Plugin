@@ -12,6 +12,9 @@ import java.util.concurrent.ConcurrentHashMap
  */
 object PartyManager {
 
+    private const val ERROR_PARTY_NOT_FOUND = "Party not found"
+    private const val ERROR_TARGET_NOT_IN_PARTY = "Target is not in the party"
+
     // Cache: Player UUID -> Party
     private val playerPartyCache = ConcurrentHashMap<UUID, Party>()
 
@@ -58,7 +61,7 @@ object PartyManager {
      * @return Result with success or error message
      */
     fun invitePlayer(partyId: UUID, inviter: UUID, invitee: UUID): Result<Unit> {
-        val party = parties[partyId] ?: return Result.failure(Exception("Party not found"))
+        val party = parties[partyId] ?: return Result.failure(Exception(ERROR_PARTY_NOT_FOUND))
 
         // Check if inviter is the leader
         if (!party.isLeader(inviter)) {
@@ -139,12 +142,10 @@ object PartyManager {
             ?: return Result.failure(Exception("You are not in a party"))
 
         // Handle leadership transfer or party deletion BEFORE removing member
-        if (party.isLeader(uuid)) {
-            if (party.size() > 1) {
-                // Transfer leadership to next member (excluding the leaving player)
-                val newLeader = party.members.first { it != uuid }
-                party.leader = newLeader
-            }
+        if (party.isLeader(uuid) && party.size() > 1) {
+            // Transfer leadership to next member (excluding the leaving player)
+            val newLeader = party.members.first { it != uuid }
+            party.leader = newLeader
         }
 
         party.removeMember(uuid)
@@ -168,14 +169,14 @@ object PartyManager {
      * Promotes a member to party leader.
      */
     fun promoteToLeader(partyId: UUID, promoter: UUID, target: UUID): Result<Unit> {
-        val party = parties[partyId] ?: return Result.failure(Exception("Party not found"))
+        val party = parties[partyId] ?: return Result.failure(Exception(ERROR_PARTY_NOT_FOUND))
 
         if (!party.isLeader(promoter)) {
             return Result.failure(Exception("Only the party leader can promote members"))
         }
 
         if (!party.isMember(target)) {
-            return Result.failure(Exception("Target is not in the party"))
+            return Result.failure(Exception(ERROR_TARGET_NOT_IN_PARTY))
         }
 
         if (party.isLeader(target)) {
@@ -190,14 +191,14 @@ object PartyManager {
      * Kicks a player from the party (leader only).
      */
     fun kickPlayer(partyId: UUID, kicker: UUID, target: UUID): Result<Unit> {
-        val party = parties[partyId] ?: return Result.failure(Exception("Party not found"))
+        val party = parties[partyId] ?: return Result.failure(Exception(ERROR_PARTY_NOT_FOUND))
 
         if (!party.isLeader(kicker)) {
             return Result.failure(Exception("Only the party leader can kick members"))
         }
 
         if (!party.isMember(target)) {
-            return Result.failure(Exception("Target is not in the party"))
+            return Result.failure(Exception(ERROR_TARGET_NOT_IN_PARTY))
         }
 
         if (party.isLeader(target)) {

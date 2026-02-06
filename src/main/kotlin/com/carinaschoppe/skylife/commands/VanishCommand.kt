@@ -32,6 +32,7 @@ import org.bukkit.entity.Player
 class VanishCommand : CommandExecutor, TabCompleter {
 
     private companion object {
+        const val PERMISSION_VANISH_SELF = "skylife.vanish.self"
         const val PERMISSION_VANISH_OTHERS = "skylife.vanish.others"
     }
 
@@ -42,7 +43,7 @@ class VanishCommand : CommandExecutor, TabCompleter {
         }
 
         // Check base permission
-        if (!sender.hasPermission("skylife.vanish.self") && !sender.hasPermission(PERMISSION_VANISH_OTHERS)) {
+        if (!sender.hasPermission(PERMISSION_VANISH_SELF) && !sender.hasPermission(PERMISSION_VANISH_OTHERS)) {
             sender.sendMessage(Messages.NO_PERMISSION)
             return true
         }
@@ -64,7 +65,7 @@ class VanishCommand : CommandExecutor, TabCompleter {
     }
 
     private fun handleSelfToggle(player: Player) {
-        if (!player.hasPermission("skylife.vanish.self")) {
+        if (!player.hasPermission(PERMISSION_VANISH_SELF)) {
             player.sendMessage(Messages.NO_PERMISSION)
             return
         }

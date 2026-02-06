@@ -15,6 +15,10 @@ import org.bukkit.command.TabCompleter
  */
 class GiveCoinsCommand : CommandExecutor, TabCompleter {
 
+    private companion object {
+        const val PERMISSION_GIVE_COINS = "skylife.admin.givecoins"
+    }
+
     /**
      * Executes the givecoins command.
      *
@@ -26,7 +30,7 @@ class GiveCoinsCommand : CommandExecutor, TabCompleter {
      */
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         // Check permission
-        if (!sender.hasPermission("skylife.admin.givecoins")) {
+        if (!sender.hasPermission(PERMISSION_GIVE_COINS)) {
             sender.sendMessage(Messages.ERROR_PERMISSION)
             return true
         }
@@ -80,7 +84,7 @@ class GiveCoinsCommand : CommandExecutor, TabCompleter {
         alias: String,
         args: Array<out String>
     ): List<String> {
-        if (!sender.hasPermission("skylife.admin.givecoins")) {
+        if (!sender.hasPermission(PERMISSION_GIVE_COINS)) {
             return emptyList()
         }
 

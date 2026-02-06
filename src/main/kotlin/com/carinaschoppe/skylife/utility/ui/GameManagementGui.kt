@@ -26,6 +26,7 @@ object GameManagementGui {
     private const val LORE_CURRENT_LOCATION = "current location"
     private const val NOT_SET_TEXT = "✗ Not set"
     private const val LOCATION_SET_TEXT = "✓ Location set!"
+    private const val MINIMUM_ONE_TEXT = "(Minimum: 1)"
 
     private val KEY_GAME_NAME: NamespacedKey by lazy { NamespacedKey(PluginContext.plugin, "manage_game_name") }
     private val KEY_ACTION: NamespacedKey by lazy { NamespacedKey(PluginContext.plugin, "manage_game_action") }
@@ -107,7 +108,7 @@ object GameManagementGui {
                 .addName(Component.text("Min Players", NamedTextColor.YELLOW, TextDecoration.BOLD))
                 .addLore(
                     Component.text("Current: ${gamePattern.minPlayers}", NamedTextColor.WHITE),
-                    Component.text("(Minimum: 1)", NamedTextColor.GRAY)
+                    Component.text(MINIMUM_ONE_TEXT, NamedTextColor.GRAY)
                 )
                 .addAmount(maxOf(1, gamePattern.minPlayers))
                 .build()
@@ -180,7 +181,7 @@ object GameManagementGui {
                 .addLore(
                     Component.text("Current: ${gamePattern.minPlayersToStart}", NamedTextColor.WHITE),
                     Component.text("Players needed to start countdown", NamedTextColor.GRAY),
-                    Component.text("(Minimum: 1)", NamedTextColor.GRAY)
+                    Component.text(MINIMUM_ONE_TEXT, NamedTextColor.GRAY)
                 )
                 .addAmount(maxOf(1, gamePattern.minPlayersToStart))
                 .build()

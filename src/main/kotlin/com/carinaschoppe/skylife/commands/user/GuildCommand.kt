@@ -28,6 +28,7 @@ class GuildCommand : CommandExecutor, TabCompleter {
 
     private companion object {
         const val GUILD_NOT_FOUND = "Guild not found"
+        const val NOT_IN_GUILD = "You are not in a guild"
     }
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
@@ -93,7 +94,7 @@ class GuildCommand : CommandExecutor, TabCompleter {
 
         val guildId = GuildManager.getPlayerGuildId(player.uniqueId)
         if (guildId == null) {
-            player.sendMessage(Messages.PREFIX.append(Component.text("You are not in a guild", Messages.ERROR_COLOR)))
+            player.sendMessage(Messages.PREFIX.append(Component.text(NOT_IN_GUILD, Messages.ERROR_COLOR)))
             return
         }
 
@@ -133,7 +134,7 @@ class GuildCommand : CommandExecutor, TabCompleter {
 
         val guildId = GuildManager.getPlayerGuildId(player.uniqueId)
         if (guildId == null) {
-            player.sendMessage(Messages.PREFIX.append(Component.text("You are not in a guild", Messages.ERROR_COLOR)))
+            player.sendMessage(Messages.PREFIX.append(Component.text(NOT_IN_GUILD, Messages.ERROR_COLOR)))
             return
         }
 
@@ -172,7 +173,7 @@ class GuildCommand : CommandExecutor, TabCompleter {
 
         val guildId = GuildManager.getPlayerGuildId(player.uniqueId)
         if (guildId == null) {
-            player.sendMessage(Messages.PREFIX.append(Component.text("You are not in a guild", Messages.ERROR_COLOR)))
+            player.sendMessage(Messages.PREFIX.append(Component.text(NOT_IN_GUILD, Messages.ERROR_COLOR)))
             return
         }
 
@@ -213,7 +214,7 @@ class GuildCommand : CommandExecutor, TabCompleter {
     private fun handleLeave(player: Player) {
         val guildId = GuildManager.getPlayerGuildId(player.uniqueId)
         if (guildId == null) {
-            player.sendMessage(Messages.PREFIX.append(Component.text("You are not in a guild", Messages.ERROR_COLOR)))
+            player.sendMessage(Messages.PREFIX.append(Component.text(NOT_IN_GUILD, Messages.ERROR_COLOR)))
             return
         }
 
@@ -245,7 +246,7 @@ class GuildCommand : CommandExecutor, TabCompleter {
     private fun handleToggleFriendlyFire(player: Player) {
         val guildId = GuildManager.getPlayerGuildId(player.uniqueId)
         if (guildId == null) {
-            player.sendMessage(Messages.PREFIX.append(Component.text("You are not in a guild", Messages.ERROR_COLOR)))
+            player.sendMessage(Messages.PREFIX.append(Component.text(NOT_IN_GUILD, Messages.ERROR_COLOR)))
             return
         }
 
@@ -270,7 +271,7 @@ class GuildCommand : CommandExecutor, TabCompleter {
     private fun handleInfo(player: Player) {
         val guildId = GuildManager.getPlayerGuildId(player.uniqueId)
         if (guildId == null) {
-            player.sendMessage(Messages.PREFIX.append(Component.text("You are not in a guild", Messages.ERROR_COLOR)))
+            player.sendMessage(Messages.PREFIX.append(Component.text(NOT_IN_GUILD, Messages.ERROR_COLOR)))
             return
         }
 

@@ -22,6 +22,10 @@ import org.bukkit.entity.Player
  */
 class PartyCommand : TabExecutor {
 
+    private companion object {
+        const val PARTY_ERROR_FORMAT = "<red>%s</red>"
+    }
+
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender !is Player) {
             sender.sendMessage(Messages.ERROR_NOTPLAYER)
@@ -94,7 +98,7 @@ class PartyCommand : TabExecutor {
             player.sendMessage(Messages.PARTY_INVITE_SENT(target.name))
             target.sendMessage(Messages.PARTY_INVITE_RECEIVED(player.name))
         }.onFailure { error ->
-            player.sendMessage(Messages.parse("<red>${error.message}</red>"))
+            sendPartyError(player, error)
         }
     }
 
@@ -119,7 +123,7 @@ class PartyCommand : TabExecutor {
                 }
             }
         }.onFailure { error ->
-            player.sendMessage(Messages.parse("<red>${error.message}</red>"))
+            sendPartyError(player, error)
         }
     }
 
@@ -153,7 +157,7 @@ class PartyCommand : TabExecutor {
                 }
             }
         }.onFailure { error ->
-            player.sendMessage(Messages.parse("<red>${error.message}</red>"))
+            sendPartyError(player, error)
         }
     }
 
@@ -187,7 +191,7 @@ class PartyCommand : TabExecutor {
                 }
             }
         }.onFailure { error ->
-            player.sendMessage(Messages.parse("<red>${error.message}</red>"))
+            sendPartyError(player, error)
         }
     }
 
@@ -224,7 +228,7 @@ class PartyCommand : TabExecutor {
                 }
             }
         }.onFailure { error ->
-            player.sendMessage(Messages.parse("<red>${error.message}</red>"))
+            sendPartyError(player, error)
         }
     }
 
@@ -330,5 +334,10 @@ class PartyCommand : TabExecutor {
 
             else -> null
         }
+    }
+
+    private fun sendPartyError(player: Player, error: Throwable) {
+        val message = error.message ?: "Unknown error"
+        player.sendMessage(Messages.parse(PARTY_ERROR_FORMAT.format(message)))
     }
 }

@@ -13,9 +13,7 @@ class DefaultGameFactory(
         val lobbyLoc = locationConverter.toLocation(pattern.gameLocationManager.lobbyLocation)
         val ingameLoc = locationConverter.toLocation(pattern.gameLocationManager.mainLocation)
 
-        if (lobbyLoc == null || ingameLoc == null) {
-            throw IllegalStateException("Failed to create game '${pattern.mapName}': Required worlds not loaded")
-        }
+        check(!(lobbyLoc == null || ingameLoc == null)) { "Failed to create game '${pattern.mapName}': Required worlds not loaded" }
 
         val game = Game(
             name = pattern.mapName,

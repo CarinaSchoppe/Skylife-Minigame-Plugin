@@ -135,17 +135,17 @@ object LobbyScoreboardManager {
     private fun getRankColorMiniMessage(rank: com.carinaschoppe.skylife.economy.PlayerRank): String {
         return when (rank) {
             com.carinaschoppe.skylife.economy.PlayerRank.USER -> "<gray>"
-            com.carinaschoppe.skylife.economy.PlayerRank.VIP -> "<green>"
-            com.carinaschoppe.skylife.economy.PlayerRank.VIP_PLUS -> "<aqua>"
-            com.carinaschoppe.skylife.economy.PlayerRank.MOD -> "<green>"
-            com.carinaschoppe.skylife.economy.PlayerRank.DEV -> "<aqua>"
+            com.carinaschoppe.skylife.economy.PlayerRank.VIP -> MM_GREEN
+            com.carinaschoppe.skylife.economy.PlayerRank.VIP_PLUS -> MM_AQUA
+            com.carinaschoppe.skylife.economy.PlayerRank.MOD -> MM_GREEN
+            com.carinaschoppe.skylife.economy.PlayerRank.DEV -> MM_AQUA
             com.carinaschoppe.skylife.economy.PlayerRank.ADMIN -> "<red>"
         }
     }
 
     private val titleColors = listOf(NamedTextColor.AQUA, NamedTextColor.BLUE, NamedTextColor.DARK_AQUA)
     private val defaultLobbyLines = listOf(
-        "<dark_gray><strikethrough>----------------</strikethrough></dark_gray>",
+        DIVIDER_LINE,
         "<aqua>Server</aqua><gray>: </gray><white>{server}</white>",
         "",
         "<aqua>Rank</aqua><gray>: </gray>{rank_color}{rank}",
@@ -156,7 +156,10 @@ object LobbyScoreboardManager {
         "<aqua>Kills</aqua><gray>: </gray><red>{kills}</red>",
         "<aqua>Wins</aqua><gray>: </gray><yellow>{wins}</yellow>",
         "<aqua>Games</aqua><gray>: </gray><white>{games}</white>",
-        "<dark_gray><strikethrough>----------------</strikethrough></dark_gray>"
+        DIVIDER_LINE
     )
     private const val MAX_LINES = 15
+    private const val MM_GREEN = "<green>"
+    private const val MM_AQUA = "<aqua>"
+    private const val DIVIDER_LINE = "<dark_gray><strikethrough>----------------</strikethrough></dark_gray>"
 }

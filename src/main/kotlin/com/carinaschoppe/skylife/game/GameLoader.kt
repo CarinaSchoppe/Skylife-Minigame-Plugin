@@ -16,6 +16,8 @@ import java.io.File
  * It uses JSON for serialization of game patterns.
  */
 object GameLoader {
+    private const val GAME_PATTERN_PREFIX = "Game pattern '"
+    private const val GAME_PATTERN_FILE_EXTENSION = ".json"
 
     /**
      * The directory where game pattern files are stored, relative to the server's plugins folder.
@@ -48,7 +50,7 @@ object GameLoader {
             } catch (e: IllegalStateException) {
                 Bukkit.getServer().consoleSender.sendMessage(
                     Messages.PREFIX
-                        .append(Component.text("Game pattern '", Messages.MESSAGE_COLOR))
+                        .append(Component.text(GAME_PATTERN_PREFIX, Messages.MESSAGE_COLOR))
                         .append(Component.text(gamePattern.mapName, Messages.NAME_COLOR))
                         .append(Component.text("' loaded, but failed to create game instance: ", Messages.ERROR_COLOR))
                         .append(Component.text(e.message ?: "Unknown error", Messages.ERROR_COLOR))
@@ -57,7 +59,7 @@ object GameLoader {
         } else {
             Bukkit.getServer().consoleSender.sendMessage(
                 Messages.PREFIX
-                    .append(Component.text("Game pattern '", Messages.MESSAGE_COLOR))
+                    .append(Component.text(GAME_PATTERN_PREFIX, Messages.MESSAGE_COLOR))
                     .append(Component.text(gamePattern.mapName, Messages.NAME_COLOR))
                     .append(Component.text("' loaded, but is incomplete!", Messages.ERROR_COLOR))
             )
@@ -73,7 +75,7 @@ object GameLoader {
         val folder = File(Bukkit.getServer().pluginsFolder, gamesFolder).also {
             if (!it.exists()) it.mkdirs()
         }
-        File(folder, "${gamePattern.mapName}.json").takeIf { it.exists() }?.delete()
+        File(folder, "${gamePattern.mapName}$GAME_PATTERN_FILE_EXTENSION").takeIf { it.exists() }?.delete()
     }
 
     /**
@@ -87,7 +89,7 @@ object GameLoader {
         val folder = File(Bukkit.getServer().pluginsFolder, gamesFolder).also {
             if (!it.exists()) it.mkdirs()
         }
-        val file = File(folder, "${gamePattern.mapName}.json")
+        val file = File(folder, "${gamePattern.mapName}$GAME_PATTERN_FILE_EXTENSION")
 
         // Delete existing file if it exists
         file.takeIf { it.exists() }?.delete()
@@ -109,7 +111,7 @@ object GameLoader {
         }
 
         return folder.listFiles { _, name ->
-            name.endsWith(".json")
+            name.endsWith(GAME_PATTERN_FILE_EXTENSION)
         }?.toList() ?: emptyList()
     }
 }

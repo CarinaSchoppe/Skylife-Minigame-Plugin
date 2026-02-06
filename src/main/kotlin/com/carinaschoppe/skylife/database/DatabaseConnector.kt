@@ -68,9 +68,7 @@ object DatabaseConnector {
                     val pgConfig = config.database.postgresql
 
                     // Validate PostgreSQL config
-                    if (pgConfig.host.isBlank() || pgConfig.database.isBlank()) {
-                        throw IllegalArgumentException("PostgreSQL configuration incomplete! Host and database name are required.")
-                    }
+                    require(!(pgConfig.host.isBlank() || pgConfig.database.isBlank())) { "PostgreSQL configuration incomplete! Host and database name are required." }
 
                     "jdbc:postgresql://${pgConfig.host}:${pgConfig.port}/${pgConfig.database}"
                 }

@@ -12,6 +12,13 @@ object Templates {
     private const val GUI_CLICK_TO_DECREASE = "<gray>Click to decrease</gray>"
     private const val GUI_CLICK_TO_INCREASE = "<gray>Click to increase</gray>"
     private const val GUI_CLICK_TO_SET_LOCATION = "<gray>Click to set your current location</gray>"
+    private const val GUI_CURRENT_COUNT_LINE = "<white>Current: <count></white>"
+    private const val GUI_LOCATION_SET = "<green>✓ Location set!</green>"
+    private const val MESSAGE_ERROR_TEMPLATE = "<prefix><red><error></red>"
+    private const val MESSAGE_CONFIGURATION_SAVED = "<prefix><green>Configuration saved!</green>"
+    private const val MESSAGE_ONLY_PLAYERS = "<prefix><red>This command can only be used by players!</red>"
+    private const val SKILL_NOT_UNLOCKED = "<prefix><red>You must unlock this skill before you can select it!</red>"
+    private const val SKILL_SELECTION_FULL = "<prefix><red>You already have <max> skills selected. Unselect one first.</red>"
 
     // Prefix
     var prefix: String = "<gray><bold>[</bold></gray><aqua><bold>Skylife</bold></aqua><gray><bold>] </bold></gray>"
@@ -69,8 +76,8 @@ object Templates {
     var skillUnselected: String = "<prefix><green>Skill </green><gold><bold><skill></bold></gold><green> unselected!</green>"
     var skillPurchased: String = "<prefix><green>Successfully purchased </green><gold><bold><skill></bold></gold><green> for </green><gold><bold><price> coins</bold></gold><green>!</green>"
     var skillAlreadyOwned: String = "<prefix><red>You already own this skill!</red>"
-    var skillNotUnlocked: String = "<prefix><red>You must unlock this skill before you can select it!</red>"
-    var skillMaxReached: String = "<prefix><red>You already have <max> skills selected. Unselect one first.</red>"
+    var skillNotUnlocked: String = SKILL_NOT_UNLOCKED
+    var skillMaxReached: String = SKILL_SELECTION_FULL
     var skillInsufficientFunds: String = "<prefix><red>Insufficient coins! Need <price>, have <current></red>"
 
     // Economy messages
@@ -189,7 +196,7 @@ object Templates {
     var guildHelpLeave: String = "<green>/guild leave</green>"
     var guildHelpToggleFF: String = "<green>/guild toggleff</green>"
     var guildHelpInfo: String = "<green>/guild info</green>"
-    var guildError: String = "<prefix><red><error></red>"
+    var guildError: String = MESSAGE_ERROR_TEMPLATE
 
     // Direct message system
     var dmUsage: String = "<prefix><red>Usage: /msg <player> <message></red>"
@@ -210,25 +217,25 @@ object Templates {
     var pluginEnabled: String = "<prefix><green>Skylife has been started!</green>"
     var pluginDisabled: String = "<prefix><red>Skylife has been stopped!</red>"
     var configLoaded: String = "<prefix><green>Configuration loaded successfully!</green>"
-    var configSaved: String = "<prefix><green>Configuration saved!</green>"
+    var configSaved: String = MESSAGE_CONFIGURATION_SAVED
     var messagesLoaded: String = "<prefix><green>Messages loaded!</green>"
     var messagesSaved: String = "<prefix><green>Messages saved!</green>"
     var messagesExported: String = "<prefix><green><bold>Messages exported to messages.json!</bold></green>"
     var messagesRestartNote: String = "<green>Restart the server to load any changes you make.</green>"
 
     // Legacy skill messages (for backwards compatibility)
-    var skillError: String = "<prefix><red><error></red>"
+    var skillError: String = MESSAGE_ERROR_TEMPLATE
     var skillPurchaseFailed: String = "<prefix><red>Failed to purchase skill: </red><gold><error></gold>"
-    var skillMustUnlock: String = "<prefix><red>You must unlock this skill before you can select it!</red>"
-    var skillSelectionFailedSlotsFull: String = "<prefix><red>You already have <max> skills selected. Unselect one first.</red>"
+    var skillMustUnlock: String = SKILL_NOT_UNLOCKED
+    var skillSelectionFailedSlotsFull: String = SKILL_SELECTION_FULL
 
     // Admin command messages
     var noActiveSetup: String = "<prefix><red>No active setup! Use /game create <name> or /gamesetup <name> first.</red>"
     var gamePatternNotFound: String = "<prefix><red>Game pattern '<game>' not found!</red>"
     var amountMustBeAtLeastOne: String = "<prefix><red>Amount must be at least 1!</red>"
     var maxPlayersGreaterThanMin: String = "<prefix><red>Max players must be >= min players (<min>)!</red>"
-    var onlyPlayersCanUse: String = "<prefix><red>This command can only be used by players!</red>"
-    var configurationSaved: String = "<prefix><green>Configuration saved!</green>"
+    var onlyPlayersCanUse: String = MESSAGE_ONLY_PLAYERS
+    var configurationSaved: String = MESSAGE_CONFIGURATION_SAVED
     var configurationLoaded: String = "<prefix><green>Configuration loaded!</green>"
 
     // Chat format (guild chat, party chat, game chat)
@@ -253,25 +260,25 @@ object Templates {
     var guiGameSetupDecreaseMinPlayers: String = "<red><bold>Decrease Min Players</bold></red>"
     var guiGameSetupDecreaseMinPlayersLore: String = GUI_CLICK_TO_DECREASE
     var guiGameSetupMinPlayers: String = "<yellow><bold>Min Players</bold></yellow>"
-    var guiGameSetupMinPlayersLore1: String = "<white>Current: <count></white>"
+    var guiGameSetupMinPlayersLore1: String = GUI_CURRENT_COUNT_LINE
     var guiGameSetupMinPlayersLore2: String = "<gray>(Minimum: 1)</gray>"
     var guiGameSetupIncreaseMinPlayers: String = "<green><bold>Increase Min Players</bold></green>"
     var guiGameSetupIncreaseMinPlayersLore: String = GUI_CLICK_TO_INCREASE
     var guiGameSetupDecreaseMaxPlayers: String = "<red><bold>Decrease Max Players</bold></red>"
     var guiGameSetupDecreaseMaxPlayersLore: String = GUI_CLICK_TO_DECREASE
     var guiGameSetupMaxPlayers: String = "<yellow><bold>Max Players</bold></yellow>"
-    var guiGameSetupMaxPlayersLore1: String = "<white>Current: <count></white>"
+    var guiGameSetupMaxPlayersLore1: String = GUI_CURRENT_COUNT_LINE
     var guiGameSetupMaxPlayersLore2: String = "<gray>(Must be ≥ Min Players)</gray>"
     var guiGameSetupIncreaseMaxPlayers: String = "<green><bold>Increase Max Players</bold></green>"
     var guiGameSetupIncreaseMaxPlayersLore: String = GUI_CLICK_TO_INCREASE
     var guiGameSetupLobbyLocation: String = "<bold>Lobby Location</bold>"
-    var guiGameSetupLobbyLocationSet: String = "<green>✓ Location set!</green>"
+    var guiGameSetupLobbyLocationSet: String = GUI_LOCATION_SET
     var guiGameSetupLobbyLocationNotSet: String = GUI_CLICK_TO_SET_LOCATION
     var guiGameSetupSpectatorLocation: String = "<bold>Spectator Location</bold>"
-    var guiGameSetupSpectatorLocationSet: String = "<green>✓ Location set!</green>"
+    var guiGameSetupSpectatorLocationSet: String = GUI_LOCATION_SET
     var guiGameSetupSpectatorLocationNotSet: String = GUI_CLICK_TO_SET_LOCATION
     var guiGameSetupMainLocation: String = "<bold>Main Location</bold>"
-    var guiGameSetupMainLocationSet: String = "<green>✓ Location set!</green>"
+    var guiGameSetupMainLocationSet: String = GUI_LOCATION_SET
     var guiGameSetupMainLocationNotSet: String = GUI_CLICK_TO_SET_LOCATION
     var guiGameSetupSpawnLocations: String = "<aqua><bold>Spawn Locations</bold></aqua>"
     var guiGameSetupSpawnLocationsLore1: String = "<white>Current spawns: <count></white>"
@@ -344,6 +351,6 @@ object Templates {
     var vanishEnabledOther: String = "<prefix><green><bold>Vanish enabled for </bold></green><gold><bold><player></bold></gold>"
     var vanishDisabledOther: String = "<prefix><green><bold>Vanish disabled for </bold></green><gold><bold><player></bold></gold>"
     var vanishUsage: String = "<prefix><red>Usage: /vanish [player]</red>"
-    var onlyPlayers: String = "<prefix><red>This command can only be used by players!</red>"
+    var onlyPlayers: String = MESSAGE_ONLY_PLAYERS
     var noPermission: String = "<prefix><red>You don't have permission to use this command!</red>"
 }

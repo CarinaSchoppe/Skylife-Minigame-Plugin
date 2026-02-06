@@ -18,6 +18,9 @@ class GameSetupGui(override val player: Player, override val gamePattern: GamePa
         private const val LORE_CLICK_TO_INCREASE = "Click to increase"
         private const val LORE_CLICK_TO_SET_LOCATION = "Click to set your current location"
         private const val LOCATION_SET_TEXT = "✓ Location set!"
+        private const val LOBBY_LOCATION_LABEL = "Lobby Location"
+        private const val SPECTATOR_LOCATION_LABEL = "Spectator Location"
+        private const val MAIN_LOCATION_LABEL = "Main Location"
 
         // Slot positions
         const val MIN_PLAYERS_DISPLAY = 10
@@ -169,7 +172,7 @@ class GameSetupGui(override val player: Player, override val gamePattern: GamePa
         builder.setItem(
             LOBBY_LOCATION,
             ItemBuilder(if (lobbySet) Material.LIME_WOOL else Material.WHITE_WOOL)
-                .addName(Component.text("Lobby Location", if (lobbySet) NamedTextColor.GREEN else NamedTextColor.WHITE, TextDecoration.BOLD))
+                .addName(Component.text(LOBBY_LOCATION_LABEL, if (lobbySet) NamedTextColor.GREEN else NamedTextColor.WHITE, TextDecoration.BOLD))
                 .addLore(
                     if (lobbySet)
                         Component.text(LOCATION_SET_TEXT, NamedTextColor.GREEN)
@@ -183,7 +186,7 @@ class GameSetupGui(override val player: Player, override val gamePattern: GamePa
         builder.setItem(
             SPECTATOR_LOCATION,
             ItemBuilder(if (spectatorSet) Material.LIME_WOOL else Material.WHITE_WOOL)
-                .addName(Component.text("Spectator Location", if (spectatorSet) NamedTextColor.GREEN else NamedTextColor.WHITE, TextDecoration.BOLD))
+                .addName(Component.text(SPECTATOR_LOCATION_LABEL, if (spectatorSet) NamedTextColor.GREEN else NamedTextColor.WHITE, TextDecoration.BOLD))
                 .addLore(
                     if (spectatorSet)
                         Component.text(LOCATION_SET_TEXT, NamedTextColor.GREEN)
@@ -197,7 +200,7 @@ class GameSetupGui(override val player: Player, override val gamePattern: GamePa
         builder.setItem(
             MAIN_LOCATION,
             ItemBuilder(if (mainSet) Material.LIME_WOOL else Material.WHITE_WOOL)
-                .addName(Component.text("Main Location", if (mainSet) NamedTextColor.GREEN else NamedTextColor.WHITE, TextDecoration.BOLD))
+                .addName(Component.text(MAIN_LOCATION_LABEL, if (mainSet) NamedTextColor.GREEN else NamedTextColor.WHITE, TextDecoration.BOLD))
                 .addLore(
                     if (mainSet)
                         Component.text(LOCATION_SET_TEXT, NamedTextColor.GREEN)
@@ -259,9 +262,9 @@ class GameSetupGui(override val player: Player, override val gamePattern: GamePa
                         val missing = mutableListOf<String>()
                         if (gamePattern.minPlayers < 1) missing.add("Min Players must be ≥ 1")
                         if (gamePattern.maxPlayers < gamePattern.minPlayers) missing.add("Max Players must be ≥ Min Players")
-                        if (!locationState.lobbySet) missing.add("Lobby Location")
-                        if (!locationState.spectatorSet) missing.add("Spectator Location")
-                        if (!locationState.mainSet) missing.add("Main Location")
+                        if (!locationState.lobbySet) missing.add(LOBBY_LOCATION_LABEL)
+                        if (!locationState.spectatorSet) missing.add(SPECTATOR_LOCATION_LABEL)
+                        if (!locationState.mainSet) missing.add(MAIN_LOCATION_LABEL)
                         if (spawnCount == 0) missing.add("At least 1 Spawn Location")
 
                         val lore = mutableListOf(Component.text("Missing requirements:", NamedTextColor.RED))
