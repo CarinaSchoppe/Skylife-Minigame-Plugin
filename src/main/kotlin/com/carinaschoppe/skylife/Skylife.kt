@@ -151,7 +151,7 @@ open class Skylife : JavaPlugin() {
 
         getCommand("managegames")?.setExecutor(ManageGamesCommand())
 
-        val vanishCommand = com.carinaschoppe.skylife.commands.VanishCommand()
+        val vanishCommand = VanishCommand()
         getCommand("vanish")?.setExecutor(vanishCommand)
         getCommand("vanish")?.tabCompleter = vanishCommand
     }

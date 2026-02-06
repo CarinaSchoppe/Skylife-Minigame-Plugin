@@ -1,4 +1,4 @@
-package com.carinaschoppe.skylife.commands
+package com.carinaschoppe.skylife.commands.admin
 
 import com.carinaschoppe.skylife.utility.VanishManager
 import com.carinaschoppe.skylife.utility.messages.Messages
