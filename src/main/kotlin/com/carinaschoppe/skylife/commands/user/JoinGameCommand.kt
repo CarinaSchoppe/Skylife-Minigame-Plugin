@@ -24,6 +24,7 @@ class JoinGameCommand : CommandExecutor, TabCompleter {
     private companion object {
         const val PARTY_JOIN_ERROR_FORMAT = "<red>%s</red>"
     }
+
     /**
      * Executes the join game command.
      *
