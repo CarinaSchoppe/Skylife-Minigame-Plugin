@@ -55,7 +55,8 @@ class GameSetupCommand : CommandExecutor {
 
         // Check if player already has an active setup
         if (activeSetups.containsKey(sender)) {
-            val currentSetup = activeSetups[sender]!!
+            val pattern = activeSetups[sender]
+            val currentSetup = if (pattern != null) pattern else throw NullPointerException("Expression 'activeSetups[sender]' must not be null")
             sender.sendMessage(
                 Messages.PREFIX
                     .append(Component.text("You already have an active setup for '", Messages.ERROR_COLOR))

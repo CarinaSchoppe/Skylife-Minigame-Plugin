@@ -22,14 +22,5 @@ object Items {
         .addName(" ")
         .build()
 
-    /**
-     * A placeholder item representing the "Paderborn" level/map.
-     *
-     * Currently used as a test item in level selection menus.
-     * TODO: Replace with actual level representation with proper name and description
-     */
-    val LEVEL_PADERBORN: ItemStack = ItemBuilder(Material.IRON_SHOVEL)
-        .addName("Paderborn")
-        .addLore("Minigame: Fast Rounds")
-        .build()
+
 }

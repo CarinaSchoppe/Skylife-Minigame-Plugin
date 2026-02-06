@@ -147,7 +147,8 @@ object Messages {
     val SKILL_ALREADY_OWNED: Component get() = parseTemplate(TEMPLATES.skillAlreadyOwned)
     val SKILL_NOT_UNLOCKED: Component get() = parseTemplate(TEMPLATES.skillNotUnlocked)
     fun SKILL_MAX_REACHED(max: Int): Component = parseTemplate(TEMPLATES.skillMaxReached, "max" to max)
-    fun SKILL_INSUFFICIENT_FUNDS(price: Int, current: Int): Component = parseTemplate(TEMPLATES.skillInsufficientFunds, "price" to price, "current" to current)
+    fun SKILLINSUFFICIENTFUNDS(price: Int, current: Int): Component =
+        parseTemplate(TEMPLATES.skillInsufficientFunds, "price" to price, "current" to current)
 
     // Economy messages
     fun COINS_EARNED_GAME(amount: Int): Component = parseTemplate(TEMPLATES.coinsEarnedGame, "amount" to amount)
@@ -278,7 +279,6 @@ object Messages {
     val ONLY_PLAYERS: Component get() = parseTemplate(TEMPLATES.onlyPlayers)
     val NO_PERMISSION: Component get() = parseTemplate(TEMPLATES.noPermission)
 }
-
 
 
 

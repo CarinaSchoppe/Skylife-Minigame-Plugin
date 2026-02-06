@@ -91,7 +91,12 @@ object MapManager {
                 Bukkit.getLogger().warning("[MapManager] World loading took ${loadTime}ms for world '$worldName'")
             }
 
-            if (world != null) {
+            if (world == null) {
+                Bukkit.getLogger().severe("[MapManager] Failed to load world '$worldName' for game $gameID")
+                // Cleanup failed world folder
+                deleteDirectory(worldFolder)
+                return null
+            } else {
                 activeWorlds[gameID] = worldName
                 val totalTime = System.currentTimeMillis() - startTime
                 Bukkit.getLogger().info("[MapManager] Loaded map '$template' as world '$worldName' for game $gameID (${totalTime}ms)")
@@ -105,11 +110,6 @@ object MapManager {
                 world.time = 6000 // Set to noon
 
                 return world
-            } else {
-                Bukkit.getLogger().severe("[MapManager] Failed to load world '$worldName' for game $gameID")
-                // Cleanup failed world folder
-                deleteDirectory(worldFolder)
-                return null
             }
         } catch (e: Exception) {
             Bukkit.getLogger().severe("[MapManager] Error loading map for game $gameID: ${e.message}")

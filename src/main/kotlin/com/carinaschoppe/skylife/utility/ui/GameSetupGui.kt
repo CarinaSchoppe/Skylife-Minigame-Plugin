@@ -21,6 +21,14 @@ class GameSetupGui(override val player: Player, override val gamePattern: GamePa
         private const val LOBBY_LOCATION_LABEL = "Lobby Location"
         private const val SPECTATOR_LOCATION_LABEL = "Spectator Location"
         private const val MAIN_LOCATION_LABEL = "Main Location"
+        private const val FINISH_TITLE = "✓ Finish & Save"
+        private const val INCOMPLETE_TITLE = "✗ Incomplete Setup"
+        private const val FINISH_LORE = "Click to save the game pattern!"
+        private const val MISSING_REQUIREMENTS_TITLE = "Missing requirements:"
+        private const val MISSING_MIN_PLAYERS = "Min Players must be ≥ 1"
+        private const val MISSING_MAX_PLAYERS = "Max Players must be ≥ Min Players"
+        private const val MISSING_SPAWN_LOCATION = "At least 1 Spawn Location"
+        private const val MISSING_BULLET_PREFIX = "• "
 
         // Slot positions
         const val MIN_PLAYERS_DISPLAY = 10
@@ -245,34 +253,42 @@ class GameSetupGui(override val player: Player, override val gamePattern: GamePa
 
     private fun setFinishButton(builder: GUIBuilder, locationState: LocationState, spawnCount: Int) {
         val isComplete = gamePattern.isComplete()
-        builder.setItem(
-            FINISH_SLOT,
-            ItemBuilder(if (isComplete) Material.LIME_CONCRETE else Material.BARRIER)
-                .addName(
-                    Component.text(
-                        if (isComplete) "✓ Finish & Save" else "✗ Incomplete Setup",
-                        if (isComplete) NamedTextColor.GREEN else NamedTextColor.RED,
-                        TextDecoration.BOLD
-                    )
+        val item = ItemBuilder(if (isComplete) Material.LIME_CONCRETE else Material.BARRIER)
+            .addName(
+                Component.text(
+                    if (isComplete) FINISH_TITLE else INCOMPLETE_TITLE,
+                    if (isComplete) NamedTextColor.GREEN else NamedTextColor.RED,
+                    TextDecoration.BOLD
                 )
-                .apply {
-                    if (isComplete) {
-                        addLore(Component.text("Click to save the game pattern!", NamedTextColor.GREEN))
-                    } else {
-                        val missing = mutableListOf<String>()
-                        if (gamePattern.minPlayers < 1) missing.add("Min Players must be ≥ 1")
-                        if (gamePattern.maxPlayers < gamePattern.minPlayers) missing.add("Max Players must be ≥ Min Players")
-                        if (!locationState.lobbySet) missing.add(LOBBY_LOCATION_LABEL)
-                        if (!locationState.spectatorSet) missing.add(SPECTATOR_LOCATION_LABEL)
-                        if (!locationState.mainSet) missing.add(MAIN_LOCATION_LABEL)
-                        if (spawnCount == 0) missing.add("At least 1 Spawn Location")
+            )
+            .apply { addFinishLore(isComplete, locationState, spawnCount) }
+            .build()
 
-                        val lore = mutableListOf(Component.text("Missing requirements:", NamedTextColor.RED))
-                        missing.forEach { lore.add(Component.text("• $it", NamedTextColor.GRAY)) }
-                        addLore(*lore.toTypedArray())
-                    }
-                }
-                .build()
-        )
+        builder.setItem(FINISH_SLOT, item)
+    }
+
+    private fun ItemBuilder.addFinishLore(isComplete: Boolean, locationState: LocationState, spawnCount: Int) {
+        if (isComplete) {
+            addLore(Component.text(FINISH_LORE, NamedTextColor.GREEN))
+            return
+        }
+
+        val missing = collectMissingRequirements(locationState, spawnCount)
+        val lore = mutableListOf(Component.text(MISSING_REQUIREMENTS_TITLE, NamedTextColor.RED))
+        missing.forEach { requirement ->
+            lore.add(Component.text("$MISSING_BULLET_PREFIX$requirement", NamedTextColor.GRAY))
+        }
+        addLore(*lore.toTypedArray())
+    }
+
+    private fun collectMissingRequirements(locationState: LocationState, spawnCount: Int): List<String> {
+        val missing = mutableListOf<String>()
+        if (gamePattern.minPlayers < 1) missing.add(MISSING_MIN_PLAYERS)
+        if (gamePattern.maxPlayers < gamePattern.minPlayers) missing.add(MISSING_MAX_PLAYERS)
+        if (!locationState.lobbySet) missing.add(LOBBY_LOCATION_LABEL)
+        if (!locationState.spectatorSet) missing.add(SPECTATOR_LOCATION_LABEL)
+        if (!locationState.mainSet) missing.add(MAIN_LOCATION_LABEL)
+        if (spawnCount == 0) missing.add(MISSING_SPAWN_LOCATION)
+        return missing
     }
 }

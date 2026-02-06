@@ -20,11 +20,9 @@ import org.bukkit.entity.Player
 class SaveMessagesCommand : CommandExecutor {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
-        if (sender is Player) {
-            if (!sender.hasPermission("skylife.admin.savemessages")) {
-                sender.sendMessage(Messages.ERROR_PERMISSION)
-                return true
-            }
+        if (sender is Player && !sender.hasPermission("skylife.admin.savemessages")) {
+            sender.sendMessage(Messages.ERROR_PERMISSION)
+            return true
         }
 
         MessageLoader.saveMessages()
