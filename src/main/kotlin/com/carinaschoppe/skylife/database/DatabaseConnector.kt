@@ -101,8 +101,7 @@ object DatabaseConnector {
             Bukkit.getServer().consoleSender.sendMessage(Messages.DATABASE_CONNECTED)
 
             transaction {
-                // Create missing tables and add missing columns (for schema updates)
-                SchemaUtils.createMissingTablesAndColumns(
+                val tables = arrayOf(
                     StatsPlayers,
                     Guilds,
                     GuildMembers,
@@ -110,6 +109,24 @@ object DatabaseConnector {
                     PlayerEconomyTable,
                     SkillUnlockTable
                 )
+
+                database.dialectMetadata.resetCaches()
+
+                val createStatements = SchemaUtils.createStatements(*tables)
+                createStatements.forEach { exec(it) }
+                commit()
+
+                val alterStatements = SchemaUtils.addMissingColumnsStatements(*tables)
+                alterStatements.forEach { exec(it) }
+                commit()
+
+                val executedStatements = createStatements + alterStatements
+                val mappingStatements = SchemaUtils.checkMappingConsistence(*tables)
+                    .filter { it !in executedStatements }
+                mappingStatements.forEach { exec(it) }
+                commit()
+
+                database.dialectMetadata.resetCaches()
             }
 
             Bukkit.getServer().consoleSender.sendMessage(Messages.DATABASE_TABLES_CREATED)

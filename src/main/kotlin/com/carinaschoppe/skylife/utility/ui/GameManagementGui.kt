@@ -181,7 +181,8 @@ object GameManagementGui {
         )
 
         // Locations section
-        val lobbySet = gamePattern.gameLocationManager.lobbyLocation != null
+        val locationManager = gamePattern.gameLocationManager
+        val lobbySet = locationManager.isLocationInitialized("lobby")
         inventory.setItem(
             36,
             ItemBuilder(if (lobbySet) Material.LIME_CONCRETE else Material.RED_CONCRETE)
@@ -199,7 +200,7 @@ object GameManagementGui {
                 .build()
         )
 
-        val spectatorSet = gamePattern.gameLocationManager.spectatorLocation != null
+        val spectatorSet = locationManager.isLocationInitialized("spectator")
         inventory.setItem(
             37,
             ItemBuilder(if (spectatorSet) Material.LIME_CONCRETE else Material.RED_CONCRETE)
@@ -217,7 +218,7 @@ object GameManagementGui {
                 .build()
         )
 
-        val mainSet = gamePattern.gameLocationManager.mainLocation != null
+        val mainSet = locationManager.isLocationInitialized("main")
         inventory.setItem(
             38,
             ItemBuilder(if (mainSet) Material.LIME_CONCRETE else Material.RED_CONCRETE)

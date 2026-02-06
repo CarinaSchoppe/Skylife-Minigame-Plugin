@@ -3,6 +3,7 @@ package com.carinaschoppe.skylife.events.skills
 import com.carinaschoppe.skylife.skills.Skill
 import com.carinaschoppe.skylife.skills.SkillsManager
 import org.bukkit.GameMode
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerToggleFlightEvent
@@ -49,9 +50,14 @@ class SkillKangarooListener : Listener {
         if (!SkillsManager.hasSkillActive(player, Skill.KANGAROO)) return
 
         // Enable flight (double jump) when player is on ground
-        if (player.isOnGround) {
+        if (isPlayerOnGround(player)) {
             player.allowFlight = true
             doubleJumpReady.add(player.uniqueId)
         }
+    }
+
+    private fun isPlayerOnGround(player: Player): Boolean {
+        val blockBelow = player.location.clone().subtract(0.0, 0.1, 0.0).block
+        return blockBelow.type.isSolid
     }
 }

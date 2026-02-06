@@ -2,7 +2,7 @@ package com.carinaschoppe.skylife.game.managers
 
 import com.carinaschoppe.skylife.platform.PluginContext
 import org.bukkit.Bukkit
-import org.bukkit.GameRule
+import org.bukkit.GameRules
 import org.bukkit.World
 import org.bukkit.WorldCreator
 import java.io.File
@@ -97,11 +97,11 @@ object MapManager {
                 Bukkit.getLogger().info("[MapManager] Loaded map '$template' as world '$worldName' for game $gameID (${totalTime}ms)")
 
                 // Set world properties (Paper 1.21+ GameRule API)
-                world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false)
-                world.setGameRule(GameRule.DO_WEATHER_CYCLE, false)
-                world.setGameRule(GameRule.DO_MOB_SPAWNING, false)
-                world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false)
-                world.setGameRule(GameRule.DO_FIRE_TICK, false)
+                world.setGameRule(GameRules.ADVANCE_TIME, false)
+                world.setGameRule(GameRules.ADVANCE_WEATHER, false)
+                world.setGameRule(GameRules.SPAWN_MOBS, false)
+                world.setGameRule(GameRules.SHOW_ADVANCEMENT_MESSAGES, false)
+                world.setGameRule(GameRules.FIRE_SPREAD_RADIUS_AROUND_PLAYER, 0)
                 world.time = 6000 // Set to noon
 
                 return world

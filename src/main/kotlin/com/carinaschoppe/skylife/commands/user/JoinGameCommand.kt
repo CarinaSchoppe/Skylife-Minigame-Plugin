@@ -79,7 +79,7 @@ class JoinGameCommand : CommandExecutor, TabCompleter {
             }
 
             // If party leader, handle party join
-            if (isPartyLeader && party != null) {
+            if (isPartyLeader) {
                 val game = GameCluster.findRandomAvailableGame()
                 if (game == null) {
                     sender.sendMessage(Messages.ERROR_NO_GAME)
@@ -110,7 +110,7 @@ class JoinGameCommand : CommandExecutor, TabCompleter {
             }
 
             // If party leader, handle party join
-            if (isPartyLeader && party != null) {
+            if (isPartyLeader) {
                 val partyJoinResult = PartyManager.handlePartyGameJoin(sender, game, mapToJoin)
                 partyJoinResult.onFailure { error ->
                     sender.sendMessage(Messages.parse("<red>${error.message}</red>"))
