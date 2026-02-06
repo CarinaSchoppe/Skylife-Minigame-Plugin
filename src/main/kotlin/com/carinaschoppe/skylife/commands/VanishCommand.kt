@@ -31,6 +31,10 @@ import org.bukkit.entity.Player
  */
 class VanishCommand : CommandExecutor, TabCompleter {
 
+    private companion object {
+        const val PERMISSION_VANISH_OTHERS = "skylife.vanish.others"
+    }
+
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender !is Player) {
             sender.sendMessage(Messages.ONLY_PLAYERS)
@@ -38,7 +42,7 @@ class VanishCommand : CommandExecutor, TabCompleter {
         }
 
         // Check base permission
-        if (!sender.hasPermission("skylife.vanish.self") && !sender.hasPermission("skylife.vanish.others")) {
+        if (!sender.hasPermission("skylife.vanish.self") && !sender.hasPermission(PERMISSION_VANISH_OTHERS)) {
             sender.sendMessage(Messages.NO_PERMISSION)
             return true
         }
@@ -74,7 +78,7 @@ class VanishCommand : CommandExecutor, TabCompleter {
     }
 
     private fun handleTargetToggle(sender: Player, targetName: String) {
-        if (!sender.hasPermission("skylife.vanish.others")) {
+        if (!sender.hasPermission(PERMISSION_VANISH_OTHERS)) {
             sender.sendMessage(Messages.NO_PERMISSION)
             return
         }
@@ -103,7 +107,7 @@ class VanishCommand : CommandExecutor, TabCompleter {
     ): List<String> {
         if (sender !is Player) return emptyList()
 
-        if (args.size == 1 && sender.hasPermission("skylife.vanish.others")) {
+        if (args.size == 1 && sender.hasPermission(PERMISSION_VANISH_OTHERS)) {
             return Bukkit.getOnlinePlayers()
                 .filter { player ->
                     // Don't show vanished players in tab complete unless sender can see them

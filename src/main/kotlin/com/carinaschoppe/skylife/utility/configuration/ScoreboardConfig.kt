@@ -14,14 +14,14 @@ data class ScoreboardConfig(
 
     @SerializedName("lines")
     var lines: List<String> = listOf(
-        "<dark_gray><strikethrough>----------------</strikethrough></dark_gray>",
+        DIVIDER_LINE,
         "<aqua>Server</aqua><gray>: </gray><white>{server}</white>",
         "<aqua>Map</aqua><gray>: </gray><white>{map}</white>",
         "<aqua>Alive</aqua><gray>: </gray><green>{alive}</green><gray>/</gray><green>{max}</green>",
         "<aqua>Kills</aqua><gray>: </gray><red>{kills}</red>",
         "<aqua>Guild</aqua><gray>: </gray><light_purple>{guild}</light_purple>",
         "<aqua>Rank</aqua><gray>: </gray><gold>#{rank}</gold>",
-        "<dark_gray><strikethrough>----------------</strikethrough></dark_gray>"
+        DIVIDER_LINE
     ),
 
     @SerializedName("lobby_title")
@@ -29,7 +29,7 @@ data class ScoreboardConfig(
 
     @SerializedName("lobby_lines")
     var lobbyLines: List<String> = listOf(
-        "<dark_gray><strikethrough>----------------</strikethrough></dark_gray>",
+        DIVIDER_LINE,
         "<aqua>Server</aqua><gray>: </gray><white>{server}</white>",
         "",
         "<aqua>Rank</aqua><gray>: </gray>{rank_color}{rank}",
@@ -40,6 +40,10 @@ data class ScoreboardConfig(
         "<aqua>Kills</aqua><gray>: </gray><red>{kills}</red>",
         "<aqua>Wins</aqua><gray>: </gray><yellow>{wins}</yellow>",
         "<aqua>Games</aqua><gray>: </gray><white>{games}</white>",
-        "<dark_gray><strikethrough>----------------</strikethrough></dark_gray>"
+        DIVIDER_LINE
     )
-)
+) {
+    private companion object {
+        const val DIVIDER_LINE = "<dark_gray><strikethrough>----------------</strikethrough></dark_gray>"
+    }
+}

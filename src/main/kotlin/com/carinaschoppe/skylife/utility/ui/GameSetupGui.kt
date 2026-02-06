@@ -14,6 +14,11 @@ import org.bukkit.entity.Player
 class GameSetupGui(override val player: Player, override val gamePattern: GamePattern) : GameSetupHolderFactory(player, gamePattern) {
 
     companion object {
+        private const val LORE_CLICK_TO_DECREASE = "Click to decrease"
+        private const val LORE_CLICK_TO_INCREASE = "Click to increase"
+        private const val LORE_CLICK_TO_SET_LOCATION = "Click to set your current location"
+        private const val LOCATION_SET_TEXT = "✓ Location set!"
+
         // Slot positions
         const val MIN_PLAYERS_DISPLAY = 10
         const val MIN_PLAYERS_DECREASE = 9
@@ -72,7 +77,7 @@ class GameSetupGui(override val player: Player, override val gamePattern: GamePa
             MIN_PLAYERS_DECREASE,
             ItemBuilder(Material.RED_WOOL)
                 .addName(Component.text("Decrease Min Players", NamedTextColor.RED, TextDecoration.BOLD))
-                .addLore(Component.text("Click to decrease", NamedTextColor.GRAY))
+                .addLore(Component.text(LORE_CLICK_TO_DECREASE, NamedTextColor.GRAY))
                 .build()
         )
 
@@ -92,7 +97,7 @@ class GameSetupGui(override val player: Player, override val gamePattern: GamePa
             MIN_PLAYERS_INCREASE,
             ItemBuilder(Material.LIME_WOOL)
                 .addName(Component.text("Increase Min Players", NamedTextColor.GREEN, TextDecoration.BOLD))
-                .addLore(Component.text("Click to increase", NamedTextColor.GRAY))
+                .addLore(Component.text(LORE_CLICK_TO_INCREASE, NamedTextColor.GRAY))
                 .build()
         )
     }
@@ -102,7 +107,7 @@ class GameSetupGui(override val player: Player, override val gamePattern: GamePa
             MAX_PLAYERS_DECREASE,
             ItemBuilder(Material.RED_WOOL)
                 .addName(Component.text("Decrease Max Players", NamedTextColor.RED, TextDecoration.BOLD))
-                .addLore(Component.text("Click to decrease", NamedTextColor.GRAY))
+                .addLore(Component.text(LORE_CLICK_TO_DECREASE, NamedTextColor.GRAY))
                 .build()
         )
 
@@ -122,7 +127,7 @@ class GameSetupGui(override val player: Player, override val gamePattern: GamePa
             MAX_PLAYERS_INCREASE,
             ItemBuilder(Material.LIME_WOOL)
                 .addName(Component.text("Increase Max Players", NamedTextColor.GREEN, TextDecoration.BOLD))
-                .addLore(Component.text("Click to increase", NamedTextColor.GRAY))
+                .addLore(Component.text(LORE_CLICK_TO_INCREASE, NamedTextColor.GRAY))
                 .build()
         )
     }
@@ -132,7 +137,7 @@ class GameSetupGui(override val player: Player, override val gamePattern: GamePa
             MIN_TO_START_DECREASE,
             ItemBuilder(Material.RED_WOOL)
                 .addName(Component.text("Decrease Min to Start", NamedTextColor.RED, TextDecoration.BOLD))
-                .addLore(Component.text("Click to decrease", NamedTextColor.GRAY))
+                .addLore(Component.text(LORE_CLICK_TO_DECREASE, NamedTextColor.GRAY))
                 .build()
         )
 
@@ -153,7 +158,7 @@ class GameSetupGui(override val player: Player, override val gamePattern: GamePa
             MIN_TO_START_INCREASE,
             ItemBuilder(Material.LIME_WOOL)
                 .addName(Component.text("Increase Min to Start", NamedTextColor.GREEN, TextDecoration.BOLD))
-                .addLore(Component.text("Click to increase", NamedTextColor.GRAY))
+                .addLore(Component.text(LORE_CLICK_TO_INCREASE, NamedTextColor.GRAY))
                 .build()
         )
     }
@@ -167,9 +172,9 @@ class GameSetupGui(override val player: Player, override val gamePattern: GamePa
                 .addName(Component.text("Lobby Location", if (lobbySet) NamedTextColor.GREEN else NamedTextColor.WHITE, TextDecoration.BOLD))
                 .addLore(
                     if (lobbySet)
-                        Component.text("✓ Location set!", NamedTextColor.GREEN)
+                        Component.text(LOCATION_SET_TEXT, NamedTextColor.GREEN)
                     else
-                        Component.text("Click to set your current location", NamedTextColor.GRAY)
+                        Component.text(LORE_CLICK_TO_SET_LOCATION, NamedTextColor.GRAY)
                 )
                 .build()
         )
@@ -181,9 +186,9 @@ class GameSetupGui(override val player: Player, override val gamePattern: GamePa
                 .addName(Component.text("Spectator Location", if (spectatorSet) NamedTextColor.GREEN else NamedTextColor.WHITE, TextDecoration.BOLD))
                 .addLore(
                     if (spectatorSet)
-                        Component.text("✓ Location set!", NamedTextColor.GREEN)
+                        Component.text(LOCATION_SET_TEXT, NamedTextColor.GREEN)
                     else
-                        Component.text("Click to set your current location", NamedTextColor.GRAY)
+                        Component.text(LORE_CLICK_TO_SET_LOCATION, NamedTextColor.GRAY)
                 )
                 .build()
         )
@@ -195,9 +200,9 @@ class GameSetupGui(override val player: Player, override val gamePattern: GamePa
                 .addName(Component.text("Main Location", if (mainSet) NamedTextColor.GREEN else NamedTextColor.WHITE, TextDecoration.BOLD))
                 .addLore(
                     if (mainSet)
-                        Component.text("✓ Location set!", NamedTextColor.GREEN)
+                        Component.text(LOCATION_SET_TEXT, NamedTextColor.GREEN)
                     else
-                        Component.text("Click to set your current location", NamedTextColor.GRAY)
+                        Component.text(LORE_CLICK_TO_SET_LOCATION, NamedTextColor.GRAY)
                 )
                 .build()
         )

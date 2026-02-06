@@ -14,6 +14,9 @@ import java.util.concurrent.ConcurrentHashMap
  */
 object GuildManager {
 
+    private const val ERROR_GUILD_NOT_FOUND = "Guild not found"
+    private const val ERROR_NOT_IN_GUILD = "You are not in this guild"
+
     // Cache: Player UUID -> Guild ID
     private val playerGuildCache = ConcurrentHashMap<UUID, Int>()
 
@@ -123,8 +126,8 @@ object GuildManager {
      * Invites a player to a guild.
      */
     fun invitePlayer(guildId: Int, inviter: UUID, invitee: UUID): Result<Unit> {
-        val guild = guildCache[guildId] ?: return Result.failure(Exception("Guild not found"))
-        val inviterRole = guild.members[inviter] ?: return Result.failure(Exception("You are not in this guild"))
+        val guild = guildCache[guildId] ?: return Result.failure(Exception(ERROR_GUILD_NOT_FOUND))
+        val inviterRole = guild.members[inviter] ?: return Result.failure(Exception(ERROR_NOT_IN_GUILD))
 
         if (inviterRole != GuildRole.LEADER && inviterRole != GuildRole.ELDER) {
             return Result.failure(Exception("Only leaders and elders can invite players"))
@@ -152,8 +155,8 @@ object GuildManager {
      * Kicks a player from a guild.
      */
     fun kickPlayer(guildId: Int, kicker: UUID, target: UUID): Result<Unit> {
-        val guild = guildCache[guildId] ?: return Result.failure(Exception("Guild not found"))
-        val kickerRole = guild.members[kicker] ?: return Result.failure(Exception("You are not in this guild"))
+        val guild = guildCache[guildId] ?: return Result.failure(Exception(ERROR_GUILD_NOT_FOUND))
+        val kickerRole = guild.members[kicker] ?: return Result.failure(Exception(ERROR_NOT_IN_GUILD))
         val targetRole = guild.members[target] ?: return Result.failure(Exception("Target is not in this guild"))
 
         // Leader can kick anyone, Elder can kick members and other elders but not leader
@@ -193,8 +196,8 @@ object GuildManager {
      * Promotes a member to elder or elder to leader.
      */
     fun promotePlayer(guildId: Int, promoter: UUID, target: UUID): Result<Unit> {
-        val guild = guildCache[guildId] ?: return Result.failure(Exception("Guild not found"))
-        val promoterRole = guild.members[promoter] ?: return Result.failure(Exception("You are not in this guild"))
+        val guild = guildCache[guildId] ?: return Result.failure(Exception(ERROR_GUILD_NOT_FOUND))
+        val promoterRole = guild.members[promoter] ?: return Result.failure(Exception(ERROR_NOT_IN_GUILD))
         val targetRole = guild.members[target] ?: return Result.failure(Exception("Target is not in this guild"))
 
         return when (promoterRole) {
@@ -209,8 +212,8 @@ object GuildManager {
      */
     fun leaveGuild(player: UUID): Result<Unit> {
         val guildId = playerGuildCache[player] ?: return Result.failure(Exception("You are not in a guild"))
-        val guild = guildCache[guildId] ?: return Result.failure(Exception("Guild not found"))
-        val role = guild.members[player] ?: return Result.failure(Exception("You are not in this guild"))
+        val guild = guildCache[guildId] ?: return Result.failure(Exception(ERROR_GUILD_NOT_FOUND))
+        val role = guild.members[player] ?: return Result.failure(Exception(ERROR_NOT_IN_GUILD))
 
         transaction {
             GuildMember.find {
@@ -243,8 +246,8 @@ object GuildManager {
      * Toggles friendly fire for a guild.
      */
     fun toggleFriendlyFire(guildId: Int, player: UUID): Result<Boolean> {
-        val guild = guildCache[guildId] ?: return Result.failure(Exception("Guild not found"))
-        val role = guild.members[player] ?: return Result.failure(Exception("You are not in this guild"))
+        val guild = guildCache[guildId] ?: return Result.failure(Exception(ERROR_GUILD_NOT_FOUND))
+        val role = guild.members[player] ?: return Result.failure(Exception(ERROR_NOT_IN_GUILD))
 
         if (role != GuildRole.LEADER) {
             return Result.failure(Exception("Only the leader can toggle friendly fire"))

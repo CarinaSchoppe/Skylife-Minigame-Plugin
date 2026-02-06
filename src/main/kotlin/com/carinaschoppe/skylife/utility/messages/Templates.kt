@@ -9,6 +9,10 @@ package com.carinaschoppe.skylife.utility.messages
  * Note: Using object instead of data class to avoid JVM parameter limit (255).
  */
 object Templates {
+    private const val GUI_CLICK_TO_DECREASE = "<gray>Click to decrease</gray>"
+    private const val GUI_CLICK_TO_INCREASE = "<gray>Click to increase</gray>"
+    private const val GUI_CLICK_TO_SET_LOCATION = "<gray>Click to set your current location</gray>"
+
     // Prefix
     var prefix: String = "<gray><bold>[</bold></gray><aqua><bold>Skylife</bold></aqua><gray><bold>] </bold></gray>"
 
@@ -247,28 +251,28 @@ object Templates {
 
     // GUI text - Game Setup GUI
     var guiGameSetupDecreaseMinPlayers: String = "<red><bold>Decrease Min Players</bold></red>"
-    var guiGameSetupDecreaseMinPlayersLore: String = "<gray>Click to decrease</gray>"
+    var guiGameSetupDecreaseMinPlayersLore: String = GUI_CLICK_TO_DECREASE
     var guiGameSetupMinPlayers: String = "<yellow><bold>Min Players</bold></yellow>"
     var guiGameSetupMinPlayersLore1: String = "<white>Current: <count></white>"
     var guiGameSetupMinPlayersLore2: String = "<gray>(Minimum: 1)</gray>"
     var guiGameSetupIncreaseMinPlayers: String = "<green><bold>Increase Min Players</bold></green>"
-    var guiGameSetupIncreaseMinPlayersLore: String = "<gray>Click to increase</gray>"
+    var guiGameSetupIncreaseMinPlayersLore: String = GUI_CLICK_TO_INCREASE
     var guiGameSetupDecreaseMaxPlayers: String = "<red><bold>Decrease Max Players</bold></red>"
-    var guiGameSetupDecreaseMaxPlayersLore: String = "<gray>Click to decrease</gray>"
+    var guiGameSetupDecreaseMaxPlayersLore: String = GUI_CLICK_TO_DECREASE
     var guiGameSetupMaxPlayers: String = "<yellow><bold>Max Players</bold></yellow>"
     var guiGameSetupMaxPlayersLore1: String = "<white>Current: <count></white>"
     var guiGameSetupMaxPlayersLore2: String = "<gray>(Must be ≥ Min Players)</gray>"
     var guiGameSetupIncreaseMaxPlayers: String = "<green><bold>Increase Max Players</bold></green>"
-    var guiGameSetupIncreaseMaxPlayersLore: String = "<gray>Click to increase</gray>"
+    var guiGameSetupIncreaseMaxPlayersLore: String = GUI_CLICK_TO_INCREASE
     var guiGameSetupLobbyLocation: String = "<bold>Lobby Location</bold>"
     var guiGameSetupLobbyLocationSet: String = "<green>✓ Location set!</green>"
-    var guiGameSetupLobbyLocationNotSet: String = "<gray>Click to set your current location</gray>"
+    var guiGameSetupLobbyLocationNotSet: String = GUI_CLICK_TO_SET_LOCATION
     var guiGameSetupSpectatorLocation: String = "<bold>Spectator Location</bold>"
     var guiGameSetupSpectatorLocationSet: String = "<green>✓ Location set!</green>"
-    var guiGameSetupSpectatorLocationNotSet: String = "<gray>Click to set your current location</gray>"
+    var guiGameSetupSpectatorLocationNotSet: String = GUI_CLICK_TO_SET_LOCATION
     var guiGameSetupMainLocation: String = "<bold>Main Location</bold>"
     var guiGameSetupMainLocationSet: String = "<green>✓ Location set!</green>"
-    var guiGameSetupMainLocationNotSet: String = "<gray>Click to set your current location</gray>"
+    var guiGameSetupMainLocationNotSet: String = GUI_CLICK_TO_SET_LOCATION
     var guiGameSetupSpawnLocations: String = "<aqua><bold>Spawn Locations</bold></aqua>"
     var guiGameSetupSpawnLocationsLore1: String = "<white>Current spawns: <count></white>"
     var guiGameSetupSpawnLocationsLore2: String = "<gray>Click to add your current location</gray>"

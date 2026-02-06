@@ -94,19 +94,19 @@ object ConfigurationLoader {
         migration: MigrationTracker
     ) {
         if (jsonObject.has("scoreboard_title")) {
-            defaults.scoreboardTitle = migrateLegacy(jsonObject.get("scoreboard_title").asString, migration)
+            defaults.scoreboardTitle = migrateLegacy(jsonObject["scoreboard_title"].asString, migration)
         }
     }
 
     private fun applyTimerSettings(jsonObject: JsonObject, defaults: Config, gson: Gson) {
         if (jsonObject.has("timer_settings")) {
-            defaults.timer = gson.fromJson(jsonObject.get("timer_settings"), Timer::class.java)
+            defaults.timer = gson.fromJson(jsonObject["timer_settings"], Timer::class.java)
         }
     }
 
     private fun applyDatabaseSettings(jsonObject: JsonObject, defaults: Config, gson: Gson) {
         if (jsonObject.has("database")) {
-            defaults.database = gson.fromJson(jsonObject.get("database"), DatabaseConfig::class.java)
+            defaults.database = gson.fromJson(jsonObject["database"], DatabaseConfig::class.java)
         }
     }
 
@@ -117,7 +117,7 @@ object ConfigurationLoader {
         gson: Gson
     ): ScoreboardConfig {
         val scoreboardDefaults = ScoreboardConfig()
-        val scoreboardElement = jsonObject.get("scoreboard")
+        val scoreboardElement = jsonObject["scoreboard"]
         if (scoreboardElement == null || !scoreboardElement.isJsonObject) {
             return scoreboardDefaults.copy(title = defaults.scoreboardTitle)
         }
@@ -148,7 +148,7 @@ object ConfigurationLoader {
         migration: MigrationTracker
     ): String {
         return if (jsonObject.has(key)) {
-            migrateLegacy(jsonObject.get(key).asString, migration)
+            migrateLegacy(jsonObject[key].asString, migration)
         } else {
             fallback
         }
@@ -156,7 +156,7 @@ object ConfigurationLoader {
 
     private fun readBoolean(jsonObject: JsonObject, key: String, fallback: Boolean): Boolean {
         return if (jsonObject.has(key)) {
-            jsonObject.get(key).asBoolean
+            jsonObject[key].asBoolean
         } else {
             fallback
         }
@@ -169,11 +169,11 @@ object ConfigurationLoader {
         migration: MigrationTracker,
         gson: Gson
     ): List<String> {
-        if (!jsonObject.has(key) || !jsonObject.get(key).isJsonArray) {
+        if (!jsonObject.has(key) || !jsonObject[key].isJsonArray) {
             return fallback
         }
 
-        return gson.fromJson(jsonObject.get(key), Array<String>::class.java)
+        return gson.fromJson(jsonObject[key], Array<String>::class.java)
             ?.map { migrateLegacy(it, migration) }
             ?: fallback
     }
@@ -184,11 +184,11 @@ object ConfigurationLoader {
         migration: MigrationTracker,
         gson: Gson
     ): List<String> {
-        if (!scoreboardObject.has("lobby_lines") || !scoreboardObject.get("lobby_lines").isJsonArray) {
+        if (!scoreboardObject.has("lobby_lines") || !scoreboardObject["lobby_lines"].isJsonArray) {
             return scoreboardDefaults.lobbyLines
         }
 
-        val lines = gson.fromJson(scoreboardObject.get("lobby_lines"), Array<String>::class.java)
+        val lines = gson.fromJson(scoreboardObject["lobby_lines"], Array<String>::class.java)
             ?.map { migrateLegacy(it, migration) }
             ?: scoreboardDefaults.lobbyLines
 

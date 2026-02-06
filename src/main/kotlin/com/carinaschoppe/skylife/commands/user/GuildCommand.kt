@@ -26,34 +26,41 @@ import org.bukkit.entity.Player
  */
 class GuildCommand : CommandExecutor, TabCompleter {
 
+    private companion object {
+        const val GUILD_NOT_FOUND = "Guild not found"
+    }
+
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
-        if (sender !is Player) {
+        val player = sender as? Player ?: run {
             sender.sendMessage(Messages.ERROR_NOTPLAYER)
             return true
         }
 
-        if (!sender.hasPermission("skylife.guild")) {
-            sender.sendMessage(Messages.ERROR_PERMISSION)
+        if (!player.hasPermission("skylife.guild")) {
+            player.sendMessage(Messages.ERROR_PERMISSION)
             return true
         }
 
         if (args.isEmpty()) {
-            sendUsage(sender)
+            sendUsage(player)
             return true
         }
 
-        when (args[0].lowercase()) {
-            "create" -> handleCreate(sender, args)
-            "invite" -> handleInvite(sender, args)
-            "kick" -> handleKick(sender, args)
-            "promote" -> handlePromote(sender, args)
-            "leave" -> handleLeave(sender)
-            "toggleff" -> handleToggleFriendlyFire(sender)
-            "info" -> handleInfo(sender)
-            else -> sendUsage(sender)
-        }
-
+        handleSubcommand(player, args)
         return true
+    }
+
+    private fun handleSubcommand(player: Player, args: Array<out String>) {
+        when (args[0].lowercase()) {
+            "create" -> handleCreate(player, args)
+            "invite" -> handleInvite(player, args)
+            "kick" -> handleKick(player, args)
+            "promote" -> handlePromote(player, args)
+            "leave" -> handleLeave(player)
+            "toggleff" -> handleToggleFriendlyFire(player)
+            "info" -> handleInfo(player)
+            else -> sendUsage(player)
+        }
     }
 
     private fun handleCreate(player: Player, args: Array<out String>) {
@@ -99,7 +106,7 @@ class GuildCommand : CommandExecutor, TabCompleter {
         val result = GuildManager.invitePlayer(guildId, player.uniqueId, target.uniqueId)
         if (result.isSuccess) {
             val guild = GuildManager.getGuild(guildId) ?: run {
-                player.sendMessage(Messages.PREFIX.append(Component.text("Guild not found", Messages.ERROR_COLOR)))
+                player.sendMessage(Messages.PREFIX.append(Component.text(GUILD_NOT_FOUND, Messages.ERROR_COLOR)))
                 return
             }
             player.sendMessage(
@@ -176,7 +183,7 @@ class GuildCommand : CommandExecutor, TabCompleter {
         }
 
         val guild = GuildManager.getGuild(guildId) ?: run {
-            player.sendMessage(Messages.PREFIX.append(Component.text("Guild not found", Messages.ERROR_COLOR)))
+            player.sendMessage(Messages.PREFIX.append(Component.text(GUILD_NOT_FOUND, Messages.ERROR_COLOR)))
             return
         }
         guild.members[target.uniqueId]
@@ -269,7 +276,7 @@ class GuildCommand : CommandExecutor, TabCompleter {
 
         val guild = GuildManager.getGuild(guildId)
         if (guild == null) {
-            player.sendMessage(Messages.PREFIX.append(Component.text("Guild not found", Messages.ERROR_COLOR)))
+            player.sendMessage(Messages.PREFIX.append(Component.text(GUILD_NOT_FOUND, Messages.ERROR_COLOR)))
             return
         }
 

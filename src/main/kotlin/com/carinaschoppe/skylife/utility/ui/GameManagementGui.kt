@@ -20,7 +20,12 @@ import org.bukkit.persistence.PersistentDataType
  */
 object GameManagementGui {
 
+    private const val LORE_CLICK_TO_DECREASE = "Click to decrease"
+    private const val LORE_CLICK_TO_INCREASE = "Click to increase"
+    private const val LORE_CLICK_TO_SET_PREFIX = "Click to set to your"
+    private const val LORE_CURRENT_LOCATION = "current location"
     private const val NOT_SET_TEXT = "✗ Not set"
+    private const val LOCATION_SET_TEXT = "✓ Location set!"
 
     private val KEY_GAME_NAME: NamespacedKey by lazy { NamespacedKey(PluginContext.plugin, "manage_game_name") }
     private val KEY_ACTION: NamespacedKey by lazy { NamespacedKey(PluginContext.plugin, "manage_game_action") }
@@ -89,7 +94,7 @@ object GameManagementGui {
             9,
             ItemBuilder(Material.RED_WOOL)
                 .addName(Component.text("Decrease Min Players", NamedTextColor.RED, TextDecoration.BOLD))
-                .addLore(Component.text("Click to decrease", NamedTextColor.GRAY))
+                .addLore(Component.text(LORE_CLICK_TO_DECREASE, NamedTextColor.GRAY))
                 .modifyMeta { meta ->
                     meta.persistentDataContainer[KEY_ACTION, PersistentDataType.STRING] = "minPlayers-"
                 }
@@ -112,7 +117,7 @@ object GameManagementGui {
             11,
             ItemBuilder(Material.LIME_WOOL)
                 .addName(Component.text("Increase Min Players", NamedTextColor.GREEN, TextDecoration.BOLD))
-                .addLore(Component.text("Click to increase", NamedTextColor.GRAY))
+                .addLore(Component.text(LORE_CLICK_TO_INCREASE, NamedTextColor.GRAY))
                 .modifyMeta { meta ->
                     meta.persistentDataContainer[KEY_ACTION, PersistentDataType.STRING] = "minPlayers+"
                 }
@@ -125,7 +130,7 @@ object GameManagementGui {
             18,
             ItemBuilder(Material.RED_WOOL)
                 .addName(Component.text("Decrease Max Players", NamedTextColor.RED, TextDecoration.BOLD))
-                .addLore(Component.text("Click to decrease", NamedTextColor.GRAY))
+                .addLore(Component.text(LORE_CLICK_TO_DECREASE, NamedTextColor.GRAY))
                 .modifyMeta { meta ->
                     meta.persistentDataContainer[KEY_ACTION, PersistentDataType.STRING] = "maxPlayers-"
                 }
@@ -148,7 +153,7 @@ object GameManagementGui {
             20,
             ItemBuilder(Material.LIME_WOOL)
                 .addName(Component.text("Increase Max Players", NamedTextColor.GREEN, TextDecoration.BOLD))
-                .addLore(Component.text("Click to increase", NamedTextColor.GRAY))
+                .addLore(Component.text(LORE_CLICK_TO_INCREASE, NamedTextColor.GRAY))
                 .modifyMeta { meta ->
                     meta.persistentDataContainer[KEY_ACTION, PersistentDataType.STRING] = "maxPlayers+"
                 }
@@ -161,7 +166,7 @@ object GameManagementGui {
             27,
             ItemBuilder(Material.RED_WOOL)
                 .addName(Component.text("Decrease Min to Start", NamedTextColor.RED, TextDecoration.BOLD))
-                .addLore(Component.text("Click to decrease", NamedTextColor.GRAY))
+                .addLore(Component.text(LORE_CLICK_TO_DECREASE, NamedTextColor.GRAY))
                 .modifyMeta { meta ->
                     meta.persistentDataContainer[KEY_ACTION, PersistentDataType.STRING] = "minPlayersToStart-"
                 }
@@ -185,7 +190,7 @@ object GameManagementGui {
             29,
             ItemBuilder(Material.LIME_WOOL)
                 .addName(Component.text("Increase Min to Start", NamedTextColor.GREEN, TextDecoration.BOLD))
-                .addLore(Component.text("Click to increase", NamedTextColor.GRAY))
+                .addLore(Component.text(LORE_CLICK_TO_INCREASE, NamedTextColor.GRAY))
                 .modifyMeta { meta ->
                     meta.persistentDataContainer[KEY_ACTION, PersistentDataType.STRING] = "minPlayersToStart+"
                 }
@@ -201,11 +206,11 @@ object GameManagementGui {
             ItemBuilder(if (lobbySet) Material.LIME_CONCRETE else Material.RED_CONCRETE)
                 .addName(Component.text("Lobby Location", NamedTextColor.YELLOW, TextDecoration.BOLD))
                 .addLore(
-                    if (lobbySet) Component.text("✓ Location set!", NamedTextColor.GREEN)
+                    if (lobbySet) Component.text(LOCATION_SET_TEXT, NamedTextColor.GREEN)
                     else Component.text(NOT_SET_TEXT, NamedTextColor.RED),
                     Component.empty(),
-                    Component.text("Click to set to your", NamedTextColor.GRAY),
-                    Component.text("current location", NamedTextColor.GRAY)
+                    Component.text(LORE_CLICK_TO_SET_PREFIX, NamedTextColor.GRAY),
+                    Component.text(LORE_CURRENT_LOCATION, NamedTextColor.GRAY)
                 )
                 .modifyMeta { meta ->
                     meta.persistentDataContainer[KEY_ACTION, PersistentDataType.STRING] = "set_lobby"
@@ -219,11 +224,11 @@ object GameManagementGui {
             ItemBuilder(if (spectatorSet) Material.LIME_CONCRETE else Material.RED_CONCRETE)
                 .addName(Component.text("Spectator Location", NamedTextColor.YELLOW, TextDecoration.BOLD))
                 .addLore(
-                    if (spectatorSet) Component.text("✓ Location set!", NamedTextColor.GREEN)
+                    if (spectatorSet) Component.text(LOCATION_SET_TEXT, NamedTextColor.GREEN)
                     else Component.text(NOT_SET_TEXT, NamedTextColor.RED),
                     Component.empty(),
-                    Component.text("Click to set to your", NamedTextColor.GRAY),
-                    Component.text("current location", NamedTextColor.GRAY)
+                    Component.text(LORE_CLICK_TO_SET_PREFIX, NamedTextColor.GRAY),
+                    Component.text(LORE_CURRENT_LOCATION, NamedTextColor.GRAY)
                 )
                 .modifyMeta { meta ->
                     meta.persistentDataContainer[KEY_ACTION, PersistentDataType.STRING] = "set_spectator"
@@ -237,11 +242,11 @@ object GameManagementGui {
             ItemBuilder(if (mainSet) Material.LIME_CONCRETE else Material.RED_CONCRETE)
                 .addName(Component.text("Main Location", NamedTextColor.YELLOW, TextDecoration.BOLD))
                 .addLore(
-                    if (mainSet) Component.text("✓ Location set!", NamedTextColor.GREEN)
+                    if (mainSet) Component.text(LOCATION_SET_TEXT, NamedTextColor.GREEN)
                     else Component.text(NOT_SET_TEXT, NamedTextColor.RED),
                     Component.empty(),
-                    Component.text("Click to set to your", NamedTextColor.GRAY),
-                    Component.text("current location", NamedTextColor.GRAY)
+                    Component.text(LORE_CLICK_TO_SET_PREFIX, NamedTextColor.GRAY),
+                    Component.text(LORE_CURRENT_LOCATION, NamedTextColor.GRAY)
                 )
                 .modifyMeta { meta ->
                     meta.persistentDataContainer[KEY_ACTION, PersistentDataType.STRING] = "set_main"

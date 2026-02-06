@@ -6,6 +6,8 @@ import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
+private const val MOBILITY_TYPE_LINE = "<gray>Type: <yellow>Mobility</yellow></gray>"
+
 /**
  * Represents a skill/perk that players can select and use in games.
  */
@@ -113,7 +115,7 @@ enum class Skill(
             "Ender Pearls regenerate over time,",
             "allowing rapid movement.",
             "",
-            "<gray>Type: <yellow>Mobility</yellow></gray>"
+            MOBILITY_TYPE_LINE
         ),
         Material.ENDER_PEARL,
         SkillType.MOBILITY,
@@ -204,7 +206,7 @@ enum class Skill(
             "Climb up walls by looking at them",
             "and moving forward.",
             "",
-            "<gray>Type: <yellow>Mobility</yellow></gray>"
+            MOBILITY_TYPE_LINE
         ),
         Material.LADDER,
         SkillType.MOBILITY,
@@ -217,7 +219,7 @@ enum class Skill(
             "Perform a double jump to reach",
             "higher places.",
             "",
-            "<gray>Type: <yellow>Mobility</yellow></gray>"
+            MOBILITY_TYPE_LINE
         ),
         Material.RABBIT_FOOT,
         SkillType.MOBILITY,
@@ -243,7 +245,7 @@ enum class Skill(
             "Fly for 3 seconds, then suffer",
             "3 seconds of nausea.",
             "",
-            "<gray>Type: <yellow>Mobility</yellow></gray>"
+            MOBILITY_TYPE_LINE
         ),
         Material.ELYTRA,
         SkillType.MOBILITY,
