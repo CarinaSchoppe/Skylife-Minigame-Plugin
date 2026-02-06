@@ -25,63 +25,10 @@ data class Config(
     var priorityJoin: PriorityJoinConfig = PriorityJoinConfig()
 )
 
-data class DatabaseConfig(
-    @SerializedName("type")
-    var type: String = "sqlite",
 
-    @SerializedName("postgresql")
-    var postgresql: PostgreSQLConfig = PostgreSQLConfig()
-)
 
-data class PostgreSQLConfig(
-    @SerializedName("host")
-    var host: String = "localhost",
 
-    @SerializedName("port")
-    var port: Int = 5432,
 
-    @SerializedName("database")
-    var database: String = "skylife",
 
-    @SerializedName("username")
-    var username: String = "postgres",
 
-    @SerializedName("password")
-    var password: String = "password"
-)
 
-data class SkillPriceConfig(
-    @SerializedName("common")
-    var common: Int = 150,
-
-    @SerializedName("rare")
-    var rare: Int = 500,
-
-    @SerializedName("epic")
-    var epic: Int = 1500,
-
-    @SerializedName("legendary")
-    var legendary: Int = 5000
-)
-
-data class MaxSkillsConfig(
-    @SerializedName("default")
-    var default: Int = 2,
-
-    @SerializedName("vip")
-    var vip: Int = 3,
-
-    @SerializedName("vip_plus")
-    var vipPlus: Int = 4
-)
-
-data class PriorityJoinConfig(
-    @SerializedName("enabled_for_vip")
-    var enabledForVip: Boolean = true,
-
-    @SerializedName("enabled_for_vip_plus")
-    var enabledForVipPlus: Boolean = true,
-
-    @SerializedName("enabled_for_staff")
-    var enabledForStaff: Boolean = true
-)

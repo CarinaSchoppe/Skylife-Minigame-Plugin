@@ -2,6 +2,7 @@ package com.carinaschoppe.skylife.guild
 
 import org.bukkit.entity.Player
 import org.jetbrains.exposed.v1.core.and
+import org.jetbrains.exposed.v1.core.dao.id.EntityID
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import java.util.*
@@ -136,7 +137,7 @@ object GuildManager {
         transaction {
             GuildMember.new {
                 this.playerUUID = invitee.toString()
-                this.guildId = org.jetbrains.exposed.v1.core.dao.id.EntityID(guildId, Guilds)
+                this.guildId = EntityID(guildId, Guilds)
                 this.role = GuildRole.MEMBER
             }
         }

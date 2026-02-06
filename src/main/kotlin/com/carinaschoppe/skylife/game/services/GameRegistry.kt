@@ -9,8 +9,3 @@ interface GameRegistry {
     val gamePatterns: MutableList<GamePattern>
 }
 
-class InMemoryGameRegistry : GameRegistry {
-    override val lobbyGames = mutableListOf<Game>()
-    override val activeGames = mutableListOf<Game>()
-    override val gamePatterns = mutableListOf<GamePattern>()
-}

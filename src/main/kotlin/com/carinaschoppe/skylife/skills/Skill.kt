@@ -344,14 +344,3 @@ enum class Skill(
     }
 }
 
-/**
- * Categories for skills.
- */
-enum class SkillType {
-    COMBAT,
-    DEFENSE,
-    MOBILITY,
-    SUSTAIN,
-    UTILITY,
-    SUMMONER
-}

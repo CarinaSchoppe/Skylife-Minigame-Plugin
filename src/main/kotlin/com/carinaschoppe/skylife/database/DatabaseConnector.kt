@@ -5,7 +5,7 @@ import com.carinaschoppe.skylife.economy.PlayerEconomyTable
 import com.carinaschoppe.skylife.guild.GuildMembers
 import com.carinaschoppe.skylife.guild.Guilds
 import com.carinaschoppe.skylife.skills.SkillUnlockTable
-import com.carinaschoppe.skylife.skills.persistence.PlayerSkillsTable
+import com.carinaschoppe.skylife.skills.persistence.PlayerSkillsSchema
 import com.carinaschoppe.skylife.utility.configuration.ConfigurationLoader
 import com.carinaschoppe.skylife.utility.messages.Messages
 import com.carinaschoppe.skylife.utility.statistics.StatsPlayers
@@ -106,7 +106,7 @@ object DatabaseConnector {
                     StatsPlayers,
                     Guilds,
                     GuildMembers,
-                    PlayerSkillsTable,
+                    PlayerSkillsSchema,
                     PlayerEconomyTable,
                     SkillUnlockTable
                 )
