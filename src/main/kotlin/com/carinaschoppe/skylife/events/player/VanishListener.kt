@@ -1,6 +1,6 @@
-package com.carinaschoppe.skylife.events
+package com.carinaschoppe.skylife.events.player
 
-import com.carinaschoppe.skylife.utility.VanishManager
+import com.carinaschoppe.skylife.utility.miscellaneous.VanishManager
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener

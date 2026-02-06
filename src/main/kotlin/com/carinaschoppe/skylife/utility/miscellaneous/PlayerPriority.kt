@@ -1,4 +1,4 @@
-package com.carinaschoppe.skylife.utility
+package com.carinaschoppe.skylife.utility.miscellaneous
 
 import org.bukkit.entity.Player
 

@@ -1,6 +1,6 @@
 package com.carinaschoppe.skylife.game.services
 
-import com.carinaschoppe.skylife.utility.PlayerPriority
+import com.carinaschoppe.skylife.utility.miscellaneous.PlayerPriority
 import org.bukkit.entity.Player
 
 interface PlayerPriorityResolver {

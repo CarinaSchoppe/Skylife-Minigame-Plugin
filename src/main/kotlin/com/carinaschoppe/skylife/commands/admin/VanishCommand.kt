@@ -1,7 +1,7 @@
 package com.carinaschoppe.skylife.commands.admin
 
-import com.carinaschoppe.skylife.utility.VanishManager
 import com.carinaschoppe.skylife.utility.messages.Messages
+import com.carinaschoppe.skylife.utility.miscellaneous.VanishManager
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor

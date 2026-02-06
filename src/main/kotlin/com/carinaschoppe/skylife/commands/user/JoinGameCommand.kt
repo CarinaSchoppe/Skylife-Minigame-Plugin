@@ -2,8 +2,8 @@ package com.carinaschoppe.skylife.commands.user
 
 import com.carinaschoppe.skylife.game.GameCluster
 import com.carinaschoppe.skylife.party.PartyManager
-import com.carinaschoppe.skylife.utility.VanishManager
 import com.carinaschoppe.skylife.utility.messages.Messages
+import com.carinaschoppe.skylife.utility.miscellaneous.VanishManager
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender

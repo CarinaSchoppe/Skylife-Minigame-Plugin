@@ -3,7 +3,7 @@ package com.carinaschoppe.skylife.game.services
 import com.carinaschoppe.skylife.game.Game
 import com.carinaschoppe.skylife.game.GamePattern
 import com.carinaschoppe.skylife.game.gamestates.GameStateType
-import com.carinaschoppe.skylife.utility.PlayerPriority
+import com.carinaschoppe.skylife.utility.miscellaneous.PlayerPriority
 import org.bukkit.entity.Player
 
 class GameClusterService(

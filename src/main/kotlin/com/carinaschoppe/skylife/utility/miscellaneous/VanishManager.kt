@@ -1,4 +1,4 @@
-package com.carinaschoppe.skylife.utility
+package com.carinaschoppe.skylife.utility.miscellaneous
 
 import com.carinaschoppe.skylife.platform.PluginContext
 import org.bukkit.Bukkit

@@ -18,6 +18,7 @@ import com.carinaschoppe.skylife.skills.persistence.ExposedPlayerSkillSelectionR
 import com.carinaschoppe.skylife.utility.configuration.ConfigurationLoader
 import com.carinaschoppe.skylife.utility.messages.MessageLoader
 import com.carinaschoppe.skylife.utility.messages.Messages
+import com.carinaschoppe.skylife.utility.miscellaneous.VanishManager
 import com.carinaschoppe.skylife.utility.statistics.StatsUtility
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
@@ -172,7 +173,7 @@ open class Skylife : JavaPlugin() {
         pluginManager.registerEvents(PlayerSelectGameListener(), this)
         pluginManager.registerEvents(PlayerDisplayNameListener(), this)
         pluginManager.registerEvents(PlayerDisconnectsPartyListener(), this)
-        pluginManager.registerEvents(com.carinaschoppe.skylife.events.VanishListener(), this)
+        pluginManager.registerEvents(VanishListener(), this)
         pluginManager.registerEvents(SkillItemProtectionListener(), this)
         registerSkillListeners(pluginManager)
     }
@@ -205,7 +206,7 @@ open class Skylife : JavaPlugin() {
 
     override fun onDisable() {
         // Unvanish all players before shutdown to prevent state issues
-        com.carinaschoppe.skylife.utility.VanishManager.unvanishAll()
+        VanishManager.unvanishAll()
 
         // Cleanup all game worlds before shutdown
         com.carinaschoppe.skylife.game.managers.MapManager.cleanupAllWorlds()
