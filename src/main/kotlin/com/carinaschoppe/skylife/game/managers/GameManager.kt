@@ -38,7 +38,7 @@ object GameManager {
         game.state = GameStateType.END
         game.currentState = EndState(game)
         game.currentState.start()
-        
+
         return true
     }
 

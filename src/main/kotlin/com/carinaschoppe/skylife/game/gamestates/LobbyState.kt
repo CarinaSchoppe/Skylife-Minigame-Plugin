@@ -13,7 +13,7 @@ import org.bukkit.entity.Player
  *
  * @param game The context of the game this state belongs to.
  */
-class LobbyState(private val game: Game) : GameState {
+class LobbyState(private val game: Game) : GameState<Player> {
 
     /**
      * The countdown timer for the lobby phase.

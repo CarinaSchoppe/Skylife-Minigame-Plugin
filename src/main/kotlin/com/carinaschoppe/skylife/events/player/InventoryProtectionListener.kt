@@ -3,6 +3,7 @@ package com.carinaschoppe.skylife.events.player
 import com.carinaschoppe.skylife.game.GameCluster
 import com.carinaschoppe.skylife.utility.ui.ExitDoorItem
 import com.carinaschoppe.skylife.utility.ui.GameOverviewItems
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -105,7 +106,7 @@ class InventoryProtectionListener : Listener {
         if (item == null || item.type != Material.NETHER_STAR) return false
         val meta = item.itemMeta ?: return false
         val displayName = meta.displayName() ?: return false
-        val plainText = net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer.plainText().serialize(displayName)
+        val plainText = PlainTextComponentSerializer.plainText().serialize(displayName)
         return plainText.contains("Skills", ignoreCase = true)
     }
 

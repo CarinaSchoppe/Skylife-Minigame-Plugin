@@ -5,6 +5,7 @@ import com.carinaschoppe.skylife.game.gamestates.IngameState
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.PotionMeta
 import org.bukkit.plugin.Plugin
 import org.bukkit.potion.PotionType
 
@@ -66,7 +67,10 @@ object SkillPassiveItemsTask {
                             }
                         }
 
-                        else -> {}
+
+                        else -> {
+                            return@forEach
+                        }
                     }
                 }
             }
@@ -126,7 +130,7 @@ object SkillPassiveItemsTask {
         val material = if (isSplash) Material.SPLASH_POTION else Material.POTION
         val potion = ItemStack(material)
 
-        val meta = potion.itemMeta as? org.bukkit.inventory.meta.PotionMeta ?: return potion
+        val meta = potion.itemMeta as? PotionMeta ?: return potion
         meta.basePotionType = type
         potion.itemMeta = meta
 

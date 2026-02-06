@@ -4,6 +4,7 @@ import com.carinaschoppe.skylife.game.GameCluster
 import com.carinaschoppe.skylife.game.GameLoader
 import com.carinaschoppe.skylife.game.GamePattern
 import com.carinaschoppe.skylife.utility.messages.Messages
+import net.kyori.adventure.text.Component
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -69,7 +70,14 @@ class CreateGamePatternCommand : CommandExecutor, TabCompleter {
                 GameSetupCommand.activeSetups[sender] = pattern
 
                 sender.sendMessage(Messages.GAME_CREATED(name))
-                sender.sendMessage(Messages.PREFIX.append(net.kyori.adventure.text.Component.text("Use /gamesetup to open the setup GUI or use commands like /setlocation, /playeramount", Messages.MESSAGE_COLOR)))
+                sender.sendMessage(
+                    Messages.PREFIX.append(
+                        Component.text(
+                            "Use /gamesetup to open the setup GUI or use commands like /setlocation, /playeramount",
+                            Messages.MESSAGE_COLOR
+                        )
+                    )
+                )
             }
 
             "save" -> {
@@ -88,7 +96,7 @@ class CreateGamePatternCommand : CommandExecutor, TabCompleter {
                 }
 
                 if (game == null) {
-                    sender.sendMessage(Messages.PREFIX.append(net.kyori.adventure.text.Component.text("Game pattern '$name' not found!", Messages.ERROR_COLOR)))
+                    sender.sendMessage(Messages.PREFIX.append(Component.text("Game pattern '$name' not found!", Messages.ERROR_COLOR)))
                     return true
                 }
 
@@ -122,7 +130,7 @@ class CreateGamePatternCommand : CommandExecutor, TabCompleter {
                     ?: GameSetupCommand.activeSetups.values.firstOrNull { it.mapName.equals(name, ignoreCase = true) }
 
                 if (game == null) {
-                    sender.sendMessage(Messages.PREFIX.append(net.kyori.adventure.text.Component.text("Game pattern '$name' not found!", Messages.ERROR_COLOR)))
+                    sender.sendMessage(Messages.PREFIX.append(Component.text("Game pattern '$name' not found!", Messages.ERROR_COLOR)))
                     return true
                 }
 

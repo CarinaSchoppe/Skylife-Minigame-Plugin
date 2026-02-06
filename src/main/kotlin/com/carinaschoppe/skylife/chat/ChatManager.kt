@@ -1,5 +1,6 @@
 package com.carinaschoppe.skylife.chat
 
+import com.carinaschoppe.skylife.economy.PlayerRank
 import com.carinaschoppe.skylife.game.GameCluster
 import com.carinaschoppe.skylife.game.gamestates.IngameState
 import com.carinaschoppe.skylife.guild.GuildManager
@@ -56,8 +57,8 @@ object ChatManager {
      * All online players can see these messages.
      */
     private fun handleGlobalChat(sender: Player, message: String) {
-        val rank = com.carinaschoppe.skylife.economy.PlayerRank.getRank(sender)
-        val rankTag = if (rank != com.carinaschoppe.skylife.economy.PlayerRank.USER && rank.tag.isNotEmpty()) rank.tag else ""
+        val rank = PlayerRank.getRank(sender)
+        val rankTag = if (rank != PlayerRank.USER && rank.tag.isNotEmpty()) rank.tag else ""
         val rankColor = getRankColor(rank)
         val guildTag = GuildManager.getFormattedTag(sender.uniqueId) ?: ""
 
@@ -87,8 +88,8 @@ object ChatManager {
             sender.sendMessage(Messages.PREFIX.append(Component.text("Guild not found", Messages.ERROR_COLOR)))
             return
         }
-        val rank = com.carinaschoppe.skylife.economy.PlayerRank.getRank(sender)
-        val rankTag = if (rank != com.carinaschoppe.skylife.economy.PlayerRank.USER && rank.tag.isNotEmpty()) rank.tag else ""
+        val rank = PlayerRank.getRank(sender)
+        val rankTag = if (rank != PlayerRank.USER && rank.tag.isNotEmpty()) rank.tag else ""
         val rankColor = getRankColor(rank)
         val guildTag = "[${guild.tag}]"
 
@@ -120,8 +121,8 @@ object ChatManager {
             return
         }
 
-        val rank = com.carinaschoppe.skylife.economy.PlayerRank.getRank(sender)
-        val rankTag = if (rank != com.carinaschoppe.skylife.economy.PlayerRank.USER && rank.tag.isNotEmpty()) rank.tag else ""
+        val rank = PlayerRank.getRank(sender)
+        val rankTag = if (rank != PlayerRank.USER && rank.tag.isNotEmpty()) rank.tag else ""
         val rankColor = getRankColor(rank)
         val isSpectator = game.spectators.contains(sender)
         val guildTag = GuildManager.getFormattedTag(sender.uniqueId) ?: ""
@@ -156,8 +157,8 @@ object ChatManager {
      * Handles hub chat for players not in any game.
      */
     private fun handleHubChat(sender: Player, message: String) {
-        val rank = com.carinaschoppe.skylife.economy.PlayerRank.getRank(sender)
-        val rankTag = if (rank != com.carinaschoppe.skylife.economy.PlayerRank.USER && rank.tag.isNotEmpty()) rank.tag else ""
+        val rank = PlayerRank.getRank(sender)
+        val rankTag = if (rank != PlayerRank.USER && rank.tag.isNotEmpty()) rank.tag else ""
         val rankColor = getRankColor(rank)
         val guildTag = GuildManager.getFormattedTag(sender.uniqueId) ?: ""
 
@@ -216,7 +217,7 @@ object ChatManager {
     /**
      * Gets the display color for a player rank.
      */
-    private fun getRankColor(rank: com.carinaschoppe.skylife.economy.PlayerRank): NamedTextColor {
+    private fun getRankColor(rank: PlayerRank): NamedTextColor {
         return rank.getColor()
     }
 }

@@ -1,7 +1,9 @@
 package com.carinaschoppe.skylife.skills
 
 import com.carinaschoppe.skylife.utility.configuration.ConfigurationLoader
+import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.format.TextDecoration
 
 /**
  * Rarity levels for skills with associated pricing and display colors.
@@ -44,7 +46,7 @@ enum class SkillRarity(
      *
      * @return Component with the rarity name in the appropriate color and bold formatting
      */
-    fun getColoredName(): net.kyori.adventure.text.Component {
-        return net.kyori.adventure.text.Component.text(displayName, color, net.kyori.adventure.text.format.TextDecoration.BOLD)
+    fun getColoredName(): Component {
+        return Component.text(displayName, color, TextDecoration.BOLD)
     }
 }

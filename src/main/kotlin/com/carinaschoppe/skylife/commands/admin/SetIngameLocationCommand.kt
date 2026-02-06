@@ -4,6 +4,7 @@ import com.carinaschoppe.skylife.game.GameCluster
 import com.carinaschoppe.skylife.game.GamePattern
 import com.carinaschoppe.skylife.game.managers.GameLocationManager
 import com.carinaschoppe.skylife.utility.messages.Messages
+import net.kyori.adventure.text.Component
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -45,7 +46,14 @@ class SetIngameLocationCommand : CommandExecutor, TabCompleter {
                 // Use active setup: /setlocation <type>
                 game = GameSetupCommand.activeSetups[sender]
                 if (game == null) {
-                    sender.sendMessage(Messages.PREFIX.append(net.kyori.adventure.text.Component.text("No active setup! Use /game create <name> or /gamesetup <name> first.", Messages.ERROR_COLOR)))
+                    sender.sendMessage(
+                        Messages.PREFIX.append(
+                            Component.text(
+                                "No active setup! Use /game create <name> or /gamesetup <name> first.",
+                                Messages.ERROR_COLOR
+                            )
+                        )
+                    )
                     return true
                 }
                 type = args[0].lowercase()

@@ -6,10 +6,12 @@ import com.carinaschoppe.skylife.game.countdown.IngameCountdown
 import com.carinaschoppe.skylife.game.countdown.ProtectionCountdown
 import com.carinaschoppe.skylife.game.managers.GameLocationManager
 import com.carinaschoppe.skylife.game.managers.MapManager
+import com.carinaschoppe.skylife.game.world
 import com.carinaschoppe.skylife.skills.SkillEffectsManager
 import com.carinaschoppe.skylife.skills.SkillsManager
 import com.carinaschoppe.skylife.utility.messages.Messages
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.title.Title
 import org.bukkit.GameMode
 import org.bukkit.entity.Player
@@ -21,7 +23,7 @@ import java.time.Duration
  *
  * @param game The context of the game this state belongs to.
  */
-class IngameState(private val game: Game) : GameState {
+class IngameState(private val game: Game) : GameState<Player> {
 
     private val countdown = IngameCountdown(game)
     private val protectionCountdown = ProtectionCountdown(game)
@@ -47,7 +49,7 @@ class IngameState(private val game: Game) : GameState {
 
             if (skylifeSpawnLoc == null) {
                 org.bukkit.Bukkit.getLogger().severe("[IngameState] Failed to convert spawn location for player ${player.name}")
-                player.sendMessage(Messages.PREFIX.append(Component.text("Failed to load spawn location", net.kyori.adventure.text.format.NamedTextColor.RED)))
+                player.sendMessage(Messages.PREFIX.append(Component.text("Failed to load spawn location", NamedTextColor.RED)))
                 return
             }
 

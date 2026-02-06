@@ -4,8 +4,13 @@ import com.carinaschoppe.skylife.game.Game
 import com.carinaschoppe.skylife.game.GameCluster
 import com.carinaschoppe.skylife.platform.PluginContext
 import com.carinaschoppe.skylife.utility.messages.Messages
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.format.TextDecoration
+import net.kyori.adventure.title.Title
 import org.bukkit.Sound
 import org.bukkit.scheduler.BukkitRunnable
+import java.time.Duration
 
 /**
  * A countdown specifically for the game lobby.
@@ -68,20 +73,20 @@ class LobbyCountdown(private val game: Game) : Countdown() {
 
                         // Show title for countdown
                         player.showTitle(
-                            net.kyori.adventure.title.Title.title(
-                                net.kyori.adventure.text.Component.text(
+                            Title.title(
+                                Component.text(
                                     seconds.toString(),
-                                    net.kyori.adventure.text.format.NamedTextColor.YELLOW,
-                                    net.kyori.adventure.text.format.TextDecoration.BOLD
+                                    NamedTextColor.YELLOW,
+                                    TextDecoration.BOLD
                                 ),
-                                net.kyori.adventure.text.Component.text(
+                                Component.text(
                                     "Game starting...",
-                                    net.kyori.adventure.text.format.NamedTextColor.GRAY
+                                    NamedTextColor.GRAY
                                 ),
-                                net.kyori.adventure.title.Title.Times.times(
-                                    java.time.Duration.ofMillis(0),
-                                    java.time.Duration.ofMillis(1000),
-                                    java.time.Duration.ofMillis(250)
+                                Title.Times.times(
+                                    Duration.ofMillis(0),
+                                    Duration.ofMillis(1000),
+                                    Duration.ofMillis(250)
                                 )
                             )
                         )

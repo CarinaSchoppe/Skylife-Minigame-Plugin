@@ -2,6 +2,7 @@ package com.carinaschoppe.skylife.events.player
 
 import com.carinaschoppe.skylife.game.GameCluster
 import com.carinaschoppe.skylife.utility.ui.SkillsGui
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -29,7 +30,7 @@ class PlayerSkillsItemListener : Listener {
         val displayName = meta.displayName() ?: return
 
         // Check if display name contains "Skills"
-        val plainText = net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer.plainText().serialize(displayName)
+        val plainText = PlainTextComponentSerializer.plainText().serialize(displayName)
         if (!plainText.contains("Skills", ignoreCase = true)) return
 
         event.isCancelled = true

@@ -45,7 +45,7 @@ object MessageLoader {
         val templatesMap = mutableMapOf<String, String>()
         Templates::class.java.declaredFields.forEach { field ->
             field.isAccessible = true
-            val value = field.get(Templates)
+            val value = field[Templates]
             if (value is String) {
                 templatesMap[field.name] = value
             }

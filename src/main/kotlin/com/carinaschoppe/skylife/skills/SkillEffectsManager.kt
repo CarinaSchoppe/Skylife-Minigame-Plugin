@@ -1,5 +1,7 @@
 package com.carinaschoppe.skylife.skills
 
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
@@ -24,24 +26,19 @@ object SkillEffectsManager {
                 Skill.JUMBO -> applyJumbo(player)
                 Skill.REGENERATOR -> applyRegenerator(player)
                 Skill.ABSORBER -> applyAbsorber(player)
-                Skill.FEATHERFALL -> {} // Handled by listener
-                Skill.SNOW_SPAMMER -> {} // Handled by task
                 Skill.LUCKY_BIRD -> applyLuckyBird(player)
                 Skill.WOLFLORD -> applyWolflord(player)
-                Skill.ENDERMASTER -> {} // Handled by task
-                Skill.WITCH -> {} // Handled by task
                 Skill.BUILDER -> applyBuilder(player)
                 Skill.SWORDMASTER -> applySwordmaster(player)
                 Skill.BOWMASTER -> applyBowmaster(player)
-                Skill.INVISIBLE_STALKER -> {} // Handled by listener
                 Skill.STRENGTH_CORE -> applyStrengthCore(player)
-                Skill.CLIMBER -> {} // Handled by listener
-                Skill.KANGAROO -> {} // Handled by listener
                 Skill.NINJA -> applyNinja(player)
                 Skill.PILOT -> applyPilot(player)
-                Skill.GOD -> {} // Handled by task
                 Skill.KUNG_FU_MASTER -> applyKungFuMaster(player)
                 Skill.KNIGHT -> applyKnight(player)
+                else -> {
+                    return@forEach
+                }
             }
         }
     }
@@ -96,10 +93,10 @@ object SkillEffectsManager {
         // Give lucky egg
         val egg = ItemStack(Material.EGG, 1)
         val meta = egg.itemMeta
-        meta.displayName(net.kyori.adventure.text.Component.text("Lucky Egg", net.kyori.adventure.text.format.NamedTextColor.GOLD))
+        meta.displayName(Component.text("Lucky Egg", NamedTextColor.GOLD))
         meta.lore(
             listOf(
-                net.kyori.adventure.text.Component.text("Throw for a random effect!", net.kyori.adventure.text.format.NamedTextColor.GRAY)
+                Component.text("Throw for a random effect!", NamedTextColor.GRAY)
             )
         )
         egg.itemMeta = meta
@@ -163,11 +160,11 @@ object SkillEffectsManager {
         // Give gray dye as activation item
         val ninjaItem = ItemStack(Material.GRAY_DYE, 3)
         val meta = ninjaItem.itemMeta
-        meta.displayName(net.kyori.adventure.text.Component.text("Ninja Cloak", net.kyori.adventure.text.format.NamedTextColor.DARK_GRAY))
+        meta.displayName(Component.text("Ninja Cloak", NamedTextColor.DARK_GRAY))
         meta.lore(
             listOf(
-                net.kyori.adventure.text.Component.text("Right-click to become invisible", net.kyori.adventure.text.format.NamedTextColor.GRAY),
-                net.kyori.adventure.text.Component.text("for 5 seconds!", net.kyori.adventure.text.format.NamedTextColor.GRAY)
+                Component.text("Right-click to become invisible", NamedTextColor.GRAY),
+                Component.text("for 5 seconds!", NamedTextColor.GRAY)
             )
         )
         ninjaItem.itemMeta = meta
@@ -178,11 +175,11 @@ object SkillEffectsManager {
         // Give elytra as activation item (not wearable, just for activation)
         val pilotItem = ItemStack(Material.ELYTRA, 1)
         val meta = pilotItem.itemMeta
-        meta.displayName(net.kyori.adventure.text.Component.text("Pilot Wings", net.kyori.adventure.text.format.NamedTextColor.AQUA))
+        meta.displayName(Component.text("Pilot Wings", NamedTextColor.AQUA))
         meta.lore(
             listOf(
-                net.kyori.adventure.text.Component.text("Right-click to fly for 3 seconds,", net.kyori.adventure.text.format.NamedTextColor.GRAY),
-                net.kyori.adventure.text.Component.text("then suffer nausea!", net.kyori.adventure.text.format.NamedTextColor.GRAY)
+                Component.text("Right-click to fly for 3 seconds,", NamedTextColor.GRAY),
+                Component.text("then suffer nausea!", NamedTextColor.GRAY)
             )
         )
         pilotItem.itemMeta = meta
@@ -195,10 +192,10 @@ object SkillEffectsManager {
         stick.addEnchantment(Enchantment.KNOCKBACK, 1)
 
         val meta = stick.itemMeta
-        meta.displayName(net.kyori.adventure.text.Component.text("Kung Fu Stick", net.kyori.adventure.text.format.NamedTextColor.GOLD))
+        meta.displayName(Component.text("Kung Fu Stick", NamedTextColor.GOLD))
         meta.lore(
             listOf(
-                net.kyori.adventure.text.Component.text("Push your enemies away!", net.kyori.adventure.text.format.NamedTextColor.GRAY)
+                Component.text("Push your enemies away!", NamedTextColor.GRAY)
             )
         )
         stick.itemMeta = meta

@@ -3,6 +3,7 @@ package com.carinaschoppe.skylife.commands.admin
 import com.carinaschoppe.skylife.game.GameCluster
 import com.carinaschoppe.skylife.game.GamePattern
 import com.carinaschoppe.skylife.utility.messages.Messages
+import net.kyori.adventure.text.Component
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -44,7 +45,7 @@ class PlayerAmountCommand : CommandExecutor, TabCompleter {
                 // Use active setup: /playeramount <min|max> <amount>
                 game = GameSetupCommand.activeSetups[sender]
                 if (game == null) {
-                    sender.sendMessage(Messages.PREFIX.append(net.kyori.adventure.text.Component.text("No active setup! Use /game create <name> or /gamesetup <name> first.", Messages.ERROR_COLOR)))
+                    sender.sendMessage(Messages.PREFIX.append(Component.text("No active setup! Use /game create <name> or /gamesetup <name> first.", Messages.ERROR_COLOR)))
                     return true
                 }
                 type = args[0].lowercase()
@@ -73,7 +74,7 @@ class PlayerAmountCommand : CommandExecutor, TabCompleter {
         }
 
         if (amount == null || amount < 1) {
-            sender.sendMessage(Messages.PREFIX.append(net.kyori.adventure.text.Component.text("Amount must be at least 1!", Messages.ERROR_COLOR)))
+            sender.sendMessage(Messages.PREFIX.append(Component.text("Amount must be at least 1!", Messages.ERROR_COLOR)))
             return true
         }
 
@@ -94,7 +95,7 @@ class PlayerAmountCommand : CommandExecutor, TabCompleter {
 
             "max" -> {
                 if (amount < game.minPlayers) {
-                    sender.sendMessage(Messages.PREFIX.append(net.kyori.adventure.text.Component.text("Max players must be >= min players (${game.minPlayers})!", Messages.ERROR_COLOR)))
+                    sender.sendMessage(Messages.PREFIX.append(Component.text("Max players must be >= min players (${game.minPlayers})!", Messages.ERROR_COLOR)))
                     return true
                 }
                 game.maxPlayers = amount
