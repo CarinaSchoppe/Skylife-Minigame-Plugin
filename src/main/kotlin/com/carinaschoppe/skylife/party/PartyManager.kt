@@ -265,50 +265,15 @@ object PartyManager {
 
         // Leader is joining - bring all online party members
         val onlineMembers = getOnlinePartyMembers(party)
-
-        // Find suitable game
-        var gameToJoin = targetGame
-
-        if (gameToJoin != null) {
-            val availableSlots = gameToJoin.maxPlayers - gameToJoin.livingPlayers.size
-            if (availableSlots < onlineMembers.size) {
-                // Target game is full, try to find another game with the same map
-                if (mapName != null) {
-                    gameToJoin = GameCluster.lobbyGamesList
-                        .filter { it.pattern.mapName == mapName }
-                        .filter { (it.maxPlayers - it.livingPlayers.size) >= onlineMembers.size }
-                        .firstOrNull()
-                }
-
-                if (gameToJoin == null || (gameToJoin.maxPlayers - gameToJoin.livingPlayers.size) < onlineMembers.size) {
-                    return Result.failure(Exception("No available game found with enough space for all party members (${onlineMembers.size} players needed)"))
-                }
-            }
-        } else {
-            return Result.failure(Exception("No game specified"))
+        val gameToJoin = resolvePartyGame(targetGame, mapName, onlineMembers.size).getOrElse { error ->
+            return Result.failure(error)
         }
 
-        // Remove all party members from their current games
-        onlineMembers.forEach { member ->
-            if (GameCluster.getGame(member) != null) {
-                GameCluster.removePlayerFromGame(member)
-            }
-        }
+        removeMembersFromGames(onlineMembers)
 
-        // Add all party members to the target game
-        val failedJoins = mutableListOf<Player>()
-        onlineMembers.forEach { member ->
-            val success = GameCluster.addPlayerToGame(member, gameToJoin)
-            if (!success) {
-                failedJoins.add(member)
-            }
-        }
-
-        // If some players couldn't join, rollback all joins
+        val failedJoins = addMembersToGame(onlineMembers, gameToJoin)
         if (failedJoins.isNotEmpty()) {
-            onlineMembers.forEach { member ->
-                GameCluster.removePlayerFromGame(member)
-            }
+            removeMembersFromGames(onlineMembers)
             return Result.failure(Exception("Failed to add all party members to game. ${failedJoins.size} players could not join."))
         }
 
@@ -343,5 +308,53 @@ object PartyManager {
      */
     fun getPartyLeader(party: Party): Player? {
         return Bukkit.getPlayer(party.leader)
+    }
+
+    private fun resolvePartyGame(
+        targetGame: com.carinaschoppe.skylife.game.Game?,
+        mapName: String?,
+        partySize: Int
+    ): Result<com.carinaschoppe.skylife.game.Game> {
+        if (targetGame == null) {
+            return Result.failure(Exception("No game specified"))
+        }
+
+        val availableSlots = targetGame.maxPlayers - targetGame.livingPlayers.size
+        if (availableSlots >= partySize) {
+            return Result.success(targetGame)
+        }
+
+        if (mapName != null) {
+            val alternative = GameCluster.lobbyGamesList
+                .filter { it.pattern.mapName == mapName }
+                .firstOrNull { (it.maxPlayers - it.livingPlayers.size) >= partySize }
+
+            if (alternative != null) {
+                return Result.success(alternative)
+            }
+        }
+
+        return Result.failure(Exception("No available game found with enough space for all party members ($partySize players needed)"))
+    }
+
+    private fun removeMembersFromGames(members: List<Player>) {
+        members.forEach { member ->
+            if (GameCluster.getGame(member) != null) {
+                GameCluster.removePlayerFromGame(member)
+            }
+        }
+    }
+
+    private fun addMembersToGame(
+        members: List<Player>,
+        game: com.carinaschoppe.skylife.game.Game
+    ): List<Player> {
+        val failed = mutableListOf<Player>()
+        members.forEach { member ->
+            if (!GameCluster.addPlayerToGame(member, game)) {
+                failed.add(member)
+            }
+        }
+        return failed
     }
 }

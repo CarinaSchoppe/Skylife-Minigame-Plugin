@@ -26,6 +26,12 @@ import org.bukkit.entity.Player
  */
 object ChatManager {
 
+    private data class ChatDecorations(
+        val rankTag: String,
+        val rankColor: NamedTextColor,
+        val guildTag: String
+    )
+
     /**
      * Processes a chat message and routes it to the appropriate recipients.
      * @return true if message was handled, false if it should be cancelled
@@ -57,17 +63,8 @@ object ChatManager {
      * All online players can see these messages.
      */
     private fun handleGlobalChat(sender: Player, message: String) {
-        val rank = PlayerRank.getRank(sender)
-        val rankTag = if (rank != PlayerRank.USER && rank.tag.isNotEmpty()) rank.tag else ""
-        val rankColor = getRankColor(rank)
-        val guildTag = GuildManager.getFormattedTag(sender.uniqueId) ?: ""
-
-        val formattedMessage = Component.text("[GLOBAL] ", NamedTextColor.GOLD)
-            .append(if (rankTag.isNotEmpty()) Component.text(rankTag, rankColor) else Component.empty())
-            .append(if (guildTag.isNotEmpty()) Component.text("$guildTag ", Messages.ACCENT_COLOR) else Component.empty())
-            .append(Component.text(sender.name, NamedTextColor.WHITE))
-            .append(Component.text(": ", NamedTextColor.GRAY))
-            .append(Component.text(message, NamedTextColor.WHITE))
+        val decorations = buildDecorations(sender)
+        val formattedMessage = buildChatMessage("[GLOBAL]", NamedTextColor.GOLD, sender, message, decorations)
 
         Bukkit.getOnlinePlayers().forEach { it.sendMessage(formattedMessage) }
     }
@@ -88,17 +85,8 @@ object ChatManager {
             sender.sendMessage(Messages.PREFIX.append(Component.text("Guild not found", Messages.ERROR_COLOR)))
             return
         }
-        val rank = PlayerRank.getRank(sender)
-        val rankTag = if (rank != PlayerRank.USER && rank.tag.isNotEmpty()) rank.tag else ""
-        val rankColor = getRankColor(rank)
-        val guildTag = "[${guild.tag}]"
-
-        val formattedMessage = Component.text("[GUILD] ", NamedTextColor.GREEN)
-            .append(if (rankTag.isNotEmpty()) Component.text(rankTag, rankColor) else Component.empty())
-            .append(Component.text("$guildTag ", Messages.ACCENT_COLOR))
-            .append(Component.text(sender.name, NamedTextColor.WHITE))
-            .append(Component.text(": ", NamedTextColor.GRAY))
-            .append(Component.text(message, NamedTextColor.WHITE))
+        val decorations = buildDecorations(sender, "[${guild.tag}]")
+        val formattedMessage = buildChatMessage("[GUILD]", NamedTextColor.GREEN, sender, message, decorations)
 
         // Send to all online guild members
         Bukkit.getOnlinePlayers()
@@ -121,33 +109,18 @@ object ChatManager {
             return
         }
 
-        val rank = PlayerRank.getRank(sender)
-        val rankTag = if (rank != PlayerRank.USER && rank.tag.isNotEmpty()) rank.tag else ""
-        val rankColor = getRankColor(rank)
         val isSpectator = game.spectators.contains(sender)
-        val guildTag = GuildManager.getFormattedTag(sender.uniqueId) ?: ""
+        val decorations = buildDecorations(sender)
 
         if (isSpectator) {
             // Spectator chat - only visible to other spectators in the same game
-            val formattedMessage = Component.text("[SPECTATOR] ", NamedTextColor.AQUA)
-                .append(if (rankTag.isNotEmpty()) Component.text(rankTag, rankColor) else Component.empty())
-                .append(if (guildTag.isNotEmpty()) Component.text("$guildTag ", Messages.ACCENT_COLOR) else Component.empty())
-                .append(Component.text(sender.name, NamedTextColor.WHITE))
-                .append(Component.text(": ", NamedTextColor.GRAY))
-                .append(Component.text(message, NamedTextColor.WHITE))
+            val formattedMessage = buildChatMessage("[SPECTATOR]", NamedTextColor.AQUA, sender, message, decorations)
 
             game.spectators.forEach { it.sendMessage(formattedMessage) }
         } else {
             // Alive player chat - visible to all alive players in the same game
-            val prefix = if (game.currentState is IngameState) "[INGAME]" else "[LOBBY]"
-            val prefixColor = if (game.currentState is IngameState) NamedTextColor.YELLOW else NamedTextColor.GREEN
-
-            val formattedMessage = Component.text("$prefix ", prefixColor)
-                .append(if (rankTag.isNotEmpty()) Component.text(rankTag, rankColor) else Component.empty())
-                .append(if (guildTag.isNotEmpty()) Component.text("$guildTag ", Messages.ACCENT_COLOR) else Component.empty())
-                .append(Component.text(sender.name, NamedTextColor.WHITE))
-                .append(Component.text(": ", NamedTextColor.GRAY))
-                .append(Component.text(message, NamedTextColor.WHITE))
+            val (prefix, prefixColor) = getRoundPrefix(game.currentState is IngameState)
+            val formattedMessage = buildChatMessage(prefix, prefixColor, sender, message, decorations)
 
             game.livingPlayers.forEach { it.sendMessage(formattedMessage) }
         }
@@ -157,17 +130,8 @@ object ChatManager {
      * Handles hub chat for players not in any game.
      */
     private fun handleHubChat(sender: Player, message: String) {
-        val rank = PlayerRank.getRank(sender)
-        val rankTag = if (rank != PlayerRank.USER && rank.tag.isNotEmpty()) rank.tag else ""
-        val rankColor = getRankColor(rank)
-        val guildTag = GuildManager.getFormattedTag(sender.uniqueId) ?: ""
-
-        val formattedMessage = Component.text("[HUB] ", NamedTextColor.GRAY)
-            .append(if (rankTag.isNotEmpty()) Component.text(rankTag, rankColor) else Component.empty())
-            .append(if (guildTag.isNotEmpty()) Component.text("$guildTag ", Messages.ACCENT_COLOR) else Component.empty())
-            .append(Component.text(sender.name, NamedTextColor.WHITE))
-            .append(Component.text(": ", NamedTextColor.GRAY))
-            .append(Component.text(message, NamedTextColor.WHITE))
+        val decorations = buildDecorations(sender)
+        val formattedMessage = buildChatMessage("[HUB]", NamedTextColor.GRAY, sender, message, decorations)
 
         // Send to all players in hub (not in any game)
         Bukkit.getOnlinePlayers()
@@ -192,17 +156,13 @@ object ChatManager {
         }
 
         // Same game - check if both are alive or both are dead
-        if (senderGame != null) {
-            val senderDead = senderGame.spectators.contains(sender)
-            val recipientDead = senderGame.spectators.contains(recipient)
-
-            // Alive can't DM dead in same game, and vice versa
-            if (senderDead != recipientDead) {
-                return false
-            }
+        if (senderGame == null) {
+            return true
         }
 
-        return true
+        val senderDead = senderGame.spectators.contains(sender)
+        val recipientDead = senderGame.spectators.contains(recipient)
+        return senderDead == recipientDead
     }
 
     /**
@@ -212,6 +172,38 @@ object ChatManager {
         // For now, just return the message as-is since we're dealing with plain strings
         // If using Components, this would need to extract plain text
         return message
+    }
+
+    private fun buildDecorations(sender: Player, guildTagOverride: String? = null): ChatDecorations {
+        val rank = PlayerRank.getRank(sender)
+        val rankTag = if (rank != PlayerRank.USER && rank.tag.isNotEmpty()) rank.tag else ""
+        val guildTag = guildTagOverride ?: (GuildManager.getFormattedTag(sender.uniqueId) ?: "")
+        return ChatDecorations(rankTag, getRankColor(rank), guildTag)
+    }
+
+    private fun buildChatMessage(
+        prefix: String,
+        prefixColor: NamedTextColor,
+        sender: Player,
+        message: String,
+        decorations: ChatDecorations
+    ): Component {
+        return Component.text("$prefix ", prefixColor)
+            .append(if (decorations.rankTag.isNotEmpty()) Component.text(decorations.rankTag, decorations.rankColor) else Component.empty())
+            .append(
+                if (decorations.guildTag.isNotEmpty()) {
+                    Component.text("${decorations.guildTag} ", Messages.ACCENT_COLOR)
+                } else {
+                    Component.empty()
+                }
+            )
+            .append(Component.text(sender.name, NamedTextColor.WHITE))
+            .append(Component.text(": ", NamedTextColor.GRAY))
+            .append(Component.text(message, NamedTextColor.WHITE))
+    }
+
+    private fun getRoundPrefix(isIngame: Boolean): Pair<String, NamedTextColor> {
+        return if (isIngame) "[INGAME]" to NamedTextColor.YELLOW else "[LOBBY]" to NamedTextColor.GREEN
     }
 
     /**

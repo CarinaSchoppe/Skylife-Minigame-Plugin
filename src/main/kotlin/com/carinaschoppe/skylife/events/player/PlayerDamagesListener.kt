@@ -28,48 +28,12 @@ class PlayerDamagesListener : Listener {
         val victim = event.entity
         val damager = event.damager
 
-        // Check if either the damager or the victim is a protected player.
-        val victimIsProtected = victim is Player && isProtected(victim)
-        val damagerIsProtected = damager is Player && isProtected(damager)
-
-        if (victimIsProtected || damagerIsProtected) {
+        if (victim is Player && damager is Player && shouldCancelPlayerDamage(victim, damager)) {
             event.isCancelled = true
-            return
-        }
-
-        // Additionally, prevent players from different games from damaging each other.
-        if (victim is Player && damager is Player) {
-            val victimGame = GameCluster.getGame(victim)
-            val damagerGame = GameCluster.getGame(damager)
-
-            // If they are in different games (and not in the hub, which is handled by isProtected),
-            // cancel the event.
-            if (victimGame != damagerGame) {
-                event.isCancelled = true
-                return
-            }
-
-            // Check guild friendly fire (parties can always damage each other)
-            if (victimGame != null && damagerGame != null) {
-                // Snapshot guild membership at time of damage check
-                val damagerGuildId = GuildManager.getPlayerGuildId(damager.uniqueId)
-                val victimGuildId = GuildManager.getPlayerGuildId(victim.uniqueId)
-
-                // Only check friendly fire if both are in guilds AND the same guild
-                if (damagerGuildId != null && victimGuildId != null && damagerGuildId == victimGuildId) {
-                    // Check if friendly fire is enabled for the guild
-                    val guild = GuildManager.getGuild(damagerGuildId)
-                    if (guild != null && !guild.friendlyFireEnabled) {
-                        // Check if guild is last team standing (only guild members alive)
-                        val isLastTeam = GuildManager.isLastTeamStanding(damagerGuildId, victimGame.livingPlayers)
-                        if (!isLastTeam) {
-                            // Cancel damage - friendly fire is disabled and guild is not last team
-                            event.isCancelled = true
-                            return
-                        }
-                    }
-                }
-            }
+        } else if (victim is Player && isProtected(victim)) {
+            event.isCancelled = true
+        } else if (damager is Player && isProtected(damager)) {
+            event.isCancelled = true
         }
     }
 
@@ -116,5 +80,44 @@ class PlayerDamagesListener : Listener {
 
         // Check if protection phase is active
         return state.protectionActive
+    }
+
+    private fun shouldCancelPlayerDamage(victim: Player, damager: Player): Boolean {
+        if (isProtected(victim) || isProtected(damager)) {
+            return true
+        }
+
+        val victimGame = GameCluster.getGame(victim)
+        val damagerGame = GameCluster.getGame(damager)
+        if (victimGame != damagerGame) {
+            return true
+        }
+
+        if (victimGame == null) {
+            return false
+        }
+
+        return isGuildFriendlyFireBlocked(victimGame, damager, victim)
+    }
+
+    private fun isGuildFriendlyFireBlocked(
+        game: com.carinaschoppe.skylife.game.Game,
+        damager: Player,
+        victim: Player
+    ): Boolean {
+        val damagerGuildId = GuildManager.getPlayerGuildId(damager.uniqueId)
+        val victimGuildId = GuildManager.getPlayerGuildId(victim.uniqueId)
+
+        if (damagerGuildId == null || victimGuildId == null || damagerGuildId != victimGuildId) {
+            return false
+        }
+
+        val guild = GuildManager.getGuild(damagerGuildId) ?: return false
+        if (guild.friendlyFireEnabled) {
+            return false
+        }
+
+        val isLastTeam = GuildManager.isLastTeamStanding(damagerGuildId, game.livingPlayers)
+        return !isLastTeam
     }
 }

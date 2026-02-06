@@ -42,140 +42,20 @@ class GameSetupGuiListener : Listener {
 
         when (slot) {
             // Min Players controls
-            GameSetupGui.MIN_PLAYERS_DECREASE -> {
-                if (gamePattern.minPlayers > 1) {
-                    gamePattern.minPlayers--
-                    player.sendMessage(
-                        Messages.PREFIX
-                            .append(Component.text("Min Players decreased to ", Messages.MESSAGE_COLOR))
-                            .append(Component.text(gamePattern.minPlayers.toString(), Messages.NAME_COLOR))
-                    )
-                    (holder as? GameSetupGui)?.updateInventory()
-                }
-            }
-
-            GameSetupGui.MIN_PLAYERS_INCREASE -> {
-                gamePattern.minPlayers++
-                // Ensure max players is at least equal to min players
-                if (gamePattern.maxPlayers < gamePattern.minPlayers) {
-                    gamePattern.maxPlayers = gamePattern.minPlayers
-                }
-                player.sendMessage(
-                    Messages.PREFIX
-                        .append(Component.text("Min Players increased to ", Messages.MESSAGE_COLOR))
-                        .append(Component.text(gamePattern.minPlayers.toString(), Messages.NAME_COLOR))
-                )
-                (holder as? GameSetupGui)?.updateInventory()
-            }
+            GameSetupGui.MIN_PLAYERS_DECREASE -> handleMinPlayersDecrease(player, gamePattern, holder)
+            GameSetupGui.MIN_PLAYERS_INCREASE -> handleMinPlayersIncrease(player, gamePattern, holder)
 
             // Max Players controls
-            GameSetupGui.MAX_PLAYERS_DECREASE -> {
-                if (gamePattern.maxPlayers > gamePattern.minPlayers) {
-                    gamePattern.maxPlayers--
-                    // Ensure minPlayersToStart doesn't exceed maxPlayers
-                    if (gamePattern.minPlayersToStart > gamePattern.maxPlayers) {
-                        gamePattern.minPlayersToStart = gamePattern.maxPlayers
-                    }
-                    player.sendMessage(
-                        Messages.PREFIX
-                            .append(Component.text("Max Players decreased to ", Messages.MESSAGE_COLOR))
-                            .append(Component.text(gamePattern.maxPlayers.toString(), Messages.NAME_COLOR))
-                    )
-                    (holder as? GameSetupGui)?.updateInventory()
-                }
-            }
-
-            GameSetupGui.MAX_PLAYERS_INCREASE -> {
-                gamePattern.maxPlayers++
-                // Ensure minPlayersToStart doesn't exceed maxPlayers
-                if (gamePattern.minPlayersToStart > gamePattern.maxPlayers) {
-                    gamePattern.minPlayersToStart = gamePattern.maxPlayers
-                }
-                player.sendMessage(
-                    Messages.PREFIX
-                        .append(Component.text("Max Players increased to ", Messages.MESSAGE_COLOR))
-                        .append(Component.text(gamePattern.maxPlayers.toString(), Messages.NAME_COLOR))
-                )
-                (holder as? GameSetupGui)?.updateInventory()
-            }
-
-            GameSetupGui.MIN_TO_START_DECREASE -> {
-                if (gamePattern.minPlayersToStart > 1) {
-                    gamePattern.minPlayersToStart--
-                    player.sendMessage(
-                        Messages.PREFIX
-                            .append(Component.text("Min Players to Start decreased to ", Messages.MESSAGE_COLOR))
-                            .append(Component.text(gamePattern.minPlayersToStart.toString(), Messages.NAME_COLOR))
-                    )
-                    (holder as? GameSetupGui)?.updateInventory()
-                }
-            }
-
-            GameSetupGui.MIN_TO_START_INCREASE -> {
-                if (gamePattern.minPlayersToStart < gamePattern.maxPlayers) {
-                    gamePattern.minPlayersToStart++
-                    player.sendMessage(
-                        Messages.PREFIX
-                            .append(Component.text("Min Players to Start increased to ", Messages.MESSAGE_COLOR))
-                            .append(Component.text(gamePattern.minPlayersToStart.toString(), Messages.NAME_COLOR))
-                    )
-                    (holder as? GameSetupGui)?.updateInventory()
-                } else {
-                    player.sendMessage(
-                        Messages.PREFIX
-                            .append(Component.text("Min Players to Start cannot exceed Max Players (", Messages.ERROR_COLOR))
-                            .append(Component.text(gamePattern.maxPlayers.toString(), Messages.NAME_COLOR))
-                            .append(Component.text(")!", Messages.ERROR_COLOR))
-                    )
-                }
-            }
+            GameSetupGui.MAX_PLAYERS_DECREASE -> handleMaxPlayersDecrease(player, gamePattern, holder)
+            GameSetupGui.MAX_PLAYERS_INCREASE -> handleMaxPlayersIncrease(player, gamePattern, holder)
+            GameSetupGui.MIN_TO_START_DECREASE -> handleMinToStartDecrease(player, gamePattern, holder)
+            GameSetupGui.MIN_TO_START_INCREASE -> handleMinToStartIncrease(player, gamePattern, holder)
 
             // Location setters
-            GameSetupGui.LOBBY_LOCATION -> {
-                gamePattern.gameLocationManager.lobbyLocation =
-                    GameLocationManager.locationToSkylifeLocationConverter(player.location)
-                player.sendMessage(
-                    Messages.PREFIX.append(
-                        Component.text("Lobby location set to your current position!", Messages.MESSAGE_COLOR)
-                    )
-                )
-                (holder as? GameSetupGui)?.updateInventory()
-            }
-
-            GameSetupGui.SPECTATOR_LOCATION -> {
-                gamePattern.gameLocationManager.spectatorLocation =
-                    GameLocationManager.locationToSkylifeLocationConverter(player.location)
-                player.sendMessage(
-                    Messages.PREFIX.append(
-                        Component.text("Spectator location set to your current position!", Messages.MESSAGE_COLOR)
-                    )
-                )
-                (holder as? GameSetupGui)?.updateInventory()
-            }
-
-            GameSetupGui.MAIN_LOCATION -> {
-                gamePattern.gameLocationManager.mainLocation =
-                    GameLocationManager.locationToSkylifeLocationConverter(player.location)
-                player.sendMessage(
-                    Messages.PREFIX.append(
-                        Component.text("Main location set to your current position!", Messages.MESSAGE_COLOR)
-                    )
-                )
-                (holder as? GameSetupGui)?.updateInventory()
-            }
-
-            GameSetupGui.SPAWN_LOCATIONS -> {
-                val skylifeLocation = GameLocationManager.locationToSkylifeLocationConverter(player.location)
-                gamePattern.gameLocationManager.spawnLocations.add(skylifeLocation)
-                val spawnNumber = gamePattern.gameLocationManager.spawnLocations.size
-                player.sendMessage(
-                    Messages.PREFIX
-                        .append(Component.text("Added spawn location #", Messages.MESSAGE_COLOR))
-                        .append(Component.text(spawnNumber.toString(), Messages.NAME_COLOR))
-                        .append(Component.text("!", Messages.MESSAGE_COLOR))
-                )
-                (holder as? GameSetupGui)?.updateInventory()
-            }
+            GameSetupGui.LOBBY_LOCATION -> setLobbyLocation(player, gamePattern, holder)
+            GameSetupGui.SPECTATOR_LOCATION -> setSpectatorLocation(player, gamePattern, holder)
+            GameSetupGui.MAIN_LOCATION -> setMainLocation(player, gamePattern, holder)
+            GameSetupGui.SPAWN_LOCATIONS -> addSpawnLocation(player, gamePattern, holder)
 
             // Cancel button
             GameSetupGui.CANCEL_SLOT -> {
@@ -257,5 +137,143 @@ class GameSetupGuiListener : Listener {
                 )
             }
         }
+    }
+
+    private fun handleMinPlayersDecrease(player: Player, gamePattern: com.carinaschoppe.skylife.game.GamePattern, holder: GameSetupHolderFactory) {
+        if (gamePattern.minPlayers <= 1) {
+            return
+        }
+        gamePattern.minPlayers--
+        player.sendMessage(
+            Messages.PREFIX
+                .append(Component.text("Min Players decreased to ", Messages.MESSAGE_COLOR))
+                .append(Component.text(gamePattern.minPlayers.toString(), Messages.NAME_COLOR))
+        )
+        refreshInventory(holder)
+    }
+
+    private fun handleMinPlayersIncrease(player: Player, gamePattern: com.carinaschoppe.skylife.game.GamePattern, holder: GameSetupHolderFactory) {
+        gamePattern.minPlayers++
+        if (gamePattern.maxPlayers < gamePattern.minPlayers) {
+            gamePattern.maxPlayers = gamePattern.minPlayers
+        }
+        player.sendMessage(
+            Messages.PREFIX
+                .append(Component.text("Min Players increased to ", Messages.MESSAGE_COLOR))
+                .append(Component.text(gamePattern.minPlayers.toString(), Messages.NAME_COLOR))
+        )
+        refreshInventory(holder)
+    }
+
+    private fun handleMaxPlayersDecrease(player: Player, gamePattern: com.carinaschoppe.skylife.game.GamePattern, holder: GameSetupHolderFactory) {
+        if (gamePattern.maxPlayers <= gamePattern.minPlayers) {
+            return
+        }
+        gamePattern.maxPlayers--
+        if (gamePattern.minPlayersToStart > gamePattern.maxPlayers) {
+            gamePattern.minPlayersToStart = gamePattern.maxPlayers
+        }
+        player.sendMessage(
+            Messages.PREFIX
+                .append(Component.text("Max Players decreased to ", Messages.MESSAGE_COLOR))
+                .append(Component.text(gamePattern.maxPlayers.toString(), Messages.NAME_COLOR))
+        )
+        refreshInventory(holder)
+    }
+
+    private fun handleMaxPlayersIncrease(player: Player, gamePattern: com.carinaschoppe.skylife.game.GamePattern, holder: GameSetupHolderFactory) {
+        gamePattern.maxPlayers++
+        if (gamePattern.minPlayersToStart > gamePattern.maxPlayers) {
+            gamePattern.minPlayersToStart = gamePattern.maxPlayers
+        }
+        player.sendMessage(
+            Messages.PREFIX
+                .append(Component.text("Max Players increased to ", Messages.MESSAGE_COLOR))
+                .append(Component.text(gamePattern.maxPlayers.toString(), Messages.NAME_COLOR))
+        )
+        refreshInventory(holder)
+    }
+
+    private fun handleMinToStartDecrease(player: Player, gamePattern: com.carinaschoppe.skylife.game.GamePattern, holder: GameSetupHolderFactory) {
+        if (gamePattern.minPlayersToStart <= 1) {
+            return
+        }
+        gamePattern.minPlayersToStart--
+        player.sendMessage(
+            Messages.PREFIX
+                .append(Component.text("Min Players to Start decreased to ", Messages.MESSAGE_COLOR))
+                .append(Component.text(gamePattern.minPlayersToStart.toString(), Messages.NAME_COLOR))
+        )
+        refreshInventory(holder)
+    }
+
+    private fun handleMinToStartIncrease(player: Player, gamePattern: com.carinaschoppe.skylife.game.GamePattern, holder: GameSetupHolderFactory) {
+        if (gamePattern.minPlayersToStart < gamePattern.maxPlayers) {
+            gamePattern.minPlayersToStart++
+            player.sendMessage(
+                Messages.PREFIX
+                    .append(Component.text("Min Players to Start increased to ", Messages.MESSAGE_COLOR))
+                    .append(Component.text(gamePattern.minPlayersToStart.toString(), Messages.NAME_COLOR))
+            )
+            refreshInventory(holder)
+            return
+        }
+
+        player.sendMessage(
+            Messages.PREFIX
+                .append(Component.text("Min Players to Start cannot exceed Max Players (", Messages.ERROR_COLOR))
+                .append(Component.text(gamePattern.maxPlayers.toString(), Messages.NAME_COLOR))
+                .append(Component.text(")!", Messages.ERROR_COLOR))
+        )
+    }
+
+    private fun setLobbyLocation(player: Player, gamePattern: com.carinaschoppe.skylife.game.GamePattern, holder: GameSetupHolderFactory) {
+        gamePattern.gameLocationManager.lobbyLocation =
+            GameLocationManager.locationToSkylifeLocationConverter(player.location)
+        player.sendMessage(
+            Messages.PREFIX.append(
+                Component.text("Lobby location set to your current position!", Messages.MESSAGE_COLOR)
+            )
+        )
+        refreshInventory(holder)
+    }
+
+    private fun setSpectatorLocation(player: Player, gamePattern: com.carinaschoppe.skylife.game.GamePattern, holder: GameSetupHolderFactory) {
+        gamePattern.gameLocationManager.spectatorLocation =
+            GameLocationManager.locationToSkylifeLocationConverter(player.location)
+        player.sendMessage(
+            Messages.PREFIX.append(
+                Component.text("Spectator location set to your current position!", Messages.MESSAGE_COLOR)
+            )
+        )
+        refreshInventory(holder)
+    }
+
+    private fun setMainLocation(player: Player, gamePattern: com.carinaschoppe.skylife.game.GamePattern, holder: GameSetupHolderFactory) {
+        gamePattern.gameLocationManager.mainLocation =
+            GameLocationManager.locationToSkylifeLocationConverter(player.location)
+        player.sendMessage(
+            Messages.PREFIX.append(
+                Component.text("Main location set to your current position!", Messages.MESSAGE_COLOR)
+            )
+        )
+        refreshInventory(holder)
+    }
+
+    private fun addSpawnLocation(player: Player, gamePattern: com.carinaschoppe.skylife.game.GamePattern, holder: GameSetupHolderFactory) {
+        val skylifeLocation = GameLocationManager.locationToSkylifeLocationConverter(player.location)
+        gamePattern.gameLocationManager.spawnLocations.add(skylifeLocation)
+        val spawnNumber = gamePattern.gameLocationManager.spawnLocations.size
+        player.sendMessage(
+            Messages.PREFIX
+                .append(Component.text("Added spawn location #", Messages.MESSAGE_COLOR))
+                .append(Component.text(spawnNumber.toString(), Messages.NAME_COLOR))
+                .append(Component.text("!", Messages.MESSAGE_COLOR))
+        )
+        refreshInventory(holder)
+    }
+
+    private fun refreshInventory(holder: GameSetupHolderFactory) {
+        (holder as? GameSetupGui)?.updateInventory()
     }
 }

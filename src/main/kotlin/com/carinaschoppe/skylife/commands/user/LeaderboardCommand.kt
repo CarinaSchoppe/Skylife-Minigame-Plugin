@@ -48,54 +48,14 @@ class LeaderboardCommand : CommandExecutor, TabCompleter {
             return true
         }
 
-        // Default to points if no argument provided
-        val statType = if (args.isEmpty()) "points" else args[0].lowercase()
-
-        // Validate stat type
-        if (!validStats.contains(statType)) {
+        val statType = resolveStatType(args)
+        if (statType == null) {
             sender.sendMessage(Messages.LEADERBOARD_INVALID_STAT)
             return true
         }
 
         try {
-            // Fetch top 10 players from database
-            val topPlayers = transaction {
-                val allPlayers = StatsPlayer.all().toList()
-
-                // Sort based on stat type
-                val sorted = when (statType) {
-                    "points" -> allPlayers.sortedByDescending { it.points }
-                    "kills" -> allPlayers.sortedByDescending { it.kills }
-                    "wins" -> allPlayers.sortedByDescending { it.wins }
-                    "games" -> allPlayers.sortedByDescending { it.games }
-                    "kd" -> allPlayers.sortedByDescending {
-                        if (it.deaths == 0) it.kills.toDouble()
-                        else it.kills.toDouble() / it.deaths.toDouble()
-                    }
-
-                    else -> allPlayers.sortedByDescending { it.points }
-                }
-
-                // Take top 10 and map to display data
-                sorted.take(10).mapIndexed { index, player ->
-                    LeaderboardEntry(
-                        rank = index + 1,
-                        name = player.name,
-                        value = when (statType) {
-                            "points" -> player.points.toString()
-                            "kills" -> player.kills.toString()
-                            "wins" -> player.wins.toString()
-                            "games" -> player.games.toString()
-                            "kd" -> {
-                                if (player.deaths == 0) player.kills.toString()
-                                else String.format("%.2f", player.kills.toDouble() / player.deaths.toDouble())
-                            }
-
-                            else -> player.points.toString()
-                        }
-                    )
-                }
-            }
+            val topPlayers = loadTopPlayers(statType)
 
             // Send leaderboard to player
             sender.sendMessage(Messages.LEADERBOARD_HEADER(statType))
@@ -133,4 +93,53 @@ class LeaderboardCommand : CommandExecutor, TabCompleter {
         val name: String,
         val value: String
     )
+
+    private fun resolveStatType(args: Array<out String>): String? {
+        val statType = if (args.isEmpty()) "points" else args[0].lowercase()
+        return statType.takeIf { validStats.contains(it) }
+    }
+
+    private fun loadTopPlayers(statType: String): List<LeaderboardEntry> = transaction {
+        val allPlayers = StatsPlayer.all().toList()
+        val sorted = sortPlayers(allPlayers, statType)
+
+        sorted.take(10).mapIndexed { index, player ->
+            LeaderboardEntry(
+                rank = index + 1,
+                name = player.name,
+                value = formatStatValue(player, statType)
+            )
+        }
+    }
+
+    private fun sortPlayers(players: List<StatsPlayer>, statType: String): List<StatsPlayer> {
+        return when (statType) {
+            "points" -> players.sortedByDescending { it.points }
+            "kills" -> players.sortedByDescending { it.kills }
+            "wins" -> players.sortedByDescending { it.wins }
+            "games" -> players.sortedByDescending { it.games }
+            "kd" -> players.sortedByDescending { kdValue(it) }
+            else -> players.sortedByDescending { it.points }
+        }
+    }
+
+    private fun formatStatValue(player: StatsPlayer, statType: String): String {
+        return when (statType) {
+            "points" -> player.points.toString()
+            "kills" -> player.kills.toString()
+            "wins" -> player.wins.toString()
+            "games" -> player.games.toString()
+            "kd" -> {
+                if (player.deaths == 0) player.kills.toString()
+                else String.format("%.2f", kdValue(player))
+            }
+
+            else -> player.points.toString()
+        }
+    }
+
+    private fun kdValue(player: StatsPlayer): Double {
+        return if (player.deaths == 0) player.kills.toDouble()
+        else player.kills.toDouble() / player.deaths.toDouble()
+    }
 }

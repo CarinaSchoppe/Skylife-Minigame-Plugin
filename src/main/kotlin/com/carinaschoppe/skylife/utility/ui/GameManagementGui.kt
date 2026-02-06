@@ -20,6 +20,8 @@ import org.bukkit.persistence.PersistentDataType
  */
 object GameManagementGui {
 
+    private const val NOT_SET_TEXT = "✗ Not set"
+
     private val KEY_GAME_NAME: NamespacedKey by lazy { NamespacedKey(PluginContext.plugin, "manage_game_name") }
     private val KEY_ACTION: NamespacedKey by lazy { NamespacedKey(PluginContext.plugin, "manage_game_action") }
 
@@ -74,7 +76,15 @@ object GameManagementGui {
      * Updates the edit GUI with current values.
      */
     fun updateEditGUI(inventory: Inventory, gamePattern: GamePattern) {
-        // Min Players
+        setMinPlayersItems(inventory, gamePattern)
+        setMaxPlayersItems(inventory, gamePattern)
+        setMinPlayersToStartItems(inventory, gamePattern)
+        setLocationItems(inventory, gamePattern)
+        setSpawnLocationsItem(inventory, gamePattern)
+        setActionButtons(inventory)
+    }
+
+    private fun setMinPlayersItems(inventory: Inventory, gamePattern: GamePattern) {
         inventory.setItem(
             9,
             ItemBuilder(Material.RED_WOOL)
@@ -108,8 +118,9 @@ object GameManagementGui {
                 }
                 .build()
         )
+    }
 
-        // Max Players
+    private fun setMaxPlayersItems(inventory: Inventory, gamePattern: GamePattern) {
         inventory.setItem(
             18,
             ItemBuilder(Material.RED_WOOL)
@@ -143,8 +154,9 @@ object GameManagementGui {
                 }
                 .build()
         )
+    }
 
-        // Min Players To Start
+    private fun setMinPlayersToStartItems(inventory: Inventory, gamePattern: GamePattern) {
         inventory.setItem(
             27,
             ItemBuilder(Material.RED_WOOL)
@@ -179,8 +191,9 @@ object GameManagementGui {
                 }
                 .build()
         )
+    }
 
-        // Locations section
+    private fun setLocationItems(inventory: Inventory, gamePattern: GamePattern) {
         val locationManager = gamePattern.gameLocationManager
         val lobbySet = locationManager.isLocationInitialized("lobby")
         inventory.setItem(
@@ -189,7 +202,7 @@ object GameManagementGui {
                 .addName(Component.text("Lobby Location", NamedTextColor.YELLOW, TextDecoration.BOLD))
                 .addLore(
                     if (lobbySet) Component.text("✓ Location set!", NamedTextColor.GREEN)
-                    else Component.text("✗ Not set", NamedTextColor.RED),
+                    else Component.text(NOT_SET_TEXT, NamedTextColor.RED),
                     Component.empty(),
                     Component.text("Click to set to your", NamedTextColor.GRAY),
                     Component.text("current location", NamedTextColor.GRAY)
@@ -207,7 +220,7 @@ object GameManagementGui {
                 .addName(Component.text("Spectator Location", NamedTextColor.YELLOW, TextDecoration.BOLD))
                 .addLore(
                     if (spectatorSet) Component.text("✓ Location set!", NamedTextColor.GREEN)
-                    else Component.text("✗ Not set", NamedTextColor.RED),
+                    else Component.text(NOT_SET_TEXT, NamedTextColor.RED),
                     Component.empty(),
                     Component.text("Click to set to your", NamedTextColor.GRAY),
                     Component.text("current location", NamedTextColor.GRAY)
@@ -225,7 +238,7 @@ object GameManagementGui {
                 .addName(Component.text("Main Location", NamedTextColor.YELLOW, TextDecoration.BOLD))
                 .addLore(
                     if (mainSet) Component.text("✓ Location set!", NamedTextColor.GREEN)
-                    else Component.text("✗ Not set", NamedTextColor.RED),
+                    else Component.text(NOT_SET_TEXT, NamedTextColor.RED),
                     Component.empty(),
                     Component.text("Click to set to your", NamedTextColor.GRAY),
                     Component.text("current location", NamedTextColor.GRAY)
@@ -235,8 +248,9 @@ object GameManagementGui {
                 }
                 .build()
         )
+    }
 
-        // Spawn locations button
+    private fun setSpawnLocationsItem(inventory: Inventory, gamePattern: GamePattern) {
         inventory.setItem(
             39,
             ItemBuilder(Material.END_PORTAL_FRAME)
@@ -252,8 +266,9 @@ object GameManagementGui {
                 }
                 .build()
         )
+    }
 
-        // Save button
+    private fun setActionButtons(inventory: Inventory) {
         inventory.setItem(
             49,
             ItemBuilder(Material.EMERALD_BLOCK)
@@ -265,7 +280,6 @@ object GameManagementGui {
                 .build()
         )
 
-        // Back button
         inventory.setItem(
             48,
             ItemBuilder(Material.ARROW)
@@ -277,7 +291,6 @@ object GameManagementGui {
                 .build()
         )
 
-        // Delete button
         inventory.setItem(
             53,
             ItemBuilder(Material.REDSTONE_BLOCK)
@@ -335,3 +348,4 @@ object GameManagementGui {
         override fun getInventory(): Inventory = inv
     }
 }
+

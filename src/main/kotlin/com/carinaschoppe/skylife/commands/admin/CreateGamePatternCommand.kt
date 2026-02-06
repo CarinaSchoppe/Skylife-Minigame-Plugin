@@ -48,103 +48,9 @@ class CreateGamePatternCommand : CommandExecutor, TabCompleter {
         val name = args[1]
 
         when (action) {
-            "create" -> {
-                if (!sender.hasPermission("skylife.admin.create")) {
-                    sender.sendMessage(Messages.ERROR_PERMISSION)
-                    return true
-                }
-                // Check if pattern already exists
-                if (GameCluster.gamePatterns.any { it.mapName.equals(name, ignoreCase = true) }) {
-                    sender.sendMessage(Messages.ERROR_PATTERN)
-                    return true
-                }
-
-                // Check if player already has an active setup
-                if (GameSetupCommand.activeSetups.containsKey(sender)) {
-                    sender.sendMessage(Messages.ERROR_ARGUMENT)
-                    return true
-                }
-
-                // Create the new pattern and start setup session
-                val pattern = GamePattern(name)
-                GameSetupCommand.activeSetups[sender] = pattern
-
-                sender.sendMessage(Messages.GAME_CREATED(name))
-                sender.sendMessage(
-                    Messages.PREFIX.append(
-                        Component.text(
-                            "Use /gamesetup to open the setup GUI or use commands like /setlocation, /playeramount",
-                            Messages.MESSAGE_COLOR
-                        )
-                    )
-                )
-            }
-
-            "save" -> {
-                if (!sender.hasPermission("skylife.admin.save")) {
-                    sender.sendMessage(Messages.ERROR_PERMISSION)
-                    return true
-                }
-
-                // Check if it's the player's active setup first
-                val game = if (GameSetupCommand.activeSetups[sender]?.mapName.equals(name, ignoreCase = true)) {
-                    GameSetupCommand.activeSetups[sender]
-                } else {
-                    // Otherwise look in already saved patterns
-                    GameCluster.gamePatterns.firstOrNull { it.mapName.equals(name, ignoreCase = true) }
-                        ?: GameSetupCommand.activeSetups.values.firstOrNull { it.mapName.equals(name, ignoreCase = true) }
-                }
-
-                if (game == null) {
-                    sender.sendMessage(Messages.PREFIX.append(Component.text("Game pattern '$name' not found!", Messages.ERROR_COLOR)))
-                    return true
-                }
-
-                if (!game.isComplete()) {
-                    sender.sendMessage(Messages.GAME_PATTERN_NOT_FULLY_DONE(game.mapName))
-                    return true
-                }
-
-                // Add to cluster if not already there
-                if (!GameCluster.gamePatterns.contains(game)) {
-                    GameCluster.addGamePattern(game)
-                }
-
-                // Save to file
-                GameLoader.saveGameToFile(game)
-
-                // Remove from active setups
-                GameSetupCommand.activeSetups.remove(sender)
-
-                sender.sendMessage(Messages.GAME_SAVED)
-            }
-
-            "delete" -> {
-                if (!sender.hasPermission("skylife.admin.delete")) {
-                    sender.sendMessage(Messages.ERROR_PERMISSION)
-                    return true
-                }
-
-                // Check in saved patterns and active setups
-                val game = GameCluster.gamePatterns.firstOrNull { it.mapName.equals(name, ignoreCase = true) }
-                    ?: GameSetupCommand.activeSetups.values.firstOrNull { it.mapName.equals(name, ignoreCase = true) }
-
-                if (game == null) {
-                    sender.sendMessage(Messages.PREFIX.append(Component.text("Game pattern '$name' not found!", Messages.ERROR_COLOR)))
-                    return true
-                }
-
-                // Remove from cluster if it's there
-                GameCluster.removeGamePattern(game)
-
-                // Remove from active setups if it's there
-                GameSetupCommand.activeSetups.entries.removeIf { it.value == game }
-
-                // Delete file if exists
-                GameLoader.deleteGameFile(game)
-
-                sender.sendMessage(Messages.GAME_DELETED)
-            }
+            "create" -> handleCreate(sender, name)
+            "save" -> handleSave(sender, name)
+            "delete" -> handleDelete(sender, name)
 
             else -> {
                 sender.sendMessage(Messages.ERROR_ARGUMENT)
@@ -168,5 +74,91 @@ class CreateGamePatternCommand : CommandExecutor, TabCompleter {
 
             else -> emptyList()
         }
+    }
+
+    private fun handleCreate(player: Player, name: String) {
+        if (!player.hasPermission("skylife.admin.create")) {
+            player.sendMessage(Messages.ERROR_PERMISSION)
+            return
+        }
+        if (GameCluster.gamePatterns.any { it.mapName.equals(name, ignoreCase = true) }) {
+            player.sendMessage(Messages.ERROR_PATTERN)
+            return
+        }
+        if (GameSetupCommand.activeSetups.containsKey(player)) {
+            player.sendMessage(Messages.ERROR_ARGUMENT)
+            return
+        }
+
+        val pattern = GamePattern(name)
+        GameSetupCommand.activeSetups[player] = pattern
+
+        player.sendMessage(Messages.GAME_CREATED(name))
+        player.sendMessage(
+            Messages.PREFIX.append(
+                Component.text(
+                    "Use /gamesetup to open the setup GUI or use commands like /setlocation, /playeramount",
+                    Messages.MESSAGE_COLOR
+                )
+            )
+        )
+    }
+
+    private fun handleSave(player: Player, name: String) {
+        if (!player.hasPermission("skylife.admin.save")) {
+            player.sendMessage(Messages.ERROR_PERMISSION)
+            return
+        }
+
+        val game = findPatternForSave(player, name)
+        if (game == null) {
+            player.sendMessage(Messages.PREFIX.append(Component.text("Game pattern '$name' not found!", Messages.ERROR_COLOR)))
+            return
+        }
+
+        if (!game.isComplete()) {
+            player.sendMessage(Messages.GAME_PATTERN_NOT_FULLY_DONE(game.mapName))
+            return
+        }
+
+        if (!GameCluster.gamePatterns.contains(game)) {
+            GameCluster.addGamePattern(game)
+        }
+
+        GameLoader.saveGameToFile(game)
+        GameSetupCommand.activeSetups.remove(player)
+
+        player.sendMessage(Messages.GAME_SAVED)
+    }
+
+    private fun handleDelete(player: Player, name: String) {
+        if (!player.hasPermission("skylife.admin.delete")) {
+            player.sendMessage(Messages.ERROR_PERMISSION)
+            return
+        }
+
+        val game = GameCluster.gamePatterns.firstOrNull { it.mapName.equals(name, ignoreCase = true) }
+            ?: GameSetupCommand.activeSetups.values.firstOrNull { it.mapName.equals(name, ignoreCase = true) }
+
+        if (game == null) {
+            player.sendMessage(Messages.PREFIX.append(Component.text("Game pattern '$name' not found!", Messages.ERROR_COLOR)))
+            return
+        }
+
+        GameCluster.removeGamePattern(game)
+        GameSetupCommand.activeSetups.entries.removeIf { it.value == game }
+        GameLoader.deleteGameFile(game)
+
+        player.sendMessage(Messages.GAME_DELETED)
+    }
+
+    private fun findPatternForSave(player: Player, name: String): GamePattern? {
+        val activePattern = GameSetupCommand.activeSetups[player]
+        if (activePattern?.mapName.equals(name, ignoreCase = true)) {
+            return activePattern
+        }
+
+        return GameCluster.gamePatterns.firstOrNull { it.mapName.equals(name, ignoreCase = true) }
+            ?: GameSetupCommand.activeSetups.values.firstOrNull { it.mapName.equals(name, ignoreCase = true) }
     }
 }

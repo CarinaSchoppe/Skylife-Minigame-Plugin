@@ -303,23 +303,41 @@ enum class Skill(
             Component.text(displayName, rarity.color, TextDecoration.BOLD)
         )
 
-        val lore = description.map { line ->
+        val lore = buildBaseLore()
+        addRarityLore(lore)
+        applySelectionLore(meta, lore, selected, unlocked)
+
+        meta.lore(lore)
+        item.itemMeta = meta
+
+        return item
+    }
+
+    private fun buildBaseLore(): MutableList<Component> {
+        return description.map { line ->
             if (line.contains('<') && line.contains('>')) {
                 com.carinaschoppe.skylife.utility.messages.Messages.parse(line)
             } else {
                 Component.text(line, NamedTextColor.GRAY)
             }
         }.toMutableList()
+    }
 
-        // Add rarity information
+    private fun addRarityLore(lore: MutableList<Component>) {
         lore.add(Component.empty())
         lore.add(
             Component.text("Rarity: ", NamedTextColor.GRAY)
                 .append(rarity.getColoredName())
         )
+    }
 
+    private fun applySelectionLore(
+        meta: org.bukkit.inventory.meta.ItemMeta,
+        lore: MutableList<Component>,
+        selected: Boolean,
+        unlocked: Boolean
+    ) {
         if (!unlocked) {
-            // Show locked status and price
             lore.add(Component.empty())
             lore.add(Component.text("🔒 LOCKED", NamedTextColor.RED, TextDecoration.BOLD))
             if (rarity.price > 0) {
@@ -327,20 +345,16 @@ enum class Skill(
                 lore.add(Component.empty())
                 lore.add(Component.text("Click to purchase", NamedTextColor.GREEN))
             }
-        } else if (selected) {
-            lore.add(Component.empty())
+            return
+        }
+
+        lore.add(Component.empty())
+        if (selected) {
             lore.add(Component.text("✔ SELECTED", NamedTextColor.GREEN, TextDecoration.BOLD))
             meta.addEnchant(org.bukkit.enchantments.Enchantment.UNBREAKING, 1, true)
             meta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_ENCHANTS)
         } else {
-            lore.add(Component.empty())
             lore.add(Component.text("Click to select", NamedTextColor.YELLOW))
         }
-
-        meta.lore(lore)
-        item.itemMeta = meta
-
-        return item
     }
 }
-

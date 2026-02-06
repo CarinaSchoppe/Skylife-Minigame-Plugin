@@ -48,7 +48,26 @@ class GameSetupGui(override val player: Player, override val gamePattern: GamePa
     fun updateInventory() {
         val builder = GUIBuilder(this)
 
-        // Min Players controls
+        setMinPlayersItems(builder)
+        setMaxPlayersItems(builder)
+        setMinPlayersToStartItems(builder)
+
+        val locationState = setLocationItems(builder)
+        val spawnCount = setSpawnLocations(builder)
+        setCancelButton(builder)
+        setFinishButton(builder, locationState, spawnCount)
+
+        // Fill empty slots with filler
+        builder.fillerPanel()
+    }
+
+    private data class LocationState(
+        val lobbySet: Boolean,
+        val spectatorSet: Boolean,
+        val mainSet: Boolean
+    )
+
+    private fun setMinPlayersItems(builder: GUIBuilder) {
         builder.setItem(
             MIN_PLAYERS_DECREASE,
             ItemBuilder(Material.RED_WOOL)
@@ -76,8 +95,9 @@ class GameSetupGui(override val player: Player, override val gamePattern: GamePa
                 .addLore(Component.text("Click to increase", NamedTextColor.GRAY))
                 .build()
         )
+    }
 
-        // Max Players controls
+    private fun setMaxPlayersItems(builder: GUIBuilder) {
         builder.setItem(
             MAX_PLAYERS_DECREASE,
             ItemBuilder(Material.RED_WOOL)
@@ -105,8 +125,9 @@ class GameSetupGui(override val player: Player, override val gamePattern: GamePa
                 .addLore(Component.text("Click to increase", NamedTextColor.GRAY))
                 .build()
         )
+    }
 
-        // Min Players to Start controls
+    private fun setMinPlayersToStartItems(builder: GUIBuilder) {
         builder.setItem(
             MIN_TO_START_DECREASE,
             ItemBuilder(Material.RED_WOOL)
@@ -135,8 +156,9 @@ class GameSetupGui(override val player: Player, override val gamePattern: GamePa
                 .addLore(Component.text("Click to increase", NamedTextColor.GRAY))
                 .build()
         )
+    }
 
-        // Location setters
+    private fun setLocationItems(builder: GUIBuilder): LocationState {
         val locationManager = gamePattern.gameLocationManager
         val lobbySet = locationManager.isLocationInitialized("lobby")
         builder.setItem(
@@ -180,7 +202,10 @@ class GameSetupGui(override val player: Player, override val gamePattern: GamePa
                 .build()
         )
 
-        // Spawn locations with counter
+        return LocationState(lobbySet, spectatorSet, mainSet)
+    }
+
+    private fun setSpawnLocations(builder: GUIBuilder): Int {
         val spawnCount = gamePattern.gameLocationManager.spawnLocations.size
         builder.setItem(
             SPAWN_LOCATIONS,
@@ -194,8 +219,10 @@ class GameSetupGui(override val player: Player, override val gamePattern: GamePa
                 .addAmount(maxOf(1, spawnCount))
                 .build()
         )
+        return spawnCount
+    }
 
-        // Cancel button
+    private fun setCancelButton(builder: GUIBuilder) {
         builder.setItem(
             CANCEL_SLOT,
             ItemBuilder(Material.RED_CONCRETE)
@@ -206,8 +233,9 @@ class GameSetupGui(override val player: Player, override val gamePattern: GamePa
                 )
                 .build()
         )
+    }
 
-        // Finish button
+    private fun setFinishButton(builder: GUIBuilder, locationState: LocationState, spawnCount: Int) {
         val isComplete = gamePattern.isComplete()
         builder.setItem(
             FINISH_SLOT,
@@ -226,9 +254,9 @@ class GameSetupGui(override val player: Player, override val gamePattern: GamePa
                         val missing = mutableListOf<String>()
                         if (gamePattern.minPlayers < 1) missing.add("Min Players must be ≥ 1")
                         if (gamePattern.maxPlayers < gamePattern.minPlayers) missing.add("Max Players must be ≥ Min Players")
-                        if (!lobbySet) missing.add("Lobby Location")
-                        if (!spectatorSet) missing.add("Spectator Location")
-                        if (!mainSet) missing.add("Main Location")
+                        if (!locationState.lobbySet) missing.add("Lobby Location")
+                        if (!locationState.spectatorSet) missing.add("Spectator Location")
+                        if (!locationState.mainSet) missing.add("Main Location")
                         if (spawnCount == 0) missing.add("At least 1 Spawn Location")
 
                         val lore = mutableListOf(Component.text("Missing requirements:", NamedTextColor.RED))
@@ -238,8 +266,5 @@ class GameSetupGui(override val player: Player, override val gamePattern: GamePa
                 }
                 .build()
         )
-
-        // Fill empty slots with filler
-        builder.fillerPanel()
     }
 }

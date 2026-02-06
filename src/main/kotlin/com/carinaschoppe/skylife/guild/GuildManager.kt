@@ -197,57 +197,10 @@ object GuildManager {
         val promoterRole = guild.members[promoter] ?: return Result.failure(Exception("You are not in this guild"))
         val targetRole = guild.members[target] ?: return Result.failure(Exception("Target is not in this guild"))
 
-        when (promoterRole) {
-            GuildRole.LEADER -> {
-                // Leader can promote member to elder, or elder to leader (demoting themselves)
-                when (targetRole) {
-                    GuildRole.MEMBER -> {
-                        transaction {
-                            GuildMember.find {
-                                (GuildMembers.playerUUID eq target.toString()) and (GuildMembers.guildId eq guildId)
-                            }.firstOrNull()?.role = GuildRole.ELDER
-                        }
-                        guild.members[target] = GuildRole.ELDER
-                        return Result.success(Unit)
-                    }
-
-                    GuildRole.ELDER -> {
-                        // Promote elder to leader, demote current leader to elder
-                        transaction {
-                            GuildMember.find {
-                                (GuildMembers.playerUUID eq target.toString()) and (GuildMembers.guildId eq guildId)
-                            }.firstOrNull()?.role = GuildRole.LEADER
-
-                            GuildMember.find {
-                                (GuildMembers.playerUUID eq promoter.toString()) and (GuildMembers.guildId eq guildId)
-                            }.firstOrNull()?.role = GuildRole.ELDER
-
-                            Guild.findById(guildId)?.leaderUUID = target.toString()
-                        }
-                        guild.members[target] = GuildRole.LEADER
-                        guild.members[promoter] = GuildRole.ELDER
-                        return Result.success(Unit)
-                    }
-
-                    GuildRole.LEADER -> return Result.failure(Exception("Target is already the leader"))
-                }
-            }
-
-            GuildRole.ELDER -> {
-                // Elders can only promote members to elder
-                if (targetRole == GuildRole.MEMBER) {
-                    transaction {
-                        GuildMember.find {
-                            (GuildMembers.playerUUID eq target.toString()) and (GuildMembers.guildId eq guildId)
-                        }.firstOrNull()?.role = GuildRole.ELDER
-                    }
-                    guild.members[target] = GuildRole.ELDER
-                    return Result.success(Unit)
-                }
-                return Result.failure(Exception("Elders can only promote members to elder"))
-            }
-
-            GuildRole.MEMBER -> return Result.failure(Exception("Members cannot promote players"))
+        return when (promoterRole) {
+            GuildRole.LEADER -> handleLeaderPromotion(guildId, promoter, target, targetRole, guild)
+            GuildRole.ELDER -> handleElderPromotion(guildId, target, targetRole, guild)
+            GuildRole.MEMBER -> Result.failure(Exception("Members cannot promote players"))
         }
     }
 
@@ -270,24 +223,10 @@ object GuildManager {
 
         // Handle leadership succession
         if (role == GuildRole.LEADER) {
-            val elders = guild.members.filter { it.value == GuildRole.ELDER }
-            val newLeader = if (elders.isNotEmpty()) {
-                elders.keys.random()
-            } else {
-                guild.members.keys.randomOrNull()
-            }
-
+            val newLeader = selectNewLeader(guild)
             if (newLeader != null) {
-                transaction {
-                    GuildMember.find {
-                        (GuildMembers.playerUUID eq newLeader.toString()) and (GuildMembers.guildId eq guildId)
-                    }.firstOrNull()?.role = GuildRole.LEADER
-
-                    Guild.findById(guildId)?.leaderUUID = newLeader.toString()
-                }
-                guild.members[newLeader] = GuildRole.LEADER
+                setGuildLeader(guildId, guild, newLeader)
             } else {
-                // No members left, delete guild
                 deleteGuild(guildId)
             }
         }
@@ -400,5 +339,82 @@ object GuildManager {
 
         // Check if all alive players are in this guild
         return alivePlayers.all { playerGuildCache[it.uniqueId] == guildId }
+    }
+
+    private fun handleLeaderPromotion(
+        guildId: Int,
+        promoter: UUID,
+        target: UUID,
+        targetRole: GuildRole,
+        guild: GuildInfo
+    ): Result<Unit> {
+        return when (targetRole) {
+            GuildRole.MEMBER -> {
+                transaction {
+                    GuildMember.find {
+                        (GuildMembers.playerUUID eq target.toString()) and (GuildMembers.guildId eq guildId)
+                    }.firstOrNull()?.role = GuildRole.ELDER
+                }
+                guild.members[target] = GuildRole.ELDER
+                Result.success(Unit)
+            }
+
+            GuildRole.ELDER -> {
+                transaction {
+                    GuildMember.find {
+                        (GuildMembers.playerUUID eq target.toString()) and (GuildMembers.guildId eq guildId)
+                    }.firstOrNull()?.role = GuildRole.LEADER
+
+                    GuildMember.find {
+                        (GuildMembers.playerUUID eq promoter.toString()) and (GuildMembers.guildId eq guildId)
+                    }.firstOrNull()?.role = GuildRole.ELDER
+
+                    Guild.findById(guildId)?.leaderUUID = target.toString()
+                }
+                guild.members[target] = GuildRole.LEADER
+                guild.members[promoter] = GuildRole.ELDER
+                Result.success(Unit)
+            }
+
+            GuildRole.LEADER -> Result.failure(Exception("Target is already the leader"))
+        }
+    }
+
+    private fun handleElderPromotion(
+        guildId: Int,
+        target: UUID,
+        targetRole: GuildRole,
+        guild: GuildInfo
+    ): Result<Unit> {
+        if (targetRole != GuildRole.MEMBER) {
+            return Result.failure(Exception("Elders can only promote members to elder"))
+        }
+        transaction {
+            GuildMember.find {
+                (GuildMembers.playerUUID eq target.toString()) and (GuildMembers.guildId eq guildId)
+            }.firstOrNull()?.role = GuildRole.ELDER
+        }
+        guild.members[target] = GuildRole.ELDER
+        return Result.success(Unit)
+    }
+
+    private fun selectNewLeader(guild: GuildInfo): UUID? {
+        val elders = guild.members.filter { it.value == GuildRole.ELDER }
+        return if (elders.isNotEmpty()) {
+            elders.keys.random()
+        } else {
+            guild.members.keys.randomOrNull()
+        }
+    }
+
+    private fun setGuildLeader(guildId: Int, guild: GuildInfo, newLeader: UUID) {
+        transaction {
+            GuildMember.find {
+                (GuildMembers.playerUUID eq newLeader.toString()) and (GuildMembers.guildId eq guildId)
+            }.firstOrNull()?.role = GuildRole.LEADER
+
+            Guild.findById(guildId)?.leaderUUID = newLeader.toString()
+        }
+        guild.members[newLeader] = GuildRole.LEADER
     }
 }

@@ -72,55 +72,9 @@ class JoinGameCommand : CommandExecutor, TabCompleter {
         }
 
         if (mapToJoin == null || mapToJoin.equals("random", ignoreCase = true)) {
-            // Join a random game
-            if (!sender.hasPermission("skylife.join.random")) {
-                sender.sendMessage(Messages.ERROR_PERMISSION)
-                return true
-            }
-
-            // If party leader, handle party join
-            if (isPartyLeader) {
-                val game = GameCluster.findRandomAvailableGame()
-                if (game == null) {
-                    sender.sendMessage(Messages.ERROR_NO_GAME)
-                    return true
-                }
-
-                val partyJoinResult = PartyManager.handlePartyGameJoin(sender, game, null)
-                partyJoinResult.onFailure { error ->
-                    sender.sendMessage(Messages.parse("<red>${error.message}</red>"))
-                }
-            } else {
-                // Normal single player join
-                if (!GameCluster.addPlayerToRandomGame(sender)) {
-                    sender.sendMessage(Messages.ERROR_NO_GAME)
-                }
-            }
+            handleRandomJoin(sender, isPartyLeader)
         } else {
-            // Join a specific game by map name
-            if (!sender.hasPermission("skylife.join.map")) {
-                sender.sendMessage(Messages.ERROR_PERMISSION)
-                return true
-            }
-
-            val game = GameCluster.getGameByName(mapToJoin)
-            if (game == null) {
-                sender.sendMessage(Messages.GAME_NOT_EXISTS(mapToJoin))
-                return true
-            }
-
-            // If party leader, handle party join
-            if (isPartyLeader) {
-                val partyJoinResult = PartyManager.handlePartyGameJoin(sender, game, mapToJoin)
-                partyJoinResult.onFailure { error ->
-                    sender.sendMessage(Messages.parse("<red>${error.message}</red>"))
-                }
-            } else {
-                // Normal single player join
-                if (!GameCluster.addPlayerToGame(sender, mapToJoin)) {
-                    sender.sendMessage(Messages.ERROR_GAME_FULL_OR_STARTED)
-                }
-            }
+            handleMapJoin(sender, mapToJoin, isPartyLeader)
         }
 
         return true
@@ -133,5 +87,55 @@ class JoinGameCommand : CommandExecutor, TabCompleter {
                 .filter { it.lowercase().startsWith(args[0].lowercase()) }
         }
         return emptyList()
+    }
+
+    private fun handleRandomJoin(player: Player, isPartyLeader: Boolean) {
+        if (!player.hasPermission("skylife.join.random")) {
+            player.sendMessage(Messages.ERROR_PERMISSION)
+            return
+        }
+
+        if (isPartyLeader) {
+            val game = GameCluster.findRandomAvailableGame()
+            if (game == null) {
+                player.sendMessage(Messages.ERROR_NO_GAME)
+                return
+            }
+
+            val partyJoinResult = PartyManager.handlePartyGameJoin(player, game, null)
+            partyJoinResult.onFailure { error ->
+                player.sendMessage(Messages.parse("<red>${error.message}</red>"))
+            }
+            return
+        }
+
+        if (!GameCluster.addPlayerToRandomGame(player)) {
+            player.sendMessage(Messages.ERROR_NO_GAME)
+        }
+    }
+
+    private fun handleMapJoin(player: Player, mapToJoin: String, isPartyLeader: Boolean) {
+        if (!player.hasPermission("skylife.join.map")) {
+            player.sendMessage(Messages.ERROR_PERMISSION)
+            return
+        }
+
+        val game = GameCluster.getGameByName(mapToJoin)
+        if (game == null) {
+            player.sendMessage(Messages.GAME_NOT_EXISTS(mapToJoin))
+            return
+        }
+
+        if (isPartyLeader) {
+            val partyJoinResult = PartyManager.handlePartyGameJoin(player, game, mapToJoin)
+            partyJoinResult.onFailure { error ->
+                player.sendMessage(Messages.parse("<red>${error.message}</red>"))
+            }
+            return
+        }
+
+        if (!GameCluster.addPlayerToGame(player, mapToJoin)) {
+            player.sendMessage(Messages.ERROR_GAME_FULL_OR_STARTED)
+        }
     }
 }

@@ -76,85 +76,132 @@ object ConfigurationLoader {
         val gson: Gson = GsonBuilder().setPrettyPrinting().create()
         val jsonObject = gson.fromJson(json, JsonObject::class.java) ?: JsonObject()
         val defaults = Config()
-        val scoreboardDefaults = ScoreboardConfig()
         val migration = MigrationTracker()
 
-        if (jsonObject.has("scoreboard_title")) {
-            defaults.scoreboardTitle = migrateLegacy(jsonObject.get("scoreboard_title").asString, migration)
-        }
-
-        if (jsonObject.has("timer_settings")) {
-            defaults.timer = gson.fromJson(jsonObject.get("timer_settings"), Timer::class.java)
-        }
-
-
-        if (jsonObject.has("database")) {
-            defaults.database = gson.fromJson(jsonObject.get("database"), DatabaseConfig::class.java)
-        }
-
-        if (jsonObject.has("scoreboard") && jsonObject.get("scoreboard").isJsonObject) {
-            val scoreboardObject = jsonObject.getAsJsonObject("scoreboard")
-            val serverName = if (scoreboardObject.has("server_name")) {
-                migrateLegacy(scoreboardObject.get("server_name").asString, migration)
-            } else {
-                scoreboardDefaults.serverName
-            }
-            val title = if (scoreboardObject.has("title")) {
-                migrateLegacy(scoreboardObject.get("title").asString, migration)
-            } else {
-                ""
-            }
-            val animateTitle = if (scoreboardObject.has("animate_title")) scoreboardObject.get("animate_title").asBoolean else scoreboardDefaults.animateTitle
-            val lines = if (scoreboardObject.has("lines") && scoreboardObject.get("lines").isJsonArray) {
-                gson.fromJson(scoreboardObject.get("lines"), Array<String>::class.java)
-                    ?.map { migrateLegacy(it, migration) }
-                    ?: scoreboardDefaults.lines
-            } else {
-                scoreboardDefaults.lines
-            }
-
-            val lobbyTitle = if (scoreboardObject.has("lobby_title")) {
-                migrateLegacy(scoreboardObject.get("lobby_title").asString, migration)
-            } else {
-                scoreboardDefaults.lobbyTitle
-            }
-
-            val lobbyLines = if (scoreboardObject.has("lobby_lines") && scoreboardObject.get("lobby_lines").isJsonArray) {
-                val lines = gson.fromJson(scoreboardObject.get("lobby_lines"), Array<String>::class.java)
-                    ?.map { migrateLegacy(it, migration) }
-                    ?: scoreboardDefaults.lobbyLines
-
-                // Check if lobby_lines need updating (missing {coins} or {guild} placeholders)
-                val hasCoinsPlaceholder = lines.any { it.contains("{coins}") }
-                val hasGuildPlaceholder = lines.any { it.contains("{guild}") }
-
-                if (!hasCoinsPlaceholder || !hasGuildPlaceholder) {
-                    migration.migrated = true
-                    scoreboardDefaults.lobbyLines
-                } else {
-                    lines
-                }
-            } else {
-                scoreboardDefaults.lobbyLines
-            }
-
-            val resolvedTitle = if (title.isBlank()) defaults.scoreboardTitle else title
-            defaults.scoreboard = ScoreboardConfig(
-                serverName = serverName.ifBlank { scoreboardDefaults.serverName },
-                title = resolvedTitle,
-                animateTitle = animateTitle,
-                lines = if (lines.isEmpty()) scoreboardDefaults.lines else lines,
-                lobbyTitle = lobbyTitle,
-                lobbyLines = if (lobbyLines.isEmpty()) scoreboardDefaults.lobbyLines else lobbyLines
-            )
-        } else {
-            defaults.scoreboard = scoreboardDefaults.copy(title = defaults.scoreboardTitle)
-        }
+        applyLegacyScoreboardTitle(jsonObject, defaults, migration)
+        applyTimerSettings(jsonObject, defaults, gson)
+        applyDatabaseSettings(jsonObject, defaults, gson)
+        defaults.scoreboard = resolveScoreboardConfig(jsonObject, defaults, migration, gson)
 
         return ConfigMigrationResult(defaults, migration.migrated)
     }
 
     private data class MigrationTracker(var migrated: Boolean = false)
+
+    private fun applyLegacyScoreboardTitle(
+        jsonObject: JsonObject,
+        defaults: Config,
+        migration: MigrationTracker
+    ) {
+        if (jsonObject.has("scoreboard_title")) {
+            defaults.scoreboardTitle = migrateLegacy(jsonObject.get("scoreboard_title").asString, migration)
+        }
+    }
+
+    private fun applyTimerSettings(jsonObject: JsonObject, defaults: Config, gson: Gson) {
+        if (jsonObject.has("timer_settings")) {
+            defaults.timer = gson.fromJson(jsonObject.get("timer_settings"), Timer::class.java)
+        }
+    }
+
+    private fun applyDatabaseSettings(jsonObject: JsonObject, defaults: Config, gson: Gson) {
+        if (jsonObject.has("database")) {
+            defaults.database = gson.fromJson(jsonObject.get("database"), DatabaseConfig::class.java)
+        }
+    }
+
+    private fun resolveScoreboardConfig(
+        jsonObject: JsonObject,
+        defaults: Config,
+        migration: MigrationTracker,
+        gson: Gson
+    ): ScoreboardConfig {
+        val scoreboardDefaults = ScoreboardConfig()
+        val scoreboardElement = jsonObject.get("scoreboard")
+        if (scoreboardElement == null || !scoreboardElement.isJsonObject) {
+            return scoreboardDefaults.copy(title = defaults.scoreboardTitle)
+        }
+        val scoreboardObject = scoreboardElement.asJsonObject
+
+        val serverName = readMigratedString(scoreboardObject, "server_name", scoreboardDefaults.serverName, migration)
+        val title = readMigratedString(scoreboardObject, "title", "", migration)
+        val animateTitle = readBoolean(scoreboardObject, "animate_title", scoreboardDefaults.animateTitle)
+        val lines = readLines(scoreboardObject, "lines", scoreboardDefaults.lines, migration, gson)
+        val lobbyTitle = readMigratedString(scoreboardObject, "lobby_title", scoreboardDefaults.lobbyTitle, migration)
+        val lobbyLines = readLobbyLines(scoreboardObject, scoreboardDefaults, migration, gson)
+
+        val resolvedTitle = if (title.isBlank()) defaults.scoreboardTitle else title
+        return ScoreboardConfig(
+            serverName = serverName.ifBlank { scoreboardDefaults.serverName },
+            title = resolvedTitle,
+            animateTitle = animateTitle,
+            lines = if (lines.isEmpty()) scoreboardDefaults.lines else lines,
+            lobbyTitle = lobbyTitle,
+            lobbyLines = if (lobbyLines.isEmpty()) scoreboardDefaults.lobbyLines else lobbyLines
+        )
+    }
+
+    private fun readMigratedString(
+        jsonObject: JsonObject,
+        key: String,
+        fallback: String,
+        migration: MigrationTracker
+    ): String {
+        return if (jsonObject.has(key)) {
+            migrateLegacy(jsonObject.get(key).asString, migration)
+        } else {
+            fallback
+        }
+    }
+
+    private fun readBoolean(jsonObject: JsonObject, key: String, fallback: Boolean): Boolean {
+        return if (jsonObject.has(key)) {
+            jsonObject.get(key).asBoolean
+        } else {
+            fallback
+        }
+    }
+
+    private fun readLines(
+        jsonObject: JsonObject,
+        key: String,
+        fallback: List<String>,
+        migration: MigrationTracker,
+        gson: Gson
+    ): List<String> {
+        if (!jsonObject.has(key) || !jsonObject.get(key).isJsonArray) {
+            return fallback
+        }
+
+        return gson.fromJson(jsonObject.get(key), Array<String>::class.java)
+            ?.map { migrateLegacy(it, migration) }
+            ?: fallback
+    }
+
+    private fun readLobbyLines(
+        scoreboardObject: JsonObject,
+        scoreboardDefaults: ScoreboardConfig,
+        migration: MigrationTracker,
+        gson: Gson
+    ): List<String> {
+        if (!scoreboardObject.has("lobby_lines") || !scoreboardObject.get("lobby_lines").isJsonArray) {
+            return scoreboardDefaults.lobbyLines
+        }
+
+        val lines = gson.fromJson(scoreboardObject.get("lobby_lines"), Array<String>::class.java)
+            ?.map { migrateLegacy(it, migration) }
+            ?: scoreboardDefaults.lobbyLines
+
+        val hasCoinsPlaceholder = lines.any { it.contains("{coins}") }
+        val hasGuildPlaceholder = lines.any { it.contains("{guild}") }
+
+        return if (!hasCoinsPlaceholder || !hasGuildPlaceholder) {
+            migration.migrated = true
+            scoreboardDefaults.lobbyLines
+        } else {
+            lines
+        }
+    }
 
     private fun migrateLegacy(text: String, tracker: MigrationTracker): String {
         val normalized = text.replace("Â§", "§")

@@ -2,6 +2,7 @@ package com.carinaschoppe.skylife.events.player
 
 import com.carinaschoppe.skylife.game.GameCluster
 import org.bukkit.Material
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -53,7 +54,7 @@ class SkillItemProtectionListener : Listener {
      */
     @EventHandler
     fun onInventoryClick(event: InventoryClickEvent) {
-        val player = event.whoClicked as? org.bukkit.entity.Player ?: return
+        val player = event.whoClicked as? Player ?: return
         val game = GameCluster.getGame(player) ?: return
 
         // Only protect items during active games
@@ -62,40 +63,18 @@ class SkillItemProtectionListener : Listener {
         val clickedItem = event.currentItem
         val cursorItem = event.cursor
 
-        // Prevent moving Pilot Wings to armor slot (helmet slot)
-        if (clickedItem != null && clickedItem.type == Material.ELYTRA) {
-            val itemName = clickedItem.itemMeta?.displayName()?.toString() ?: ""
-            if (itemName.contains("Pilot Wings")) {
-                // Check if trying to move to armor slots (39 = helmet, 38 = chestplate)
-                if (event.slot == 39 || event.slot == 38) {
-                    event.isCancelled = true
-                    player.sendMessage("§cYou cannot equip this skill item!")
-                    return
-                }
-            }
+        if (isPilotWingsEquipBlocked(clickedItem, event)) {
+            cancelEquip(player, event)
+            return
         }
 
-        // Prevent shift-clicking skill items to armor slots
-        if (event.isShiftClick) {
-            if (isProtectedSkillItem(clickedItem)) {
-                // Allow shift-clicking within player inventory, but not to armor slots
-                val clickedSlot = event.slot
-                // Armor slots are typically 36-39 (boots, leggings, chestplate, helmet)
-                if (clickedSlot in 36..39 || event.slotType == org.bukkit.event.inventory.InventoryType.SlotType.ARMOR) {
-                    event.isCancelled = true
-                    player.sendMessage("§cYou cannot equip this skill item!")
-                }
-            }
+        if (event.isShiftClick && isProtectedSkillItem(clickedItem) && isArmorSlot(event)) {
+            cancelEquip(player, event)
+            return
         }
 
-        // Prevent moving skill items with cursor
-        if (isProtectedSkillItem(cursorItem)) {
-            val targetSlot = event.slot
-            // Prevent placing in armor slots
-            if (targetSlot in 36..39 || event.slotType == org.bukkit.event.inventory.InventoryType.SlotType.ARMOR) {
-                event.isCancelled = true
-                player.sendMessage("§cYou cannot equip this skill item!")
-            }
+        if (isProtectedSkillItem(cursorItem) && isArmorSlot(event)) {
+            cancelEquip(player, event)
         }
     }
 
@@ -117,5 +96,25 @@ class SkillItemProtectionListener : Listener {
             event.isCancelled = true
             player.sendMessage("§cYou cannot swap this skill item to your offhand!")
         }
+    }
+
+    private fun isPilotWingsEquipBlocked(item: ItemStack?, event: InventoryClickEvent): Boolean {
+        if (item == null || item.type != Material.ELYTRA) {
+            return false
+        }
+        val itemName = item.itemMeta?.displayName()?.toString() ?: ""
+        if (!itemName.contains("Pilot Wings")) {
+            return false
+        }
+        return event.slot == 39 || event.slot == 38
+    }
+
+    private fun isArmorSlot(event: InventoryClickEvent): Boolean {
+        return event.slot in 36..39 || event.slotType == org.bukkit.event.inventory.InventoryType.SlotType.ARMOR
+    }
+
+    private fun cancelEquip(player: Player, event: InventoryClickEvent) {
+        event.isCancelled = true
+        player.sendMessage("§cYou cannot equip this skill item!")
     }
 }

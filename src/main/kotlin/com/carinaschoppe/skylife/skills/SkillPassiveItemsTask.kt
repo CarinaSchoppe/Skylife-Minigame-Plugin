@@ -29,50 +29,7 @@ object SkillPassiveItemsTask {
     fun start(plugin: Plugin) {
         taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, {
             Bukkit.getOnlinePlayers().forEach { player ->
-                // Only give items to players in active games
-                val game = GameCluster.getGame(player) ?: return@forEach
-                if (game.currentState !is IngameState) return@forEach
-                if (game.spectators.contains(player)) return@forEach
-
-                val activeSkills = SkillsManager.getActiveSkills(player)
-
-                activeSkills.forEach { skill ->
-                    when (skill) {
-                        Skill.SNOW_SPAMMER -> {
-                            val snowball = ItemStack(Material.SNOWBALL, 1)
-                            player.inventory.addItem(snowball)
-                        }
-
-                        Skill.ENDERMASTER -> {
-                            val pearl = ItemStack(Material.ENDER_PEARL, 1)
-                            player.inventory.addItem(pearl)
-                        }
-
-                        Skill.WITCH -> {
-                            val potion = createRandomPotion()
-                            player.inventory.addItem(potion)
-                        }
-
-                        Skill.GOD -> {
-                            // Track counter for 90 second intervals
-                            val counter = godSkillCounters.getOrDefault(player.uniqueId, 0) + 1
-
-                            // 90 seconds / 10 seconds = 9 cycles
-                            if (counter >= 9) {
-                                val goldenApple = ItemStack(Material.GOLDEN_APPLE, 1)
-                                player.inventory.addItem(goldenApple)
-                                godSkillCounters[player.uniqueId] = 0
-                            } else {
-                                godSkillCounters[player.uniqueId] = counter
-                            }
-                        }
-
-
-                        else -> {
-                            return@forEach
-                        }
-                    }
-                }
+                handlePlayer(player)
             }
         }, 200L, 200L) // 200 ticks = 10 seconds
     }
@@ -102,6 +59,41 @@ object SkillPassiveItemsTask {
      */
     fun resetAllGodCounters() {
         godSkillCounters.clear()
+    }
+
+    private fun handlePlayer(player: org.bukkit.entity.Player) {
+        val game = GameCluster.getGame(player) ?: return
+        if (game.currentState !is IngameState) return
+        if (game.spectators.contains(player)) return
+
+        SkillsManager.getActiveSkills(player).forEach { skill ->
+            applySkillPassiveItem(player, skill)
+        }
+    }
+
+    private fun applySkillPassiveItem(player: org.bukkit.entity.Player, skill: Skill) {
+        when (skill) {
+            Skill.SNOW_SPAMMER -> giveItem(player, Material.SNOWBALL)
+            Skill.ENDERMASTER -> giveItem(player, Material.ENDER_PEARL)
+            Skill.WITCH -> player.inventory.addItem(createRandomPotion())
+            Skill.GOD -> handleGodSkill(player)
+            else -> return
+        }
+    }
+
+    private fun giveItem(player: org.bukkit.entity.Player, material: Material) {
+        player.inventory.addItem(ItemStack(material, 1))
+    }
+
+    private fun handleGodSkill(player: org.bukkit.entity.Player) {
+        val counter = godSkillCounters.getOrDefault(player.uniqueId, 0) + 1
+
+        if (counter >= 9) {
+            giveItem(player, Material.GOLDEN_APPLE)
+            godSkillCounters[player.uniqueId] = 0
+        } else {
+            godSkillCounters[player.uniqueId] = counter
+        }
     }
 
     /**

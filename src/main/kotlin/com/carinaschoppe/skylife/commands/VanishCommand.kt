@@ -45,48 +45,54 @@ class VanishCommand : CommandExecutor, TabCompleter {
 
         // /vanish - toggle own vanish
         if (args.isEmpty()) {
-            if (!sender.hasPermission("skylife.vanish.self")) {
-                sender.sendMessage(Messages.NO_PERMISSION)
-                return true
-            }
-
-            val isNowVanished = VanishManager.toggleVanish(sender)
-            if (isNowVanished) {
-                sender.sendMessage(Messages.VANISH_ENABLED)
-            } else {
-                sender.sendMessage(Messages.VANISH_DISABLED)
-            }
+            handleSelfToggle(sender)
             return true
         }
 
         // /vanish <player> - toggle vanish for target player
         if (args.size == 1) {
-            if (!sender.hasPermission("skylife.vanish.others")) {
-                sender.sendMessage(Messages.NO_PERMISSION)
-                return true
-            }
-
-            val targetName = args[0]
-            val target = Bukkit.getPlayer(targetName)
-
-            if (target == null) {
-                sender.sendMessage(Messages.PLAYER_NOT_ONLINE(targetName))
-                return true
-            }
-
-            val isNowVanished = VanishManager.toggleVanish(target)
-            if (isNowVanished) {
-                sender.sendMessage(Messages.VANISH_ENABLED_OTHER(target.name))
-                target.sendMessage(Messages.VANISH_ENABLED)
-            } else {
-                sender.sendMessage(Messages.VANISH_DISABLED_OTHER(target.name))
-                target.sendMessage(Messages.VANISH_DISABLED)
-            }
+            handleTargetToggle(sender, args[0])
             return true
         }
 
         sender.sendMessage(Messages.VANISH_USAGE)
         return true
+    }
+
+    private fun handleSelfToggle(player: Player) {
+        if (!player.hasPermission("skylife.vanish.self")) {
+            player.sendMessage(Messages.NO_PERMISSION)
+            return
+        }
+
+        val isNowVanished = VanishManager.toggleVanish(player)
+        if (isNowVanished) {
+            player.sendMessage(Messages.VANISH_ENABLED)
+        } else {
+            player.sendMessage(Messages.VANISH_DISABLED)
+        }
+    }
+
+    private fun handleTargetToggle(sender: Player, targetName: String) {
+        if (!sender.hasPermission("skylife.vanish.others")) {
+            sender.sendMessage(Messages.NO_PERMISSION)
+            return
+        }
+
+        val target = Bukkit.getPlayer(targetName)
+        if (target == null) {
+            sender.sendMessage(Messages.PLAYER_NOT_ONLINE(targetName))
+            return
+        }
+
+        val isNowVanished = VanishManager.toggleVanish(target)
+        if (isNowVanished) {
+            sender.sendMessage(Messages.VANISH_ENABLED_OTHER(target.name))
+            target.sendMessage(Messages.VANISH_ENABLED)
+        } else {
+            sender.sendMessage(Messages.VANISH_DISABLED_OTHER(target.name))
+            target.sendMessage(Messages.VANISH_DISABLED)
+        }
     }
 
     override fun onTabComplete(
